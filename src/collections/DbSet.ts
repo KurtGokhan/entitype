@@ -1,38 +1,53 @@
-import { GroupedExpressionBuilder, IncludeExpression, OrderByExpression, Queryable, WhereExpression } from '../fluent/types';
+import { Error } from 'tslint/lib/error';
+import { IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable } from '../fluent/interfaces/types';
+import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
-export class DbSet<Entity> implements Queryable<Entity>{
+export class DbSet<EntityType extends Function> implements IQueryable<EntityType> {
+  entity: DecoratorStorage.Entity;
 
-    toList: { (): Promise<Entity[]>; query: string; };
-    first: { (): Promise<Entity>; query: string; };
+  toList: { (): Promise<EntityType[]>; query: string; };
+  first: { (): Promise<EntityType>; query: string; };
+  count: { (): Promise<number>; query: string; };
 
-    include(expression: IncludeExpression<Entity>): this {
-        throw new Error("Method not implemented.");
-    }
-    select<SelectType>(expression: {}): Queryable<SelectType> {
-        throw new Error("Method not implemented.");
-    }
-    where(expression: WhereExpression<Entity>): this {
-        throw new Error("Method not implemented.");
-    }
-    groupBy<GroupedType>(expression: {}): GroupedExpressionBuilder<GroupedType, Entity> {
-        throw new Error("Method not implemented.");
-    }
 
-    orderBy(expression: OrderByExpression<Entity>): this {
-        throw new Error("Method not implemented.");
-    }
-    orderByDescending(expression: OrderByExpression<Entity>): this {
-        throw new Error("Method not implemented.");
-    }
+  constructor(entityType: EntityType) {
+    this.entity = DecoratorStorage.getEntity(entityType);
 
-    take(limit: number): this {
-        throw new Error("Method not implemented.");
-    }
-    skip(amount: number): this {
-        throw new Error("Method not implemented.");
-    }
-    getQuery(): string {
-        throw new Error("Method not implemented.");
-    }
+    this.toList = this.toListQuery();
+  }
 
+  include(): IIncludable<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+  groupBy(): IGrouped<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+  select(): IOrderable<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+  orderByAscending(): IOrdered<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+  orderByDescending(): IOrdered<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+  where(): IFiltered<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+
+  private toListQuery(): { (): Promise<EntityType[]>; query: string; } {
+    let self = this;
+    let ret = () => {
+      console.log(ret['query']);
+      return [];
+    };
+
+    Object.defineProperty(ret, 'query', {
+      get() {
+        return 'Select * from ' + self.entity.dbName;
+      }
+    });
+
+    return ret as any;
+  }
 }

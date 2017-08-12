@@ -1,24 +1,26 @@
 {
-    "version": "2.1.1",
-    "compilerOptions": {
-        "lib": ["es5", "es6"],
-        "outDir": "build/compiled",
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "sourceMap": true,
-        "declaration": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitReturns": true,
-        "stripInternal": true,
-        "pretty": true
-    },
-    "exclude": [
-        "tmp",
-        "temp",
-        "build",
-        "node_modules"
-    ]
+  "version": "2.1.1",
+  "compilerOptions": {
+    "lib": ["es5", "es6"],
+    "outDir": "build/compiled",
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "stripInternal": true,
+    "pretty": true,
+    "baseUrl": "./"
+  },
+  "exclude": [
+    "tmp",
+    "temp",
+    "build",
+    "dist",
+    "node_modules"
+  ]
 }
