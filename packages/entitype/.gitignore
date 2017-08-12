@@ -1,5 +1,10 @@
-.vscode/
 .idea/
-build/
-coverage/
+
 node_modules/
+
+temp/
+tmp/
+dist/
+build/
+
+package-lock.json

@@ -1,42 +1,46 @@
 {
-    "name": "entitype",
-    "private": true,
-    "version": "0.0.0",
-    "description": "An orm framework for typescript that lets you fluently query the database",
-    "license": "MIT",
-    "readmeFilename": "README.md",
-    "author": {
-        "name": "Gökhan Kurt",
-        "email": "krtgokhan@hotmail.com"
-    },
-    "tags": [
-        "orm",
-        "typescript",
-        "typescript-orm",
-        "entity",
-        "linq",
-        "fluent"
-    ],
-    "dependencies": {
-        "chalk": "^2.1.0",
-        "dotenv": "^4.0.0",
-        "reflect-metadata": "^0.1.10"
-    },
-    "devDependencies": {
-        "@types/chai": "^4.0.2",
-        "@types/mocha": "^2.2.41",
-        "@types/node": "^8.0.20",
-        "chai": "^4.1.1",
-        "mocha": "^3.5.0",
-        "sqlite3": "^3.1.9",
-        "ts-node": "^3.3.0",
-        "tslint": "^5.6.0",
-        "tslint-stylish": "^2.1.0",
-        "typescript": "^2.4.2",
-        "codelyzer": "^3.1.2"
-    },
-    "scripts": {
-        "test": "gulp tests",
-        "compile": "tsc"
-    }
+  "name": "entitype",
+  "private": true,
+  "version": "0.0.0",
+  "description": "An orm framework for typescript that lets you fluently query the database",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "Gökhan Kurt",
+    "email": "krtgokhan@hotmail.com"
+  },
+  "tags": [
+    "orm",
+    "typescript",
+    "typescript-orm",
+    "entity",
+    "linq",
+    "fluent"
+  ],
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "dotenv": "^4.0.0",
+    "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.2",
+    "@types/chai-string": "^1.1.30",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.20",
+    "chai": "^4.1.1",
+    "chai-string": "^1.4.0",
+    "mocha": "^3.5.0",
+    "mochawesome": "^2.3.0",
+    "sqlite3": "^3.1.9",
+    "ts-node": "^3.3.0",
+    "tsconfig-paths": "^2.2.0",
+    "tslint": "^5.6.0",
+    "tslint-stylish": "^2.1.0",
+    "typescript": "^2.4.2"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --reporter mochawesome",
+    "test:debug": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --inspect=5858 --inspect-brk --reporter mochawesome",
+    "compile": "tsc"
+  }
 }

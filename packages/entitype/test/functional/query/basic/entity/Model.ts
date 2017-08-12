@@ -1,5 +1,9 @@
-export class Model {
-    id: number;
+import { Column } from 'src/decorators/Column';
 
-    name: string;
+export class Model {
+  @Column().type('int')
+  id: number;
+
+  @Column()
+  name: string;
 }

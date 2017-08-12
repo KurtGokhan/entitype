@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "restart": true,
+      "name": "Run Tests",
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeExecutable": "npm",
+      "args": [
+        "run",
+        "test:debug"
+      ],
+      "port": 5858,
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "envFile": "${workspaceRoot}/.env"
+    },
+    {
+      "type": "node",
+      "protocol": "inspector",
+      "request": "attach",
+      "restart": true,
+      "port": 5858,
+      "name": "Attach Program",
+      "address": "localhost:5858"
+    }
+  ]
+}
