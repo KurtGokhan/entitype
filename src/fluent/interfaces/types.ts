@@ -1,3 +1,4 @@
+import { SelectExpression } from '../types';
 export interface IQueryable<Entity> extends IIncludable<Entity> {
 }
 
@@ -49,7 +50,7 @@ export interface IGroupFiltered<Entity> extends ISelectable<Entity> {
 
 
 export interface ISelectable<Entity> extends IOrderable<Entity> {
-  select(): IOrderable<Entity>;
+  select<SelectType>(expression: SelectExpression<Entity, SelectType>): IOrderable<SelectType>;
 }
 
 export interface IOrderable<Entity> extends IExecutable<Entity> {
