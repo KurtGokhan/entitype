@@ -7,15 +7,17 @@ export interface GroupedExpressionBuilder<GroupingKey, Entity> {
 
 export declare type OrderByExpression<Entity> = {
 
-}
+};
 
-export declare type SelectExpression<Entity, SelectType> = {
+export declare type SelectExpression<Entity, SelectType> = (expression: SelectExpressionQuery<Entity, SelectType>) => SelectType;
 
-}
+export declare type SelectExpressionQuery<Entity, SelectType> = {
+  [P in keyof Entity]: SelectExpressionQuery<Entity, Entity[P]>;
+};
 
 export declare type WhereExpression<Entity> = {
   [P in keyof Entity]: WhereProperty<Entity, Entity[P]>;
-}
+};
 
 export declare type WhereProperty<Entity, PropertyType> = {
   equals(value: PropertyType);
@@ -26,23 +28,17 @@ export declare type WhereProperty<Entity, PropertyType> = {
   between(minValue: any, maxValue: any);
   like(value: string);
   asEntity(): WhereExpression<PropertyType>;
-}
+};
 
 
 export declare type GroupByExpression<Entity, GroupedType> = {
 
-}
+};
 
 export declare type IncludeExpression<Entity> = {
-}
+};
 
 export declare type Grouping<KeyType, ValueType> = {
   get(key: KeyType): ValueType[];
   toDictionary(): { key: KeyType, values: ValueType[] }[];
-}
-
-
-
-
-
-
+};
