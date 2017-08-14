@@ -9,7 +9,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.lt(5))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id < 5 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( id < 5 ) )');
   });
 
   it('should be able to filter with not lessThan', async () => {
@@ -18,7 +18,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.not.lt(5))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( NOT id < 5 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( NOT id < 5 ) )');
   });
 
   it('should be able to filter with lessThanOrEqual', async () => {
@@ -27,7 +27,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.lte(5))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id <= 5 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( id <= 5 ) )');
   });
 
   it('should be able to filter with greaterThan', async () => {
@@ -36,7 +36,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.gt(5))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id > 5 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( id > 5 ) )');
   });
 
   it('should be able to filter with greaterThanOrEqual', async () => {
@@ -45,7 +45,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.gte(5))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id >= 5 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( id >= 5 ) )');
   });
 
   it('should be able to filter with between', async () => {
@@ -54,7 +54,7 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.between(5, 10))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id BETWEEN 5 AND 10 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( id BETWEEN 5 AND 10 ) )');
   });
 
   it('should be able to filter with not between', async () => {
@@ -63,6 +63,6 @@ describe('query > where > comparison', async () => {
       .where(x => x.id.not.between(5, 10))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( NOT id BETWEEN 5 AND 10 )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( NOT id BETWEEN 5 AND 10 ) )');
   });
 });

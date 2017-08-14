@@ -54,6 +54,7 @@ export class QueryRunner {
       tokens.push('WHERE');
       tokens.push('(');
 
+      let andRequired = false;
       for (let index = 0; index < wheres.length; index++) {
         let cmd = wheres[index] as WhereCommand;
 
@@ -61,12 +62,22 @@ export class QueryRunner {
           tokens.push(')');
           tokens.push('OR');
           tokens.push('(');
+
+          andRequired = false;
           continue;
         }
 
+        if (andRequired) {
+          tokens.push('AND');
+        }
+
+        tokens.push('(');
         if (cmd.negated) tokens.push('NOT');
         let whereQuery = cmd.propertyPath + cmd.condition;
         tokens.push(whereQuery);
+        tokens.push(')');
+
+        andRequired = true;
       }
 
       tokens.push(')');

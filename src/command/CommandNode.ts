@@ -1,3 +1,4 @@
+import { IFilteredFilterable } from '../fluent/interfaces';
 import { createWhereExpressionQueryBase } from './helpers/where-helpers';
 import { getColumns } from './helpers/column-helpers';
 import { WhereExpressionQuery } from '../fluent';
@@ -20,13 +21,19 @@ import {
   IOrdered,
   IQueryable,
   ITakeable,
+  IWhereable,
 } from '../fluent/interfaces';
 import { DbSet } from '../collections/DbSet';
 import { SelectExpression, WhereExpression } from 'src/fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 import { WhereCommand } from 'src/command/command-types/WhereCommand';
+import { OrCommand } from 'src/command/command-types/OrCommand';
 
-export class CommandNode<EntityType> implements IQueryable<EntityType> {
+export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType> {
+  get or(): IWhereable<EntityType> {
+    let nextCommand = this.createNextCommand(new OrCommand());
+    return nextCommand;
+  }
 
   readonly command: Command;
 
@@ -132,6 +139,10 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
 
 
     return this.createNextCommand(whereCommand);
+  }
+
+  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType> {
+    return this.where(expression);
   }
 
   skip(amount: number): ITakeable<EntityType> {

@@ -16,6 +16,7 @@ export function mysql_real_escape_string(str: string, forLike: boolean = false) 
       case '"':
       case '\'':
       case '\\':
+        return '\\' + char;
       case '%':
         if (forLike) return char;
         else return '\\' + char;
@@ -33,7 +34,7 @@ export function valueAsDbString(value: any, forLike: boolean = false): string {
 
   if (typeof value === 'object') {
     if (value instanceof Date) {
-      value = dateAsDbString;
+      value = dateAsDbString(value);
     }
     else {
       value = JSON.stringify(value);
@@ -52,14 +53,14 @@ export function valueAsDbString(value: any, forLike: boolean = false): string {
 }
 
 function dateAsDbString(date: Date) {
-  let YYYY = date.getFullYear().toString(),
-    MM = (date.getMonth() + 1).toString(),
-    DD = date.getDate().toString(),
+  let YYYY = date.getUTCFullYear().toString(),
+    MM = (date.getUTCMonth() + 1).toString(),
+    DD = date.getUTCDate().toString(),
     hh = date.getUTCHours().toString(),
     mm = date.getUTCMinutes().toString(),
     ss = date.getUTCSeconds().toString();
-  return YYYY + '-'
-    + (MM[1] ? MM : '0' + MM[0])
+  return YYYY
+    + '-' + (MM[1] ? MM : '0' + MM[0])
     + '-' + (DD[1] ? DD : '0' + DD[0])
     + ' ' + (hh[1] ? hh : '0' + hh[0])
     + ':' + (mm[1] ? mm : '0' + mm[0])
