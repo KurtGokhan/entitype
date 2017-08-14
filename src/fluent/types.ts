@@ -22,6 +22,8 @@ export declare type WhereExpressionQuery<Entity> = {
 };
 
 export declare type WhereProperty<Entity, PropertyType> = {
+  not: WhereProperty<Entity, PropertyType>;
+
   equals(value: PropertyType);
   gt(value: PropertyType);
   gte(value: PropertyType);
@@ -29,10 +31,10 @@ export declare type WhereProperty<Entity, PropertyType> = {
   lte(value: PropertyType);
   between(minValue: any, maxValue: any);
   like(value: string);
-  asEntity(): WhereExpression<PropertyType>;
   isNull();
-  isNotNull();
-  in(array: string[]);
+  in(array: any[]);
+
+  asEntity(): WhereExpression<PropertyType>;
 };
 
 
