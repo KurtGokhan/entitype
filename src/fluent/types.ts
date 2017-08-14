@@ -15,7 +15,9 @@ export declare type SelectExpressionQuery<BaseEntity, Entity> = {
   [P in keyof Entity]: SelectExpressionQuery<BaseEntity, Entity[P]>;
 };
 
-export declare type WhereExpression<Entity> = {
+export declare type WhereExpression<Entity> = (expression: WhereExpressionQuery<Entity>) => string;
+
+export declare type WhereExpressionQuery<Entity> = {
   [P in keyof Entity]: WhereProperty<Entity, Entity[P]>;
 };
 
@@ -28,6 +30,9 @@ export declare type WhereProperty<Entity, PropertyType> = {
   between(minValue: any, maxValue: any);
   like(value: string);
   asEntity(): WhereExpression<PropertyType>;
+  isNull();
+  isNotNull();
+  in(array: string[]);
 };
 
 

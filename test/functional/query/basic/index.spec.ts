@@ -28,4 +28,13 @@ describe('query > basic', async () => {
     expect(query).to.be.equalIgnoreCase('SELECT name as NameAlias, id as idAlias FROM model');
   });
 
+  it('should be able to limit selection', async () => {
+    let ctx = new DbSet(Model);
+    let listNode = ctx
+      .select(x => ({ nameAlias: x.name, idAlias: x.id }))
+      .take(5)
+      .toList;
+    let query = listNode.query;
+    expect(query).to.be.equalIgnoreCase('SELECT TOP 5 name as NameAlias, id as idAlias FROM model');
+  });
 });

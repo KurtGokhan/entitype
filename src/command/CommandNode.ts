@@ -1,3 +1,5 @@
+import { SkipCommand } from './command-types/SkipCommand';
+import { TakeCommand } from './command-types/TakeCommand';
 import { QueryCommand } from './command-types/QueryCommand';
 import { ToListCommand } from './command-types/ToListCommand';
 import { CommandType } from './CommandType';
@@ -15,7 +17,7 @@ import {
   ITakeable,
 } from '../fluent/interfaces/types';
 import { DbSet } from '../collections/DbSet';
-import { SelectExpression } from 'src/fluent/types';
+import { SelectExpression, WhereExpression } from 'src/fluent/types';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType> {
@@ -116,15 +118,19 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
     throw new Error('Method not implemented.');
   }
 
-  where(): IFiltered<EntityType> {
+  where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
     throw new Error('Method not implemented.');
   }
 
   skip(amount: number): ITakeable<EntityType> {
-    throw new Error('Method not im.plemented.');
+    let skip = new SkipCommand();
+    skip.amount = amount;
+    return <any>new CommandNode(this, this.callback, this.entityTypeOrObject, skip);
   }
 
   take(amount: number): IExecutable<EntityType> {
-    throw new Error('Method not implemented.');
+    let take = new TakeCommand();
+    take.amount = amount;
+    return <any>new CommandNode(this, this.callback, this.entityTypeOrObject, take);
   }
 }

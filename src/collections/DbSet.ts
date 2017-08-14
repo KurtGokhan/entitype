@@ -1,6 +1,6 @@
 import { Command } from '../command/Command';
 import { QueryRunner } from '../query/QueryRunner';
-import { SelectExpression } from '../fluent/types';
+import { SelectExpression, WhereExpression } from '../fluent/types';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
 import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces/types';
@@ -53,8 +53,8 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
   orderByDescending(): IOrdered<EntityType> {
     return this.rootCommand.orderByDescending();
   }
-  where(): IFiltered<EntityType> {
-    return this.rootCommand.where();
+  where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
+    return this.rootCommand.where(expression);
   }
 
   take(amount: number): IExecutable<EntityType> {

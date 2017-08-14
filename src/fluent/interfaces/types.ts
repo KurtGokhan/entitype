@@ -1,78 +1,79 @@
-import { SelectExpression } from '../types';
-export interface IQueryable<Entity> extends IIncludable<Entity> {
+import { SelectExpression, WhereExpression } from '../types';
+
+export interface IQueryable<EntityType> extends IIncludable<EntityType> {
 }
 
 
-export interface IIncludable<Entity> extends IFilterable<Entity> {
-  include(): IIncludable<Entity>;
-}
-
-
-
-export interface IFilterable<Entity> extends IGroupable<Entity>, IWhereable<Entity> {
-}
-
-export interface IWhereable<Entity> {
-  where(): IFiltered<Entity>;
-}
-
-export interface IFiltered<Entity> extends IFilteredFilterable<Entity>, IGroupable<Entity> {
-}
-
-
-export interface IFilteredFilterable<Entity> extends IGroupable<Entity> {
-  readonly or: IWhereable<Entity>;
-  andWhere(): IFilteredFilterable<Entity>;
+export interface IIncludable<EntityType> extends IFilterable<EntityType> {
+  include(): IIncludable<EntityType>;
 }
 
 
 
-export interface IGroupable<Entity> extends ISelectable<Entity> {
-  groupBy(): IGrouped<Entity>;
+export interface IFilterable<EntityType> extends IGroupable<EntityType>, IWhereable<EntityType> {
+}
+
+export interface IWhereable<EntityType> {
+  where(expression: WhereExpression<EntityType>): IFiltered<EntityType>;
+}
+
+export interface IFiltered<EntityType> extends IFilteredFilterable<EntityType>, IGroupable<EntityType> {
+}
+
+
+export interface IFilteredFilterable<EntityType> extends IGroupable<EntityType> {
+  readonly or: IWhereable<EntityType>;
+  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType>;
 }
 
 
 
-
-export interface IGrouped<Entity> extends IGroupFilterable<Entity>, ISelectable<Entity> {
-}
-
-export interface IGroupFilterable<Entity> {
-  having(): IGroupFiltered<Entity>;
-}
-
-export interface IGroupFiltered<Entity> extends ISelectable<Entity> {
-  readonly or: IGroupFilterable<Entity>;
-  andHaving(): IGroupFiltered<Entity>;
+export interface IGroupable<EntityType> extends ISelectable<EntityType> {
+  groupBy(): IGrouped<EntityType>;
 }
 
 
 
 
-export interface ISelectable<Entity> extends IOrderable<Entity> {
-  select<SelectType>(expression: SelectExpression<Entity, SelectType>): IOrderable<SelectType>;
+export interface IGrouped<EntityType> extends IGroupFilterable<EntityType>, ISelectable<EntityType> {
 }
 
-export interface IOrderable<Entity> extends ISkippable<Entity> {
-  orderByAscending(): IOrdered<Entity>;
-  orderByDescending(): IOrdered<Entity>;
+export interface IGroupFilterable<EntityType> {
+  having(): IGroupFiltered<EntityType>;
 }
 
-export interface IOrdered<Entity> extends ISkippable<Entity> {
-  thenByAscending(): IOrdered<Entity>;
-  thenByDescending(): IOrdered<Entity>;
+export interface IGroupFiltered<EntityType> extends ISelectable<EntityType> {
+  readonly or: IGroupFilterable<EntityType>;
+  andHaving(): IGroupFiltered<EntityType>;
 }
 
-export interface ISkippable<Entity> extends ITakeable<Entity> {
-  skip(amount: number): ITakeable<Entity>;
+
+
+
+export interface ISelectable<EntityType> extends IOrderable<EntityType> {
+  select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType>;
 }
 
-export interface ITakeable<Entity> extends IExecutable<Entity> {
-  take(amount: number): IExecutable<Entity>;
+export interface IOrderable<EntityType> extends ISkippable<EntityType> {
+  orderByAscending(): IOrdered<EntityType>;
+  orderByDescending(): IOrdered<EntityType>;
 }
 
-export interface IExecutable<Entity> {
-  toList: { (): Promise<Entity[]>; query: string; };
-  first: { (): Promise<Entity>; query: string; };
+export interface IOrdered<EntityType> extends ISkippable<EntityType> {
+  thenByAscending(): IOrdered<EntityType>;
+  thenByDescending(): IOrdered<EntityType>;
+}
+
+export interface ISkippable<EntityType> extends ITakeable<EntityType> {
+  skip(amount: number): ITakeable<EntityType>;
+}
+
+export interface ITakeable<EntityType> extends IExecutable<EntityType> {
+  take(amount: number): IExecutable<EntityType>;
+}
+
+export interface IExecutable<EntityType> {
+  toList: { (): Promise<EntityType[]>; query: string; };
+  first: { (): Promise<EntityType>; query: string; };
   count: { (): Promise<number>; query: string; };
 }
