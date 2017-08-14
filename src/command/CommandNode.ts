@@ -5,7 +5,7 @@ import { ToListCommand } from './command-types/ToListCommand';
 import { CommandType } from './CommandType';
 import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
-import { SelectExpressionQuery } from '../fluent/types';
+import { SelectExpressionQuery } from '../fluent';
 import {
   IExecutable,
   IFiltered,
@@ -15,9 +15,9 @@ import {
   IOrdered,
   IQueryable,
   ITakeable,
-} from '../fluent/interfaces/types';
+} from '../fluent/interfaces';
 import { DbSet } from '../collections/DbSet';
-import { SelectExpression, WhereExpression } from 'src/fluent/types';
+import { SelectExpression, WhereExpression } from 'src/fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType> {

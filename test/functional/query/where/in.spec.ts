@@ -1,4 +1,4 @@
-import { IQueryable } from '../../../../src/fluent/interfaces/types';
+
 import { DbSet } from 'src/collections/DbSet';
 import { Model } from './entity/Model';
 import { expect } from 'chai';

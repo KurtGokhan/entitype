@@ -1,4 +1,4 @@
-import { SelectExpression, WhereExpression } from '../types';
+import { SelectExpression, WhereExpression } from '../';
 
 export interface IQueryable<EntityType> extends IIncludable<EntityType> {
 }

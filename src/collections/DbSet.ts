@@ -1,9 +1,9 @@
 import { Command } from '../command/Command';
 import { QueryRunner } from '../query/QueryRunner';
-import { SelectExpression, WhereExpression } from '../fluent/types';
+import { SelectExpression, WhereExpression } from '../fluent';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
-import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces/types';
+import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export type ObjectType<T> = { new(): T } | Function;
