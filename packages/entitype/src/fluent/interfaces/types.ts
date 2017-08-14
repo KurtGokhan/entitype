@@ -53,14 +53,22 @@ export interface ISelectable<Entity> extends IOrderable<Entity> {
   select<SelectType>(expression: SelectExpression<Entity, SelectType>): IOrderable<SelectType>;
 }
 
-export interface IOrderable<Entity> extends IExecutable<Entity> {
+export interface IOrderable<Entity> extends ISkippable<Entity> {
   orderByAscending(): IOrdered<Entity>;
   orderByDescending(): IOrdered<Entity>;
 }
 
-export interface IOrdered<Entity> extends IExecutable<Entity> {
+export interface IOrdered<Entity> extends ISkippable<Entity> {
   thenByAscending(): IOrdered<Entity>;
   thenByDescending(): IOrdered<Entity>;
+}
+
+export interface ISkippable<Entity> extends ITakeable<Entity> {
+  skip(amount: number): ITakeable<Entity>;
+}
+
+export interface ITakeable<Entity> extends IExecutable<Entity> {
+  take(amount: number): IExecutable<Entity>;
 }
 
 export interface IExecutable<Entity> {

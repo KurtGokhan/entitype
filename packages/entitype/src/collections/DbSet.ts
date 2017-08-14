@@ -3,10 +3,13 @@ import { QueryRunner } from '../query/QueryRunner';
 import { SelectExpression } from '../fluent/types';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
-import { IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable } from '../fluent/interfaces/types';
+import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable } from '../fluent/interfaces/types';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
-export class DbSet<EntityType extends Function> implements IQueryable<EntityType> {
+export type ObjectType<T> = { new(): T } | Function;
+
+export class DbSet<EntityType> implements IQueryable<EntityType> {
+
   entity: DecoratorStorage.Entity;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
@@ -17,7 +20,7 @@ export class DbSet<EntityType extends Function> implements IQueryable<EntityType
   first: { (): Promise<EntityType>; query: string; };
   count: { (): Promise<number>; query: string; };
 
-  constructor(entityType: EntityType) {
+  constructor(entityType: { new(): EntityType }) {
     this.entity = DecoratorStorage.getEntity(entityType);
   }
 
@@ -46,6 +49,10 @@ export class DbSet<EntityType extends Function> implements IQueryable<EntityType
     throw new Error('Method not implemented.');
   }
   where(): IFiltered<EntityType> {
+    throw new Error('Method not implemented.');
+  }
+
+  take(amount: number): IExecutable<EntityType> {
     throw new Error('Method not implemented.');
   }
 }
