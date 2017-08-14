@@ -1,3 +1,5 @@
+import { CountCommand } from './command-types/CountCommand';
+import { FirstCommand } from './command-types/FirstCommand';
 import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { QueryCommand } from './command-types/QueryCommand';
@@ -7,7 +9,7 @@ import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
 import { SelectExpressionQuery } from '../fluent';
 import {
-  IExecutable,
+  IListable,
   IFiltered,
   IGrouped,
   IIncludable,
@@ -19,31 +21,42 @@ import {
 import { DbSet } from '../collections/DbSet';
 import { SelectExpression, WhereExpression } from 'src/fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { WhereCommand } from 'src/command/command-types/WhereCommand';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType> {
 
   readonly command: Command;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
+    return this.finalizerCommand(ToListCommand);
+  }
+
+  get first(): { (): Promise<EntityType>; query: string; } {
+    return this.finalizerCommand(FirstCommand);
+  }
+
+  get count(): { (): Promise<number>; query: string; } {
+    return this.finalizerCommand(CountCommand);
+  }
+
+
+  private finalizerCommand(commandCreator: typeof Command) {
     let self = this;
     let ret = () => {
-      let nextCommand = new CommandNode(self, self.callback, self.entityTypeOrObject, new ToListCommand());
+      let nextCommand = self.createNextCommand(new commandCreator());
       return nextCommand.runCommandChain();
     };
 
     Object.defineProperty(ret, 'query', {
       get() {
-        let nextCommand = new CommandNode(self, self.callback, self.entityTypeOrObject, new ToListCommand());
-        let queryCommand = new CommandNode(nextCommand, self.callback, self.entityTypeOrObject, new QueryCommand());
+        let nextCommand = self.createNextCommand(new commandCreator());
+        let queryCommand = nextCommand.createNextCommand(new QueryCommand());
         return queryCommand.runCommandChain();
       }
     });
 
     return ret as any;
   }
-
-  first: { (): Promise<EntityType>; query: string; };
-  count: { (): Promise<number>; query: string; };
 
   constructor(
     public prevNode: CommandNode<EntityType>,
@@ -90,26 +103,26 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
 
     let selectObject = expression(parameter);
 
-    let sel = new SelectCommand();
+    let select = new SelectCommand();
 
     if (typeof selectObject === 'string') {
-      sel.columns = [{ alias: '', dbName: selectObject }];
+      select.columns = [{ alias: '', dbName: selectObject }];
     }
     else {
       // TODO: deep selection
 
-      sel.columns = [];
+      select.columns = [];
 
       for (let key in selectObject) {
         if (selectObject.hasOwnProperty(key)) {
           let prop = selectObject[key];
 
-          sel.columns.push({ alias: key, dbName: prop as any });
+          select.columns.push({ alias: key, dbName: prop as any });
         }
       }
     }
 
-    return <any>new CommandNode(this, this.callback, selectObject, sel);
+    return this.createNextCommand(select, selectObject);
   }
   orderByAscending(): IOrdered<EntityType> {
     throw new Error('Method not implemented.');
@@ -119,18 +132,24 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
   }
 
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
-    throw new Error('Method not implemented.');
+    let where = new WhereCommand();
+
+    return this.createNextCommand(where);
   }
 
   skip(amount: number): ITakeable<EntityType> {
     let skip = new SkipCommand();
     skip.amount = amount;
-    return <any>new CommandNode(this, this.callback, this.entityTypeOrObject, skip);
+    return this.createNextCommand(skip);
   }
 
-  take(amount: number): IExecutable<EntityType> {
+  take(amount: number): IListable<EntityType> {
     let take = new TakeCommand();
     take.amount = amount;
-    return <any>new CommandNode(this, this.callback, this.entityTypeOrObject, take);
+    return this.createNextCommand(take);
+  }
+
+  private createNextCommand(command: Command, entityTypeOrObject?: Function | Object) {
+    return <any>new CommandNode(this, this.callback, entityTypeOrObject || this.entityTypeOrObject, command);
   }
 }

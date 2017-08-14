@@ -3,7 +3,7 @@ import { QueryRunner } from '../query/QueryRunner';
 import { SelectExpression, WhereExpression } from '../fluent';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
-import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces';
+import { IListable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export type ObjectType<T> = { new(): T } | Function;
@@ -57,7 +57,7 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.where(expression);
   }
 
-  take(amount: number): IExecutable<EntityType> {
+  take(amount: number): IListable<EntityType> {
     return this.rootCommand.take(amount);
   }
 

@@ -54,26 +54,27 @@ export interface ISelectable<EntityType> extends IOrderable<EntityType> {
   select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType>;
 }
 
-export interface IOrderable<EntityType> extends ISkippable<EntityType> {
+export interface IOrderable<EntityType> extends ICountable<EntityType> {
   orderByAscending(): IOrdered<EntityType>;
   orderByDescending(): IOrdered<EntityType>;
 }
 
-export interface IOrdered<EntityType> extends ISkippable<EntityType> {
+export interface IOrdered<EntityType> extends ICountable<EntityType> {
   thenByAscending(): IOrdered<EntityType>;
   thenByDescending(): IOrdered<EntityType>;
 }
 
-export interface ISkippable<EntityType> extends ITakeable<EntityType> {
+export interface ICountable<EntityType> extends ITakeable<EntityType> {
+  first: { (): Promise<EntityType>; query: string; };
+  count: { (): Promise<number>; query: string; };
+
   skip(amount: number): ITakeable<EntityType>;
 }
 
-export interface ITakeable<EntityType> extends IExecutable<EntityType> {
-  take(amount: number): IExecutable<EntityType>;
+export interface ITakeable<EntityType> extends IListable<EntityType> {
+  take(amount: number): IListable<EntityType>;
 }
 
-export interface IExecutable<EntityType> {
+export interface IListable<EntityType> {
   toList: { (): Promise<EntityType[]>; query: string; };
-  first: { (): Promise<EntityType>; query: string; };
-  count: { (): Promise<number>; query: string; };
 }

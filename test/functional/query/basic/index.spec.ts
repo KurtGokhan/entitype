@@ -36,4 +36,19 @@ describe('query > basic', async () => {
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase('SELECT TOP 5 name as NameAlias, id as idAlias FROM model');
   });
+
+  it('should be able to query count', async () => {
+    let ctx = new DbSet(Model);
+    let listNode = ctx.count;
+    let query = listNode.query;
+    expect(query).to.be.equalIgnoreCase('SELECT COUNT(*) FROM model');
+  });
+
+
+  it('should be able to query first', async () => {
+    let ctx = new DbSet(Model);
+    let listNode = ctx.first;
+    let query = listNode.query;
+    expect(query).to.be.equalIgnoreCase('SELECT TOP 1 * FROM model');
+  });
 });
