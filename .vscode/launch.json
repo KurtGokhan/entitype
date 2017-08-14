@@ -16,9 +16,8 @@
       ],
       "port": 5858,
       "env": {
-        "NODE_ENV": "development"
+        "NODE_ENV": "test"
       },
-      "envFile": "${workspaceRoot}/.env",
       "smartStep": true,
       "showAsyncStacks": true
     },

@@ -1,0 +1,25 @@
+{
+  "check-coverage": true,
+  "include": [
+    "src/**/*.ts"
+  ],
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "require": [
+    "ts-node/register",
+    "tsconfig-paths/register",
+    "./test/helper.ts"
+  ],
+  "extension": [
+    ".ts",
+    ".tsx"
+  ],
+  "exclude": [
+    "**/*.d.ts"
+  ],
+  "report-dir": "./tmp",
+  "temp-directory": "./tmp/.nyc_output",
+  "all": true
+}

@@ -29,8 +29,10 @@
     "@types/node": "^8.0.20",
     "chai": "^4.1.1",
     "chai-string": "^1.4.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
+    "nyc": "^11.1.0",
     "sqlite3": "^3.1.9",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.2.0",
@@ -39,8 +41,9 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --reporter mochawesome",
-    "test:debug": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --inspect=5858 --inspect-brk --reporter mochawesome",
+    "test": "nyc mocha & npm run coverage:open",
+    "coverage:open": "start ./tmp/lcov-report/index.html",
+    "test:debug": "mocha --inspect=5858 --inspect-brk",
     "compile": "tsc"
   }
 }
