@@ -1,3 +1,4 @@
+import { Command } from '../command/Command';
 import { QueryRunner } from '../query/QueryRunner';
 import { SelectExpression } from '../fluent/types';
 import { CommandNode } from '../command/CommandNode';
@@ -9,7 +10,7 @@ export class DbSet<EntityType extends Function> implements IQueryable<EntityType
   entity: DecoratorStorage.Entity;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
-    let cmd = new CommandNode(null, this, this.runCommandChain, this.entity.type);
+    let cmd = new CommandNode(null, this, this.runCommandChain.bind(this), this.entity.type);
     return cmd.toList;
   }
 
@@ -20,15 +21,9 @@ export class DbSet<EntityType extends Function> implements IQueryable<EntityType
     this.entity = DecoratorStorage.getEntity(entityType);
   }
 
-  private runCommandChain(command: CommandNode<EntityType>) {
-    let commands = [];
-    while (command) {
-      commands.push(command);
-      command = command.prevNode;
-    }
-
+  private runCommandChain(commands: Command[]) {
     let runner: QueryRunner = new QueryRunner(commands);
-    return runner.run();
+    return runner.run(this.entity);
   }
 
   include(): IIncludable<EntityType> {
@@ -39,7 +34,7 @@ export class DbSet<EntityType extends Function> implements IQueryable<EntityType
   }
 
   select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let cmd = new CommandNode(null, this, this.runCommandChain, this.entity.type);
+    let cmd = new CommandNode(null, this, this.runCommandChain.bind(this), this.entity.type);
     cmd.select(expression);
     return <any>cmd;
   }
