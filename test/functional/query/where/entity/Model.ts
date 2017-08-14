@@ -6,4 +6,7 @@ export class Model {
 
   @Column()
   name: string;
+
+  @Column()
+  active: boolean;
 }
