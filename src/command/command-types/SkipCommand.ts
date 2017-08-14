@@ -1,10 +1,10 @@
 import { CommandType } from '../CommandType';
 import { Command } from '../Command';
 
-export class TakeCommand extends Command {
-  amount: number;
+export class SkipCommand extends Command {
+  limit: number;
 
   constructor() {
-    super(CommandType.Take);
+    super(CommandType.Skip);
   }
 }

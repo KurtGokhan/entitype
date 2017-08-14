@@ -89,13 +89,21 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
     let selectObject = expression(parameter);
 
     let sel = new SelectCommand();
-    sel.columns = [];
 
-    for (let key in selectObject) {
-      if (selectObject.hasOwnProperty(key)) {
-        let prop = selectObject[key];
+    if (typeof selectObject === 'string') {
+      sel.columns = [{ alias: '', dbName: selectObject }];
+    }
+    else {
+      // TODO: deep selection
 
-        sel.columns.push({ alias: key, dbName: prop as any });
+      sel.columns = [];
+
+      for (let key in selectObject) {
+        if (selectObject.hasOwnProperty(key)) {
+          let prop = selectObject[key];
+
+          sel.columns.push({ alias: key, dbName: prop as any });
+        }
       }
     }
 
