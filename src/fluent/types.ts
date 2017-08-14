@@ -9,10 +9,10 @@ export declare type OrderByExpression<Entity> = {
 
 };
 
-export declare type SelectExpression<Entity, SelectType> = (expression: SelectExpressionQuery<Entity, SelectType>) => SelectType;
+export declare type SelectExpression<Entity, SelectType> = (expression: SelectExpressionQuery<Entity, Entity>) => SelectType;
 
-export declare type SelectExpressionQuery<Entity, SelectType> = {
-  [P in keyof Entity]: SelectExpressionQuery<Entity, Entity[P]>;
+export declare type SelectExpressionQuery<BaseEntity, Entity> = {
+  [P in keyof Entity]: SelectExpressionQuery<BaseEntity, Entity[P]>;
 };
 
 export declare type WhereExpression<Entity> = {

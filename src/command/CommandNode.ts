@@ -4,12 +4,22 @@ import { CommandType } from './CommandType';
 import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
 import { SelectExpressionQuery } from '../fluent/types';
-import { IFiltered, IGrouped, IIncludable, IOrderable, IQueryable, IOrdered } from '../fluent/interfaces/types';
+import {
+  IExecutable,
+  IFiltered,
+  IGrouped,
+  IIncludable,
+  IOrderable,
+  IOrdered,
+  IQueryable,
+  ITakeable,
+} from '../fluent/interfaces/types';
 import { DbSet } from '../collections/DbSet';
 import { SelectExpression } from 'src/fluent/types';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
-export class CommandNode<EntityType extends Function> implements IQueryable<EntityType> {
+export class CommandNode<EntityType> implements IQueryable<EntityType> {
+
   command: Command;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
@@ -68,7 +78,7 @@ export class CommandNode<EntityType extends Function> implements IQueryable<Enti
     throw new Error('Method not implemented.');
   }
   select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let parameter: SelectExpressionQuery<EntityType, SelectType> = <any>{};
+    let parameter: SelectExpressionQuery<EntityType, EntityType> = <any>{};
 
     let columns = this.getColumns();
     for (let index = 0; index < columns.length; index++) {
@@ -105,4 +115,11 @@ export class CommandNode<EntityType extends Function> implements IQueryable<Enti
     throw new Error('Method not implemented.');
   }
 
+  skip(amount: number): ITakeable<EntityType> {
+    throw new Error('Method not im.plemented.');
+  }
+
+  take(amount: number): IExecutable<EntityType> {
+    throw new Error('Method not implemented.');
+  }
 }
