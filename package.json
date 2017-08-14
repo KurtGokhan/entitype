@@ -41,8 +41,8 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
-    "test": "nyc mocha & npm run coverage:open",
-    "coverage:open": "start ./tmp/lcov-report/index.html",
+    "test": "nyc mocha & npm run coverage:show",
+    "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=5858 --inspect-brk",
     "compile": "tsc"
   }

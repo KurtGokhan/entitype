@@ -9,7 +9,7 @@ describe('query > where > null', async () => {
       .where(x => x.name.isNull())
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE name IS NULL`);
+    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( name IS NULL )`);
   });
 
   it('should be able to filter selection where not null', async () => {
@@ -18,6 +18,6 @@ describe('query > where > null', async () => {
       .where(x => x.name.not.isNull())
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE name IS NOT NULL`);
+    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( NOT name IS NULL )`);
   });
 });

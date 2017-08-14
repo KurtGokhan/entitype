@@ -1,3 +1,6 @@
+import { createWhereExpressionQueryBase } from './helpers/where-helpers';
+import { getColumns } from './helpers/column-helpers';
+import { WhereExpressionQuery } from '../fluent';
 import { CountCommand } from './command-types/CountCommand';
 import { FirstCommand } from './command-types/FirstCommand';
 import { SkipCommand } from './command-types/SkipCommand';
@@ -66,14 +69,6 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
     this.command = command || new Command();
   }
 
-  private getColumns(): DecoratorStorage.Column[] {
-    if (typeof this.entityTypeOrObject === 'function') {
-      let entity = DecoratorStorage.getEntity(this.entityTypeOrObject);
-      return entity.columns;
-    }
-    return null;
-  }
-
   private runCommandChain() {
     let commands: CommandNode<EntityType>[] = [];
     let command: CommandNode<EntityType> = this;
@@ -94,7 +89,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
   select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
     let parameter: SelectExpressionQuery<EntityType, EntityType> = <any>{};
 
-    let columns = this.getColumns();
+    let columns = getColumns(this.entityTypeOrObject);
     for (let index = 0; index < columns.length; index++) {
       let column = columns[index];
 
@@ -132,9 +127,11 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
   }
 
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
-    let where = new WhereCommand();
+    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityTypeOrObject);
+    let whereCommand = expression(parameter);
 
-    return this.createNextCommand(where);
+
+    return this.createNextCommand(whereCommand);
   }
 
   skip(amount: number): ITakeable<EntityType> {

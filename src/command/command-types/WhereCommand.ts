@@ -3,7 +3,7 @@ import { Command } from '../Command';
 
 export class WhereCommand extends Command {
   negated: boolean = false;
-  propertyPath: string;
+  propertyPath: string[];
   condition: string;
 
   constructor() {

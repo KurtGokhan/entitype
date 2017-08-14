@@ -15,7 +15,7 @@ export namespace DecoratorStorage {
   export class Column {
     parent: Entity;
     type: string;
-    name: string | symbol;
+    name: string;
     dbName: string;
 
     isArray: boolean = false;
@@ -38,7 +38,7 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addColumn(parent: Function, columnName: string | symbol, metadata: any): Column {
+  export function addColumn(parent: Function, columnName: string, metadata: any): Column {
     let type = 'int';
     if (metadata) {
       type = metadata.type;
@@ -58,8 +58,14 @@ export namespace DecoratorStorage {
     return column;
   }
 
-  export function getEntity(type: Function): Entity {
-    let entity = targetStorage[type.name];
+  export function getEntity(type: Function | string): Entity {
+    let entity = null;
+    if (typeof type === 'string') {
+      entity = targetStorage[type];
+    }
+    else {
+      entity = targetStorage[type.name];
+    }
     return entity;
   }
 }

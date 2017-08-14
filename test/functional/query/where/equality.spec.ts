@@ -9,7 +9,7 @@ describe('query > where > equality', async () => {
       .where(x => x.id.equals(1))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE id = 1');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( id = 1 )');
   });
 
   it('should be able to filter selection with not', async () => {
@@ -18,6 +18,6 @@ describe('query > where > equality', async () => {
       .where(x => x.id.not.equals(1))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE NOT id = 1');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( NOT id = 1 )');
   });
 });
