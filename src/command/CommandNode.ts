@@ -16,16 +16,16 @@ export class CommandNode<EntityType extends Function> implements IQueryable<Enti
     let self = this;
     let ret = () => {
       this.command = new ToListCommand();
-      return this.callback(this);
+      return this.runCommandChain();
     };
 
     Object.defineProperty(ret, 'query', {
       get() {
-        this.command = new ToListCommand();
+        self.command = new ToListCommand();
         let nextCommand = new CommandNode(self, self.runOn, self.callback, self.entityTypeOrObject);
         nextCommand.command = new QueryCommand();
 
-        return this.callback(nextCommand);
+        return nextCommand.runCommandChain();
       }
     });
 
@@ -38,7 +38,7 @@ export class CommandNode<EntityType extends Function> implements IQueryable<Enti
   constructor(
     public prevNode: CommandNode<EntityType>,
     private runOn: DbSet<EntityType>,
-    private callback: (command: CommandNode<any>) => void,
+    private callback: (commands: Command[]) => void,
     private entityTypeOrObject: Function | Object) {
   }
 
@@ -48,6 +48,17 @@ export class CommandNode<EntityType extends Function> implements IQueryable<Enti
       return entity.columns;
     }
     return null;
+  }
+
+  private runCommandChain() {
+    let commands: CommandNode<EntityType>[] = [];
+    let command: CommandNode<EntityType> = this;
+    while (command) {
+      commands.push(command);
+      command = command.prevNode;
+    }
+
+    return this.callback(commands.map(x => x.command).reverse());
   }
 
   include(): IIncludable<EntityType> {

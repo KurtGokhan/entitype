@@ -4,7 +4,6 @@
       "type": "node",
       "request": "launch",
       "protocol": "inspector",
-      "restart": true,
       "name": "Run Tests",
       "sourceMaps": true,
       "cwd": "${workspaceRoot}",
@@ -19,13 +18,16 @@
       "env": {
         "NODE_ENV": "development"
       },
-      "envFile": "${workspaceRoot}/.env"
+      "envFile": "${workspaceRoot}/.env",
+      "smartStep": true,
+      "showAsyncStacks": true
     },
     {
       "type": "node",
       "protocol": "inspector",
       "request": "attach",
-      "restart": true,
+      "showAsyncStacks": true,
+      "smartStep": true,
       "port": 5858,
       "name": "Attach Program",
       "address": "localhost:5858"

@@ -4,5 +4,6 @@ export enum CommandType {
   ToList = 2,
   First = 3,
   Count = 4,
-  Query = 5
+  Query = 5,
+  Take = 6
 }
