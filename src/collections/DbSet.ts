@@ -3,25 +3,32 @@ import { QueryRunner } from '../query/QueryRunner';
 import { SelectExpression } from '../fluent/types';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
-import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable } from '../fluent/interfaces/types';
+import { IExecutable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces/types';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export type ObjectType<T> = { new(): T } | Function;
 
 export class DbSet<EntityType> implements IQueryable<EntityType> {
 
+
   entity: DecoratorStorage.Entity;
+  rootCommand: CommandNode<EntityType>;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
-    let cmd = new CommandNode(null, this, this.runCommandChain.bind(this), this.entity.type);
-    return cmd.toList;
+    return this.rootCommand.toList;
   }
 
-  first: { (): Promise<EntityType>; query: string; };
-  count: { (): Promise<number>; query: string; };
+  get first(): { (): Promise<EntityType>; query: string; } {
+    return this.rootCommand.first;
+  }
+
+  get count(): { (): Promise<number>; query: string; } {
+    return this.rootCommand.count;
+  }
 
   constructor(entityType: { new(): EntityType }) {
     this.entity = DecoratorStorage.getEntity(entityType);
+    this.rootCommand = new CommandNode(null, this.runCommandChain.bind(this), this.entity.type);
   }
 
   private runCommandChain(commands: Command[]) {
@@ -30,29 +37,31 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
   }
 
   include(): IIncludable<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.include();
   }
   groupBy(): IGrouped<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.groupBy();
   }
 
   select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let cmd = new CommandNode(null, this, this.runCommandChain.bind(this), this.entity.type);
-    cmd.select(expression);
-    return <any>cmd;
+    return this.rootCommand.select(expression);
   }
 
   orderByAscending(): IOrdered<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.orderByAscending();
   }
   orderByDescending(): IOrdered<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.orderByDescending();
   }
   where(): IFiltered<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.where();
   }
 
   take(amount: number): IExecutable<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.rootCommand.take(amount);
+  }
+
+  skip(amount: number): ITakeable<EntityType> {
+    return this.rootCommand.skip(amount);
   }
 }

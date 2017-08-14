@@ -20,22 +20,20 @@ import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType> {
 
-  command: Command;
+  readonly command: Command;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
     let self = this;
     let ret = () => {
-      this.command = new ToListCommand();
-      return this.runCommandChain();
+      let nextCommand = new CommandNode(self, self.callback, self.entityTypeOrObject, new ToListCommand());
+      return nextCommand.runCommandChain();
     };
 
     Object.defineProperty(ret, 'query', {
       get() {
-        self.command = new ToListCommand();
-        let nextCommand = new CommandNode(self, self.runOn, self.callback, self.entityTypeOrObject);
-        nextCommand.command = new QueryCommand();
-
-        return nextCommand.runCommandChain();
+        let nextCommand = new CommandNode(self, self.callback, self.entityTypeOrObject, new ToListCommand());
+        let queryCommand = new CommandNode(nextCommand, self.callback, self.entityTypeOrObject, new QueryCommand());
+        return queryCommand.runCommandChain();
       }
     });
 
@@ -47,9 +45,10 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
 
   constructor(
     public prevNode: CommandNode<EntityType>,
-    private runOn: DbSet<EntityType>,
     private callback: (commands: Command[]) => void,
-    private entityTypeOrObject: Function | Object) {
+    private entityTypeOrObject: Function | Object,
+    command?: Command) {
+    this.command = command || new Command();
   }
 
   private getColumns(): DecoratorStorage.Column[] {
@@ -100,9 +99,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
       }
     }
 
-    this.command = sel;
-
-    return <any>new CommandNode(this, this.runOn, this.callback, selectObject);
+    return <any>new CommandNode(this, this.callback, selectObject, sel);
   }
   orderByAscending(): IOrdered<EntityType> {
     throw new Error('Method not implemented.');
