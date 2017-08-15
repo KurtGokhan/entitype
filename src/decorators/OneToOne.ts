@@ -1,19 +1,17 @@
+import 'reflect-metadata';
 import { ObjectType } from '../fluent';
 import { PropertyExpression } from '../fluent';
-import 'reflect-metadata';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { NavigationPropertyDecorator } from 'src/decorators';
 
 
 
-export type ColumnDecorator = PropertyDecorator & { type: (string) => PropertyDecorator };
 
-export function NavigationProperty<EntityType, SelectType>(
-  propertyType: ObjectType<EntityType>,
-  expression: PropertyExpression<EntityType, SelectType>)
-  : ColumnDecorator {
+export function OneToOne<EntityType, SelectType>(propertyType: ObjectType<EntityType>): NavigationPropertyDecorator {
 
   let propertyDecorator = (options, target, propertyKey) => {
-    let metadata = Reflect.getMetadata('design:type', target, propertyKey);
+    options = options || {};
+    let metadata = options.type || Reflect.getMetadata('design:type', target, propertyKey);
 
     DecoratorStorage.addColumn(target.constructor, propertyKey, metadata);
   };
@@ -23,5 +21,5 @@ export function NavigationProperty<EntityType, SelectType>(
     return propertyDecorator.bind(null, { type });
   };
 
-  return retType as ColumnDecorator;
+  return retType as NavigationPropertyDecorator;
 }

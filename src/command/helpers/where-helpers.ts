@@ -1,3 +1,4 @@
+import { ObjectType } from '../../fluent';
 import { valueAsDbString } from '../../common/dbUtil';
 import { WhereCommand } from '../command-types/WhereCommand';
 import { WhereProperty } from '../../fluent';
@@ -6,7 +7,7 @@ import { WhereExpressionRoot } from '../../fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export function createWhereExpressionQueryBase<EntityType>(
-  entityType: Function | Object,
+  entityType: ObjectType<EntityType> | DecoratorStorage.Entity,
   path: string[] = []):
   WhereExpressionRoot<EntityType> {
 

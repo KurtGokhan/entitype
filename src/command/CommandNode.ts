@@ -1,3 +1,6 @@
+import { DeepPropertyExpression } from '../fluent';
+import { ObjectType } from '../fluent';
+import { createDeepPropertySelector, createPropertyMapSelector } from '../fluent/property-selector';
 import { OrderByCommand } from './command-types/OrderByCommand';
 import { IFilteredFilterable } from '../fluent/interfaces';
 import { createWhereExpressionQueryBase } from './helpers/where-helpers';
@@ -72,7 +75,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   constructor(
     public prevNode: CommandNode<EntityType>,
     private callback: (commands: Command[]) => void,
-    private entityTypeOrObject: Function | Object,
+    private entityType: ObjectType<EntityType>,
     command?: Command) {
     this.command = command || new Command();
   }
@@ -95,7 +98,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     throw new Error('Method not implemented.');
   }
   select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let parameter = this.createPropertySelectExpressionParameter();
+    let parameter = createPropertyMapSelector(this.entityType);
     let selectObject = expression(parameter);
 
 
@@ -118,28 +121,28 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
       }
     }
 
-    return this.createNextCommand(select, selectObject);
+    return this.createNextCommand(select);
   }
 
-  orderByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.evaluateOrderExpression(expression, false);
   }
 
-  orderByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.evaluateOrderExpression(expression, true);
   }
 
 
-  thenByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.orderByAscending(expression);
   }
 
-  thenByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.orderByDescending(expression);
   }
 
   private evaluateOrderExpression<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>, descending: boolean) {
-    let parameter = this.createPropertySelectExpressionParameter();
+    let parameter = createDeepPropertySelector(this.entityType);
     let selectObject = expression(parameter);
 
     let cmd = new OrderByCommand();
@@ -151,7 +154,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
 
 
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
-    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityTypeOrObject);
+    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityType);
     let whereCommand = expression(parameter);
 
     return this.createNextCommand(whereCommand);
@@ -173,20 +176,8 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.createNextCommand(take);
   }
 
-  private createNextCommand(command: Command, entityTypeOrObject?: Function | Object) {
-    return <any>new CommandNode(this, this.callback, entityTypeOrObject || this.entityTypeOrObject, command);
+  private createNextCommand(command: Command, entityTypeOrObject?: ObjectType<any>) {
+    return <any>new CommandNode(this, this.callback, entityTypeOrObject || this.entityType, command);
   }
 
-  private createPropertySelectExpressionParameter() {
-    let parameter: PropertyMapSelector<EntityType, EntityType> = <any>{};
-
-    let columns = getColumns(this.entityTypeOrObject);
-    for (let index = 0; index < columns.length; index++) {
-      let column = columns[index];
-
-      parameter[column.name] = <any>column.dbName;
-    }
-
-    return parameter;
-  }
 }

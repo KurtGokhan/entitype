@@ -1,3 +1,4 @@
+import { DeepPropertyExpression } from '../fluent';
 import { Command } from '../command/Command';
 import { QueryRunner } from '../query/QueryRunner';
 import { PropertyMapExpression, WhereExpression } from '../fluent';
@@ -26,7 +27,7 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
 
   constructor(entityType: { new(): EntityType }) {
     this.entity = DecoratorStorage.getEntity(entityType);
-    this.rootCommand = new CommandNode(null, this.runCommandChain.bind(this), this.entity.type);
+    this.rootCommand = new CommandNode(null, this.runCommandChain.bind(this), this.entity.type as any);
   }
 
   private runCommandChain(commands: Command[]) {
@@ -45,10 +46,10 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.select(expression);
   }
 
-  orderByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.rootCommand.orderByAscending(expression);
   }
-  orderByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.rootCommand.orderByDescending(expression);
   }
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
