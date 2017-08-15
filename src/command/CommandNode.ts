@@ -12,7 +12,7 @@ import { ToListCommand } from './command-types/ToListCommand';
 import { CommandType } from './CommandType';
 import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
-import { PropertyMapExpressionRoot } from '../fluent';
+import { PropertyMapSelector } from '../fluent';
 import {
   IListable,
   IFiltered,
@@ -178,7 +178,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   }
 
   private createPropertySelectExpressionParameter() {
-    let parameter: PropertyMapExpressionRoot<EntityType, EntityType> = <any>{};
+    let parameter: PropertyMapSelector<EntityType, EntityType> = <any>{};
 
     let columns = getColumns(this.entityTypeOrObject);
     for (let index = 0; index < columns.length; index++) {

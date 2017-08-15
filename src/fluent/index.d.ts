@@ -8,24 +8,24 @@ export declare type PropertyMap = PropertyPath | {
 };
 
 
-export declare type PropertyExpression<Entity, SelectType> = (expression: PropertyExpressionRoot<Entity, Entity>) => PropertyPath;
+export declare type PropertyExpression<Entity, SelectType> = (expression: PropertySelector<Entity>) => PropertyPath;
 
-export declare type PropertyExpressionRoot<BaseEntity, Entity> = {
+export declare type PropertySelector<Entity> = {
   [P in keyof Entity]: PropertyPath;
 };
 
 
-export declare type DeepPropertyExpression<Entity, SelectType> = (expression: PropertyMapExpressionRoot<Entity, Entity>) => PropertyPath;
+export declare type DeepPropertyExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => PropertyPath;
 
-export declare type DeepPropertyExpressionRoot<BaseEntity, Entity> = {
-  [P in keyof Entity]: PropertyMapExpressionRoot<BaseEntity, Entity[P]> | PropertyPath;
+export declare type DeepPropertySelector<Entity> = {
+  [P in keyof Entity]: DeepPropertySelector<Entity[P]> | PropertyPath;
 };
 
 
-export declare type PropertyMapExpression<Entity, PropertyMap> = (expression: PropertyMapExpressionRoot<Entity, Entity>) => PropertyMap;
+export declare type PropertyMapExpression<Entity, PropertyMap> = (expression: PropertyMapSelector<Entity, Entity>) => PropertyMap;
 
-export declare type PropertyMapExpressionRoot<BaseEntity, Entity> = {
-  [P in keyof Entity]: PropertyMapExpressionRoot<BaseEntity, Entity[P]>;
+export declare type PropertyMapSelector<BaseEntity, Entity> = {
+  [P in keyof Entity]: PropertyMapSelector<BaseEntity, Entity[P]>;
 };
 
 

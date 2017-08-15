@@ -1,7 +1,7 @@
 import 'reflect-metadata';
+import { ColumnDecorator } from './';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
-export type ColumnDecorator = PropertyDecorator & { type: (string) => PropertyDecorator };
 
 export function Column(): ColumnDecorator {
 
