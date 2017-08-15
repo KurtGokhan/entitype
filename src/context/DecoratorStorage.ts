@@ -38,10 +38,10 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addColumn(parent: Function, columnName: string, metadata: any): Column {
+  export function addColumn(parent: Function, columnName: string, metadataType: any): Column {
     let type = 'int';
-    if (metadata) {
-      type = metadata.type;
+    if (metadataType) {
+      type = metadataType;
     }
 
     let entity = targetStorage[parent.name] || addEntity(parent);
@@ -53,7 +53,9 @@ export namespace DecoratorStorage {
       type: type
     });
 
-    entity.columns.push(column);
+    // TODO: Multiple columns with same name is added because of mocha. Find a way to seperate decorators.
+    if (!entity.columns.find(x => x.name === column.name))
+      entity.columns.push(column);
 
     return column;
   }

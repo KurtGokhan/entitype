@@ -4,38 +4,36 @@ export type ObjectType<T> = { new(): T };
 
 
 export declare type PropertyPath = string[];
+export declare type PropertyPathGetter = () => string[];
 export declare type PropertyMap = PropertyPath | {
   [key: string]: PropertyMap;
 };
 
+export declare type PropertyMapGetter = PropertyPathGetter | {
+  [key: string]: PropertyMapGetter;
+};
 
-export declare type PropertyExpression<Entity, SelectType> = (expression: PropertySelector<Entity>) => PropertyPath;
+export declare type PropertyExpression<Entity, SelectType> = (expression: PropertySelector<Entity>) => any;
 
 export declare type PropertySelector<Entity> = {
-  [P in keyof Entity]: PropertyPath;
+  [P in keyof Entity]: any;
 };
 
 
-export declare type DeepPropertyExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => PropertyPath;
+export declare type DeepPropertyExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => PropertyPathGetter;
 
 export declare type DeepPropertySelector<Entity> = {
-  [P in keyof Entity]: DeepPropertySelector<Entity[P]> & PropertyPath;
+  [P in keyof Entity]: DeepPropertySelector<Entity[P]>;
 };
 
 
-export declare type PropertyMapExpression<Entity, PropertyMap> = (expression: PropertyMapSelector<Entity>) => PropertyMap;
-
-export declare type PropertyMapSelector<Entity> = {
-  [P in keyof Entity]: PropertyMapSelector<Entity[P]>;
-};
+export declare type PropertyMapExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => SelectType;
 
 
+export declare type WhereExpression<Entity> = (expression: WhereSelector<Entity>) => WhereCommand;
 
 
-export declare type WhereExpression<Entity> = (expression: WhereExpressionRoot<Entity>) => WhereCommand;
-
-
-export declare type WhereExpressionRoot<Entity> = {
+export declare type WhereSelector<Entity> = {
   [P in keyof Entity]: WhereProperty<Entity, Entity[P]>;
 };
 
@@ -53,5 +51,5 @@ export declare type WhereProperty<Entity, PropertyType> = {
   isNull(): WhereCommand;
   in(array: PropertyType[]): WhereCommand;
 
-  asEntity(): WhereExpressionRoot<PropertyType>;
+  asEntity(): WhereSelector<PropertyType>;
 };

@@ -8,5 +8,6 @@ export class Model {
   @Column()
   name: string;
 
+  @Column()
   child: ChildModel;
 }

@@ -1,11 +1,15 @@
+import { PropertyPath } from '../fluent';
 import { DeepPropertyExpression } from '../fluent';
 import { ObjectType } from '../fluent';
-import { createDeepPropertySelector, createPropertyMapSelector } from '../fluent/property-selector';
+import {
+  resolveDeepPropertyExpression,
+  resolvePropertyMapExpression,
+} from '../fluent/property-selector';
 import { OrderByCommand } from './command-types/OrderByCommand';
 import { IFilteredFilterable } from '../fluent/interfaces';
 import { createWhereExpressionQueryBase } from './helpers/where-helpers';
 import { getColumns } from './helpers/column-helpers';
-import { WhereExpressionRoot } from '../fluent';
+import { WhereSelector } from '../fluent';
 import { CountCommand } from './command-types/CountCommand';
 import { FirstCommand } from './command-types/FirstCommand';
 import { SkipCommand } from './command-types/SkipCommand';
@@ -15,7 +19,6 @@ import { ToListCommand } from './command-types/ToListCommand';
 import { CommandType } from './CommandType';
 import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
-import { PropertyMapSelector } from '../fluent';
 import {
   IListable,
   IFiltered,
@@ -98,28 +101,8 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     throw new Error('Method not implemented.');
   }
   select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let parameter = createPropertyMapSelector(this.entityType);
-    let selectObject = expression(parameter);
-
-
     let select = new SelectCommand();
-
-    if (typeof selectObject === 'string') {
-      select.columns = [{ alias: '', dbName: selectObject }];
-    }
-    else {
-      // TODO: deep selection
-
-      select.columns = [];
-
-      for (let key in selectObject) {
-        if (selectObject.hasOwnProperty(key)) {
-          let prop = selectObject[key];
-
-          select.columns.push({ alias: key, dbName: prop as any });
-        }
-      }
-    }
+    select.columns = resolvePropertyMapExpression(expression, this.entityType);
 
     return this.createNextCommand(select);
   }
@@ -141,12 +124,9 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.orderByDescending(expression);
   }
 
-  private evaluateOrderExpression<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>, descending: boolean) {
-    let parameter = createDeepPropertySelector(this.entityType);
-    let selectObject = expression(parameter);
-
+  private evaluateOrderExpression<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>, descending: boolean) {
     let cmd = new OrderByCommand();
-    cmd.propertyPath = selectObject as any;
+    cmd.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
     cmd.descending = descending;
 
     return this.createNextCommand(cmd);

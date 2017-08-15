@@ -27,12 +27,12 @@ export class QueryRunner {
     let order = this.commandChain.find(x => x.type === CommandType.OrderBy) as OrderByCommand;
 
     let selectedColumns = select ? select.columns : [];
-    let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.alias);
+    let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.mapPath.length);
 
     let columnsQuery = '';
     if (count) columnsQuery = 'COUNT(*)';
-    else if (isScalar) columnsQuery = selectedColumns[0].dbName;
-    else if (selectedColumns.length) columnsQuery = selectedColumns.map(x => `${x.dbName} as ${x.alias}`).join(', ');
+    else if (isScalar) columnsQuery = selectedColumns[0].path.toString();
+    else if (selectedColumns.length) columnsQuery = selectedColumns.map(x => `${x.path} as ${x.mapPath}`).join(', ');
     else columnsQuery = '*';
 
 
