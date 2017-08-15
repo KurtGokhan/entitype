@@ -1,12 +1,10 @@
 import { Command } from '../command/Command';
 import { QueryRunner } from '../query/QueryRunner';
-import { SelectExpression, WhereExpression } from '../fluent';
+import { PropertyMapExpression, WhereExpression } from '../fluent';
 import { CommandNode } from '../command/CommandNode';
 import { Error } from 'tslint/lib/error';
 import { IListable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
-
-export type ObjectType<T> = { new(): T } | Function;
 
 export class DbSet<EntityType> implements IQueryable<EntityType> {
 
@@ -43,14 +41,14 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.groupBy();
   }
 
-  select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
     return this.rootCommand.select(expression);
   }
 
-  orderByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.rootCommand.orderByAscending(expression);
   }
-  orderByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.rootCommand.orderByDescending(expression);
   }
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {

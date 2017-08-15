@@ -2,7 +2,7 @@ import { OrderByCommand } from './command-types/OrderByCommand';
 import { IFilteredFilterable } from '../fluent/interfaces';
 import { createWhereExpressionQueryBase } from './helpers/where-helpers';
 import { getColumns } from './helpers/column-helpers';
-import { WhereExpressionQuery } from '../fluent';
+import { WhereExpressionRoot } from '../fluent';
 import { CountCommand } from './command-types/CountCommand';
 import { FirstCommand } from './command-types/FirstCommand';
 import { SkipCommand } from './command-types/SkipCommand';
@@ -12,7 +12,7 @@ import { ToListCommand } from './command-types/ToListCommand';
 import { CommandType } from './CommandType';
 import { SelectCommand } from './command-types/SelectCommand';
 import { Command } from './Command';
-import { SelectExpressionQuery } from '../fluent';
+import { PropertyMapExpressionRoot } from '../fluent';
 import {
   IListable,
   IFiltered,
@@ -25,7 +25,7 @@ import {
   IWhereable,
 } from '../fluent/interfaces';
 import { DbSet } from '../collections/DbSet';
-import { SelectExpression, WhereExpression } from 'src/fluent';
+import { PropertyMapExpression, WhereExpression } from 'src/fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 import { WhereCommand } from 'src/command/command-types/WhereCommand';
 import { OrCommand } from 'src/command/command-types/OrCommand';
@@ -94,7 +94,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   groupBy(): IGrouped<EntityType> {
     throw new Error('Method not implemented.');
   }
-  select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
     let parameter = this.createPropertySelectExpressionParameter();
     let selectObject = expression(parameter);
 
@@ -121,24 +121,24 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.createNextCommand(select, selectObject);
   }
 
-  orderByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.evaluateOrderExpression(expression, false);
   }
 
-  orderByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.evaluateOrderExpression(expression, true);
   }
 
 
-  thenByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.orderByAscending(expression);
   }
 
-  thenByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType> {
     return this.orderByDescending(expression);
   }
 
-  private evaluateOrderExpression<SelectType>(expression: SelectExpression<EntityType, SelectType>, descending: boolean) {
+  private evaluateOrderExpression<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>, descending: boolean) {
     let parameter = this.createPropertySelectExpressionParameter();
     let selectObject = expression(parameter);
 
@@ -178,7 +178,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   }
 
   private createPropertySelectExpressionParameter() {
-    let parameter: SelectExpressionQuery<EntityType, EntityType> = <any>{};
+    let parameter: PropertyMapExpressionRoot<EntityType, EntityType> = <any>{};
 
     let columns = getColumns(this.entityTypeOrObject);
     for (let index = 0; index < columns.length; index++) {

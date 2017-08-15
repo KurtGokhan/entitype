@@ -2,18 +2,18 @@ import { valueAsDbString } from '../../common/dbUtil';
 import { WhereCommand } from '../command-types/WhereCommand';
 import { WhereProperty } from '../../fluent';
 import { getColumns, getEntity } from './column-helpers';
-import { WhereExpressionQuery } from '../../fluent';
+import { WhereExpressionRoot } from '../../fluent';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export function createWhereExpressionQueryBase<EntityType>(
   entityType: Function | Object,
   path: string[] = []):
-  WhereExpressionQuery<EntityType> {
+  WhereExpressionRoot<EntityType> {
 
   let entity = getEntity(entityType as any);
   let columns = getColumns(entityType);
 
-  let parameter: WhereExpressionQuery<EntityType> = <any>{};
+  let parameter: WhereExpressionRoot<EntityType> = <any>{};
   for (let index = 0; index < columns.length; index++) {
     let column = columns[index];
 
@@ -82,7 +82,7 @@ class WherePropertyBase<EntityType, PropertyType> implements WhereProperty<Entit
     return this.createWhereCommand(' IN ' + '(' + array.map(x => valueAsDbString(x)).join(',') + ')');
   }
 
-  asEntity(): WhereExpressionQuery<PropertyType> {
+  asEntity(): WhereExpressionRoot<PropertyType> {
     let entity = getEntity(this.column.type);
 
     if (!this.column.isNavigationProperty)

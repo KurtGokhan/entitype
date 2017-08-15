@@ -1,4 +1,4 @@
-import { SelectExpression, WhereExpression } from '../';
+import { PropertyMapExpression, WhereExpression } from '../';
 
 export interface IQueryable<EntityType> extends IIncludable<EntityType> {
 }
@@ -51,17 +51,17 @@ export interface IGroupFiltered<EntityType> extends ISelectable<EntityType> {
 
 
 export interface ISelectable<EntityType> extends IOrderable<EntityType> {
-  select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType>;
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType>;
 }
 
 export interface IOrderable<EntityType> extends ICountable<EntityType> {
-  orderByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
-  orderByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  orderByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  orderByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
 export interface IOrdered<EntityType> extends ICountable<EntityType> {
-  thenByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
-  thenByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  thenByAscending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  thenByDescending<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
 export interface ICountable<EntityType> extends ITakeable<EntityType> {
