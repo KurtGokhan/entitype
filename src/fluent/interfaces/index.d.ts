@@ -55,13 +55,13 @@ export interface ISelectable<EntityType> extends IOrderable<EntityType> {
 }
 
 export interface IOrderable<EntityType> extends ICountable<EntityType> {
-  orderByAscending(): IOrdered<EntityType>;
-  orderByDescending(): IOrdered<EntityType>;
+  orderByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  orderByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
 export interface IOrdered<EntityType> extends ICountable<EntityType> {
-  thenByAscending(): IOrdered<EntityType>;
-  thenByDescending(): IOrdered<EntityType>;
+  thenByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
+  thenByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
 export interface ICountable<EntityType> extends ITakeable<EntityType> {

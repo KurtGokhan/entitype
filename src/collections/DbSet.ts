@@ -47,11 +47,11 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.select(expression);
   }
 
-  orderByAscending(): IOrdered<EntityType> {
-    return this.rootCommand.orderByAscending();
+  orderByAscending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.rootCommand.orderByAscending(expression);
   }
-  orderByDescending(): IOrdered<EntityType> {
-    return this.rootCommand.orderByDescending();
+  orderByDescending<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.rootCommand.orderByDescending(expression);
   }
   where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
     return this.rootCommand.where(expression);

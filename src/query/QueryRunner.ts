@@ -1,3 +1,4 @@
+import { OrderByCommand } from '../command/command-types/OrderByCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { FirstCommand } from '../command/command-types/FirstCommand';
 import { CountCommand } from '../command/command-types/CountCommand';
@@ -16,13 +17,14 @@ export class QueryRunner {
   }
 
   run(entity: DecoratorStorage.Entity) {
-    let tokens = [];
+    let tokens: string[] = [];
 
     let select = this.commandChain.find(x => x.type === CommandType.Select) as SelectCommand;
     let isQuery = this.commandChain.find(x => x.type === CommandType.Query) as QueryCommand;
     let take = this.commandChain.find(x => x.type === CommandType.Take) as TakeCommand;
     let count = this.commandChain.find(x => x.type === CommandType.Count) as CountCommand;
     let first = this.commandChain.find(x => x.type === CommandType.First) as FirstCommand;
+    let order = this.commandChain.find(x => x.type === CommandType.OrderBy) as OrderByCommand;
 
     let selectedColumns = select ? select.columns : [];
     let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.alias);
@@ -81,6 +83,12 @@ export class QueryRunner {
       }
 
       tokens.push(')');
+    }
+
+    if (order) {
+      tokens.push('ORDER BY');
+      tokens.push(<any>order.propertyPath);
+      tokens.push(order.descending ? 'DESC' : 'ASC');
     }
 
 
