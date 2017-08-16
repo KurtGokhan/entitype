@@ -1,9 +1,6 @@
-import { ObjectType } from '../../fluent';
-import { valueAsDbString } from '../../common/dbUtil';
-import { WhereCommand } from '../command-types/WhereCommand';
-import { WhereProperty } from '../../fluent';
-import { getColumns, getEntity } from './column-helpers';
-import { WhereSelector } from '../../fluent';
+import { valueAsDbString } from '../common/dbUtil';
+import { WhereCommand } from '../command/command-types/WhereCommand';
+import { ObjectType, WhereProperty, WhereSelector } from './';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 export function createWhereExpressionQueryBase<EntityType>(
@@ -11,8 +8,8 @@ export function createWhereExpressionQueryBase<EntityType>(
   path: string[] = []):
   WhereSelector<EntityType> {
 
-  let entity = getEntity(entityType as any);
-  let columns = getColumns(entityType);
+  let entity = DecoratorStorage.getEntity(entityType as any);
+  let columns = entity.columns;
 
   let parameter: WhereSelector<EntityType> = <any>{};
   for (let index = 0; index < columns.length; index++) {
@@ -84,7 +81,7 @@ class WherePropertyBase<EntityType, PropertyType> implements WhereProperty<Entit
   }
 
   asEntity(): WhereSelector<PropertyType> {
-    let entity = getEntity(this.column.type);
+    let entity = DecoratorStorage.getEntity(this.column.type);
 
     if (!this.column.isNavigationProperty)
       throw Error('Only navigation properties can be queried as entity.');

@@ -1,4 +1,3 @@
-
 export namespace DecoratorStorage {
   export class Entity {
     type: Function;
@@ -14,7 +13,7 @@ export namespace DecoratorStorage {
 
   export class Column {
     parent: Entity;
-    type: string;
+    type: Function;
     name: string;
     dbName: string;
 
@@ -27,24 +26,26 @@ export namespace DecoratorStorage {
     }
   }
 
-  let targetStorage: { [key: string]: Entity } = {};
+  let targetStorage: Entity[] = [];
 
-  export function addEntity(entity: Function): Entity {
-    return targetStorage[entity.name] = new Entity({
-      name: entity.name,
-      type: entity,
-      dbName: entity.name
+  export function addEntity(entityType: Function): Entity {
+    let entity = new Entity({
+      name: entityType.name,
+      type: entityType,
+      dbName: entityType.name
     });
+    targetStorage.push(entity);
+    return entity;
   }
 
 
   export function addColumn(parent: Function, columnName: string, metadataType: any): Column {
-    let type = 'int';
+    let type = Number;
     if (metadataType) {
       type = metadataType;
     }
 
-    let entity = targetStorage[parent.name] || addEntity(parent);
+    let entity = getEntity(parent) || addEntity(parent);
 
     let column = new Column({
       dbName: columnName.toString(),
@@ -53,21 +54,21 @@ export namespace DecoratorStorage {
       type: type
     });
 
-    // TODO: Multiple columns with same name is added because of mocha. Find a way to seperate decorators.
     if (!entity.columns.find(x => x.name === column.name))
       entity.columns.push(column);
 
     return column;
   }
 
-  export function getEntity(type: Function | string): Entity {
-    let entity = null;
-    if (typeof type === 'string') {
-      entity = targetStorage[type];
+  export function getEntity(type: Function | Entity): Entity {
+    if (typeof type === 'object')
+      return type;
+
+    for (let index = 0; index < targetStorage.length; index++) {
+      let entity = targetStorage[index];
+      if (entity.type === type)
+        return entity;
     }
-    else {
-      entity = targetStorage[type.name];
-    }
-    return entity;
+    return null;
   }
 }

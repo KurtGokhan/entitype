@@ -13,14 +13,14 @@ export declare type PropertyMapGetter = PropertyPathGetter | {
   [key: string]: PropertyMapGetter;
 };
 
-export declare type PropertyExpression<Entity, SelectType> = (expression: PropertySelector<Entity>) => any;
+export declare type PropertyExpression<Entity, SelectType> = (expression: PropertySelector<Entity>) => SelectType;
 
 export declare type PropertySelector<Entity> = {
-  [P in keyof Entity]: any;
+  [P in keyof Entity]: Entity[P];
 };
 
 
-export declare type DeepPropertyExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => PropertyPathGetter;
+export declare type DeepPropertyExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => SelectType;
 
 export declare type DeepPropertySelector<Entity> = {
   [P in keyof Entity]: DeepPropertySelector<Entity[P]>;

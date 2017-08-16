@@ -8,18 +8,18 @@ import {
   PropertyMapExpression
 } from './';
 import { SelectMapping } from '../command/command-types/SelectCommand';
-import { getColumns, getEntity } from '../command/helpers/column-helpers';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
 
 
-function createPropertySelector<EntityType>(entity: ObjectType<EntityType>): PropertySelector<EntityType> {
+function createPropertySelector<EntityType>(entityType: ObjectType<EntityType>): PropertySelector<EntityType> {
   let parameter: PropertySelector<EntityType> = <any>{};
 
-  let columns = getColumns(this.entityTypeOrObject);
+  let entity = DecoratorStorage.getEntity(entityType);
+  let columns = entity.columns;
   for (let index = 0; index < columns.length; index++) {
     let column = columns[index];
 
-    parameter[column.name] = <any>column.dbName;
+    parameter[<any>column.name] = <any>column.name;
   }
 
   return <any>Object.freeze(parameter);
@@ -33,7 +33,8 @@ function createDeepPropertySelectorInternal<EntityType>(
 
   let selector: DeepPropertySelector<EntityType> = extend;
 
-  let columns = getColumns(entityType);
+  let entity = DecoratorStorage.getEntity(entityType);
+  let columns = entity.columns;
   for (let index = 0; index < columns.length; index++) {
     let column = columns[index];
 
@@ -45,7 +46,7 @@ function createDeepPropertySelectorInternal<EntityType>(
       get() { return getter; }
     });
 
-    let colEntity = getEntity(column.type);
+    let colEntity = DecoratorStorage.getEntity(column.type);
     if (column.isNavigationProperty || colEntity) {
       createDeepPropertySelectorInternal(colEntity, colPath, getter);
     }
@@ -90,7 +91,7 @@ export function resolveDeepPropertyExpression<EntityType, SelectType>(
   expression: DeepPropertyExpression<EntityType, SelectType>,
   entityType: ObjectType<EntityType>): PropertyPath {
   let parameter = createDeepPropertySelector(entityType);
-  let selectObject = expression(parameter);
+  let selectObject = <any>expression(parameter);
   return selectObject();
 }
 
@@ -101,5 +102,5 @@ export function resolvePropertyMapExpression<EntityType, SelectType>(
   let parameter = createDeepPropertySelector(entityType);
   let selectObject = expression(parameter);
 
-  return getPropertyMapping(selectObject as any);
+  return getPropertyMapping(<any>selectObject);
 }

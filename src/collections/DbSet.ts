@@ -1,11 +1,21 @@
-import { DeepPropertyExpression } from '../fluent';
-import { Command } from '../command/Command';
-import { QueryRunner } from '../query/QueryRunner';
-import { PropertyMapExpression, WhereExpression } from '../fluent';
-import { CommandNode } from '../command/CommandNode';
-import { Error } from 'tslint/lib/error';
-import { IListable, IFiltered, IGrouped, IIncludable, IOrderable, IOrdered, IQueryable, ITakeable } from '../fluent/interfaces';
 import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { Command } from '../command/Command';
+import { CommandNode } from '../command/CommandNode';
+import {
+  DeepPropertyExpression,
+  IFiltered,
+  IGrouped,
+  IIncludable,
+  IListable,
+  IOrderable,
+  IOrdered,
+  IQueryable,
+  ITakeable,
+  ObjectType,
+  PropertyMapExpression,
+  WhereExpression,
+} from '../fluent';
+import { QueryRunner } from '../query/QueryRunner';
 
 export class DbSet<EntityType> implements IQueryable<EntityType> {
 
@@ -25,7 +35,7 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.count;
   }
 
-  constructor(entityType: { new(): EntityType }) {
+  constructor(entityType: ObjectType<EntityType>) {
     this.entity = DecoratorStorage.getEntity(entityType);
     this.rootCommand = new CommandNode(null, this.runCommandChain.bind(this), this.entity.type as any);
   }
