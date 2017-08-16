@@ -5,9 +5,10 @@ import { DecoratorStorage } from 'src/context/DecoratorStorage';
 import { NavigationPropertyDecorator } from 'src/decorators';
 
 
+type OneToOneDecorator = {
+};
 
-
-export function OneToOne<EntityType, SelectType>(propertyType: ObjectType<EntityType>): NavigationPropertyDecorator {
+export function OneToOne<EntityType, SelectType>(propertyType: ObjectType<EntityType>): NavigationPropertyDecorator<EntityType> {
 
   let propertyDecorator = (options, target, propertyKey) => {
     options = options || {};
@@ -21,5 +22,5 @@ export function OneToOne<EntityType, SelectType>(propertyType: ObjectType<Entity
     return propertyDecorator.bind(null, { type });
   };
 
-  return retType as NavigationPropertyDecorator;
+  return retType as NavigationPropertyDecorator<EntityType>;
 }
