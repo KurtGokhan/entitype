@@ -25,8 +25,8 @@ describe('query > basic > orderby', async () => {
 
   it('should be able to combine orders', async () => {
     let ctx = new DbSet(Model);
-    let loadModelQuery = ctx.toList.query;
-    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT * FROM model');
+    let loadModelQuery = ctx.orderByDescending(x => x.id).thenByAscending(x => x.name).toList.query;
+    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT * FROM model ORDER BY id DESC , name ASC');
 
     let results = await ctx.toList();
     expect(results).to.be.eql([]);

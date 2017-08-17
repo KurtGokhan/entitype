@@ -17,6 +17,7 @@ import { PropertyPath } from 'src/fluent';
 export class QueryRunner {
   includes: IncludeCommand[];
   wheres: WhereCommand[];
+  orders: OrderByCommand[];
 
   select: SelectCommand;
   isQuery: QueryCommand;
@@ -24,11 +25,17 @@ export class QueryRunner {
   take: TakeCommand;
   count: CountCommand;
   first: FirstCommand;
-  order: OrderByCommand;
   whereGroups: WhereCommand[][];
 
 
-  joins: { leftEntity: DecoratorStorage.Entity, rightEntity: DecoratorStorage.Entity, lefColumn: string, rightColum: string }[];
+  private joins: {
+    leftEntity: DecoratorStorage.Entity,
+    rightEntity: DecoratorStorage.Entity,
+    lefColumn: string,
+    rightColum: string
+  }[] = [];
+  private typeAliases: { type: DecoratorStorage.Entity, alias: string }[] = [];
+  private columnAliases: { column: DecoratorStorage.Column, alias: string }[] = [];
 
   constructor(private commandChain: Command[], private entity: DecoratorStorage.Entity) {
     this.resolveCommands();
@@ -37,6 +44,7 @@ export class QueryRunner {
   private resolveCommands() {
     this.includes = this.commandChain.filter(x => x.type === CommandType.Include) as IncludeCommand[];
     this.wheres = this.commandChain.filter(x => x.type === CommandType.Where) as WhereCommand[];
+    this.orders = this.commandChain.filter(x => x.type === CommandType.OrderBy) as OrderByCommand[];
 
     this.select = this.commandChain.find(x => x.type === CommandType.Select) as SelectCommand;
     this.isQuery = this.commandChain.find(x => x.type === CommandType.Query) as QueryCommand;
@@ -44,7 +52,6 @@ export class QueryRunner {
     this.skip = this.commandChain.find(x => x.type === CommandType.Skip) as SkipCommand;
     this.count = this.commandChain.find(x => x.type === CommandType.Count) as CountCommand;
     this.first = this.commandChain.find(x => x.type === CommandType.First) as FirstCommand;
-    this.order = this.commandChain.find(x => x.type === CommandType.OrderBy) as OrderByCommand;
 
 
     this.whereGroups = [[]];
@@ -93,6 +100,8 @@ export class QueryRunner {
 
     paths.push(...this.wheres.filter(x => x.propertyPath.length > 1));
     paths.push(...this.includes.map(x => x.propertyPath));
+    paths.push(...this.orders.filter(x => x.propertyPath.length > 1));
+
   }
 
   run() {
@@ -145,10 +154,15 @@ export class QueryRunner {
       }
     }
 
-    if (this.order) {
+    if (this.orders.length) {
       tokens.push('ORDER BY');
-      tokens.push(<any>this.order.propertyPath);
-      tokens.push(this.order.descending ? 'DESC' : 'ASC');
+
+      this.orders.forEach(order => {
+        tokens.push(<any>order.propertyPath);
+        tokens.push(order.descending ? 'DESC' : 'ASC');
+        tokens.push(',');
+      });
+      tokens.pop();
     }
 
 
