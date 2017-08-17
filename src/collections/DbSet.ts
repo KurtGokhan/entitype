@@ -41,8 +41,8 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
   }
 
   private runCommandChain(commands: Command[]) {
-    let runner: QueryRunner = new QueryRunner(commands);
-    return runner.run(this.entity);
+    let runner: QueryRunner = new QueryRunner(commands, this.entity);
+    return runner.run();
   }
 
   include(): IIncludable<EntityType> {

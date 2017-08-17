@@ -12,9 +12,11 @@ import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 import { IncludeCommand } from 'src/command/command-types/IncludeCommand';
 import { SkipCommand } from 'src/command/command-types/SkipCommand';
 import { OrCommand } from 'src/command/command-types/OrCommand';
+import { PropertyPath } from 'src/fluent';
 
 export class QueryRunner {
   includes: IncludeCommand[];
+  wheres: WhereCommand[];
 
   select: SelectCommand;
   isQuery: QueryCommand;
@@ -26,14 +28,15 @@ export class QueryRunner {
   whereGroups: WhereCommand[][];
 
 
-  joins: { leftEntity: DecoratorStorage.Entity, rightEntity: DecoratorStorage.Entity, lefColumn: string, rightColum: string };
+  joins: { leftEntity: DecoratorStorage.Entity, rightEntity: DecoratorStorage.Entity, lefColumn: string, rightColum: string }[];
 
-  constructor(private commandChain: Command[]) {
+  constructor(private commandChain: Command[], private entity: DecoratorStorage.Entity) {
     this.resolveCommands();
   }
 
   private resolveCommands() {
     this.includes = this.commandChain.filter(x => x.type === CommandType.Include) as IncludeCommand[];
+    this.wheres = this.commandChain.filter(x => x.type === CommandType.Where) as WhereCommand[];
 
     this.select = this.commandChain.find(x => x.type === CommandType.Select) as SelectCommand;
     this.isQuery = this.commandChain.find(x => x.type === CommandType.Query) as QueryCommand;
@@ -63,15 +66,36 @@ export class QueryRunner {
     }
   }
 
+  private getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {
+    let entity = this.entity;
+    let col = null;
+
+    for (let index = 0; index < path.length; index++) {
+      let prop = path[index];
+
+      if (!entity) throw Error('Wrong property path in the query');
+
+      col = entity.columns.find(x => x.name === prop);
+      entity = DecoratorStorage.getEntity(col.type);
+    }
+    return col;
+  }
+
+
   protected escapeAlias(alias: string) {
     return '[' + alias + ']';
   }
 
   private resolveJoins() {
+    let paths = [];
+    if (this.select)
+      paths.push(...this.select.columns.filter(x => x.path.length > 1));
 
+    paths.push(...this.wheres.filter(x => x.propertyPath.length > 1));
+    paths.push(...this.includes.map(x => x.propertyPath));
   }
 
-  run(entity: DecoratorStorage.Entity) {
+  run() {
 
     let tokens: string[] = [];
 
@@ -93,7 +117,7 @@ export class QueryRunner {
     tokens.push(limitQuery);
     tokens.push(columnsQuery);
     tokens.push('FROM');
-    tokens.push(entity.dbName);
+    tokens.push(this.entity.dbName);
 
 
     if (this.whereGroups.length && this.whereGroups[0].length) {
@@ -130,12 +154,11 @@ export class QueryRunner {
 
     let query = tokens.filter(x => !!x).join(' ');
 
-    if (this.isQuery)
-      return query;
-    return this.query(query);
+    if (this.isQuery) return query;
+    return this.runQuery(query);
   }
 
-  query(sql: string) {
+  runQuery(sql: string) {
     return Promise.resolve([]);
   }
 }
