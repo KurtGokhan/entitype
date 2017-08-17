@@ -1,7 +1,7 @@
 import { valueAsDbString } from '../common/dbUtil';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { ObjectType, WhereProperty, WhereSelector } from './';
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
 export function createWhereExpressionQueryBase<EntityType>(
   entityType: ObjectType<EntityType> | DecoratorStorage.Entity,

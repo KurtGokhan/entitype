@@ -1,26 +1,28 @@
 import 'reflect-metadata';
-import { ObjectType } from '../fluent';
-import { PropertyExpression } from '../fluent';
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
-import { NavigationPropertyDecorator } from 'src/decorators';
+import { ObjectType, PropertyExpression } from '../fluent';
+import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { OneToOneDecorator } from 'src/decorators';
+import { resolvePropertyExpression } from 'src/fluent/property-selector';
 
 
-type OneToOneDecorator = {
-};
+export function OneToOne<EntityType, SelectType>(
+  foreignKeyEntity: ObjectType<EntityType>,
+  foreignKey: PropertyExpression<EntityType, SelectType>)
+  : OneToOneDecorator {
 
-export function OneToOne<EntityType, SelectType>(propertyType: ObjectType<EntityType>): NavigationPropertyDecorator<EntityType> {
 
-  let propertyDecorator = (options, target, propertyKey) => {
-    options = options || {};
-    let metadata = options.type || Reflect.getMetadata('design:type', target, propertyKey);
 
-    DecoratorStorage.addColumn(target.constructor, propertyKey, metadata);
+  let propertyDecorator = (target, propertyKey) => {
+    let type = Reflect.getMetadata('design:type', target, propertyKey);
+
+    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type);
+    column.isNavigationProperty = true;
+    column.foreignKey = {
+      entity: foreignKeyEntity,
+      column: resolvePropertyExpression(foreignKey, foreignKeyEntity)
+    };
   };
 
-  let retType = propertyDecorator.bind(null, null);
-  retType['type'] = function (type) {
-    return propertyDecorator.bind(null, { type });
-  };
 
-  return retType as NavigationPropertyDecorator<EntityType>;
+  return propertyDecorator;
 }

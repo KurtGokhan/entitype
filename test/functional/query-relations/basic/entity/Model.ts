@@ -1,5 +1,6 @@
 import { ChildModel } from './ChildModel';
 import { Column } from 'src/decorators/Column';
+import { OneToOne } from 'src/decorators/OneToOne';
 
 export class Model {
   @Column().type('int')
@@ -8,6 +9,9 @@ export class Model {
   @Column()
   name: string;
 
-  @Column()
+  @OneToOne(Model, x => x.child_id)
   child: ChildModel;
+
+  @Column()
+  child_id: number;
 }

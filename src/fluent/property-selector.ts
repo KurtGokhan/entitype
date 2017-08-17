@@ -5,10 +5,11 @@ import {
   ObjectType,
   PropertyMapGetter,
   DeepPropertyExpression,
-  PropertyMapExpression
+  PropertyMapExpression,
+  PropertyExpression
 } from './';
 import { SelectMapping } from '../command/command-types/SelectCommand';
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
 
 function createPropertySelector<EntityType>(entityType: ObjectType<EntityType>): PropertySelector<EntityType> {
@@ -46,8 +47,9 @@ function createDeepPropertySelectorInternal<EntityType>(
       get() { return getter; }
     });
 
-    let colEntity = DecoratorStorage.getEntity(column.type);
-    if (column.isNavigationProperty || colEntity) {
+    if (column.isNavigationProperty) {
+      let colEntity = DecoratorStorage.getEntity(column.type);
+
       createDeepPropertySelectorInternal(colEntity, colPath, getter);
     }
     else {
@@ -87,6 +89,14 @@ function getPropertyMapping(map: PropertyMapGetter): SelectMapping[] {
   return getPropertyMappingInner(map, []);
 }
 
+export function resolvePropertyExpression<EntityType, SelectType>(
+  expression: PropertyExpression<EntityType, SelectType>,
+  entityType: ObjectType<EntityType>): string {
+  let parameter = createPropertySelector(entityType);
+  let selectObject = <any>expression(parameter);
+  return selectObject;
+}
+
 export function resolveDeepPropertyExpression<EntityType, SelectType>(
   expression: DeepPropertyExpression<EntityType, SelectType>,
   entityType: ObjectType<EntityType>): PropertyPath {
@@ -100,7 +110,7 @@ export function resolvePropertyMapExpression<EntityType, SelectType>(
   entityType: ObjectType<EntityType>): SelectMapping[] {
 
   let parameter = createDeepPropertySelector(entityType);
-  let selectObject = expression(parameter);
+  let selectObject = <any>expression(parameter);
 
-  return getPropertyMapping(<any>selectObject);
+  return getPropertyMapping(selectObject);
 }

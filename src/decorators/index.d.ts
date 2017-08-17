@@ -27,8 +27,5 @@ export type ColumnOptions = {
 
 
 
-export type NavigationPropertyDecorator<EntityType> = PropertyDecorator & {
-  type(type: ObjectType<EntityType>): NavigationPropertyDecorator<EntityType>;
-  reference<SelectType>(expression?: PropertyExpression<EntityType, SelectType>): NavigationPropertyDecorator<EntityType>;
-};
 
+type OneToOneDecorator = PropertyDecorator;

@@ -1,4 +1,4 @@
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 import { Command } from '../command/Command';
 import { CommandNode } from '../command/CommandNode';
 import {

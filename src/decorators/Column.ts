@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { ColumnDecorator, ColumnOptions } from './';
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
+import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
 
-export function Column(options: ColumnOptions): ColumnDecorator {
+export function Column(options?: ColumnOptions): ColumnDecorator {
   options = options || {};
 
   let retType = (target, propertyKey) => {

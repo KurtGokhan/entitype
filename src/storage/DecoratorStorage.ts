@@ -21,9 +21,16 @@ export namespace DecoratorStorage {
     isNavigationProperty: boolean = false;
     isForeignKey: boolean = false;
 
+    foreignKey: ForeignKey;
+
     constructor(init?: Partial<Column>) {
       Object.assign(this, init);
     }
+  }
+
+  export class ForeignKey {
+    entity: Function;
+    column: string;
   }
 
   let targetStorage: Entity[] = [];
