@@ -53,10 +53,7 @@ export namespace DecoratorStorage {
 
 
   export function addColumn(parent: Function, columnName: string, metadataType: any, options: ColumnOptions): Column {
-    let type = Number;
-    if (metadataType) {
-      type = metadataType;
-    }
+    let type = metadataType;
 
     let entity = getEntity(parent) || addEntity(parent);
 
@@ -106,5 +103,42 @@ export namespace DecoratorStorage {
 
   export function updateEntityReferences(entity: Entity) {
     entity.columns.forEach(updateColumnReferences);
+    updateAllReferences();
+  }
+
+  export function updateAllReferences() {
+    targetStorage.forEach(entity => {
+      entity.columns.forEach(col => {
+        if (!col.foreignKey) return;
+        if (!col.type) {
+          // HACK: Due to the reflect-metadata bug in issue 12, in circular references
+          // Type cannot be retrieved. Find the type by searching the counter part of this FK
+
+          let fkCounterPart = DecoratorStorage.getForeignKeyCounterPart(col);
+
+          if (fkCounterPart)
+            col.type = fkCounterPart.parent.type;
+        }
+      });
+    });
+  }
+
+  export function getForeignKeyCounterPart(baseColumn: Column): Column {
+    let fk = baseColumn.foreignKey;
+    let baseEntity = getEntity(fk.owner);
+
+    for (let index = 0; index < targetStorage.length; index++) {
+      let entity = targetStorage[index];
+
+      for (let colIndex = 0; colIndex < entity.columns.length; colIndex++) {
+        let col = entity.columns[colIndex];
+        if (baseColumn === col || !col.foreignKey) continue;
+
+        let fkEntity = getEntity(col.foreignKey.owner);
+        if (fkEntity === baseEntity && col.foreignKey.column === fk.column)
+          return col;
+      }
+    }
+    return null;
   }
 }

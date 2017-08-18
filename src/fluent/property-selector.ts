@@ -44,16 +44,18 @@ function createDeepPropertySelectorInternal<EntityType>(
     let getter = <any>(() => colPath);
 
     Object.defineProperty(selector, column.name, {
-      get() { return getter; }
+      get() {
+
+        if (column.isNavigationProperty) {
+          let colEntity = DecoratorStorage.getEntity(column.type);
+
+          createDeepPropertySelectorInternal(colEntity, colPath, getter);
+        }
+
+        return getter;
+      }
     });
 
-    if (column.isNavigationProperty) {
-      let colEntity = DecoratorStorage.getEntity(column.type);
-
-      createDeepPropertySelectorInternal(colEntity, colPath, getter);
-    }
-    else {
-    }
   }
 
   return <any>Object.freeze(selector);
