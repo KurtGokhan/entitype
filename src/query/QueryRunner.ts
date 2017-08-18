@@ -16,31 +16,21 @@ import { PropertyPath } from 'src/fluent';
 import { JoinPath } from 'src/algorithms/data-structures/JoinPath';
 
 export class QueryRunner {
-  includes: IncludeCommand[];
-  wheres: WhereCommand[];
-  orders: OrderByCommand[];
+  private includes: IncludeCommand[];
+  private wheres: WhereCommand[];
+  private orders: OrderByCommand[];
 
-  select: SelectCommand;
-  isQuery: QueryCommand;
-  skip: SkipCommand;
-  take: TakeCommand;
-  count: CountCommand;
-  first: FirstCommand;
+  private select: SelectCommand;
+  private isQuery: QueryCommand;
+  private skip: SkipCommand;
+  private take: TakeCommand;
+  private count: CountCommand;
+  private first: FirstCommand;
 
-  whereGroups: WhereCommand[][];
-
-
-  private joins: {
-    leftEntity: DecoratorStorage.Entity,
-    rightEntity: DecoratorStorage.Entity,
-    lefColumn: string,
-    rightColum: string
-  }[] = [];
-  private typeAliases: { type: DecoratorStorage.Entity, alias: string }[] = [];
-  private columnAliases: { column: DecoratorStorage.Column, alias: string }[] = [];
+  private whereGroups: WhereCommand[][];
 
 
-  joinPathRoot: JoinPath;
+  private joinPathRoot: JoinPath;
 
   constructor(private commandChain: Command[], private entity: DecoratorStorage.Entity) {
     this.resolveCommands();
@@ -94,10 +84,13 @@ export class QueryRunner {
     return col;
   }
 
-  protected escapeAlias(alias: string) {
-    return '[' + alias + ']';
-  }
 
+  /**
+   * Creates a join tree so that it can be used easily in the query
+   *
+   * @private
+   * @memberof QueryRunner
+   */
   private resolveJoins() {
     let paths: PropertyPath[] = [];
     if (this.select)
@@ -107,7 +100,6 @@ export class QueryRunner {
 
     paths = paths.map(x => x.slice(0, x.length - 1));
     paths.push(...this.includes.map(x => x.propertyPath));
-
 
 
     this.joinPathRoot = { entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {} };
@@ -135,10 +127,63 @@ export class QueryRunner {
         currentPathNode = pathNode;
       });
     });
-
-
   }
 
+  private resolveFrom(): string {
+    let tokens = this.resolveFromBranch(this.joinPathRoot);
+    return tokens.filter(x => !!x).join(' ');
+  }
+
+  private resolveFromBranch(branch: JoinPath): string[] {
+    let tokens: string[] = [];
+
+    if (branch.parent) {
+      tokens.push('LEFT JOIN');
+      tokens.push(branch.entity.dbName);
+      tokens.push(this.getTableAlias(branch.path));
+      tokens.push('ON');
+
+      let fk = branch.column.foreignKey;
+      let owner = branch.parent;
+      let owned = branch;
+      if (fk.owner === branch.entity.type) {
+        owner = branch;
+        owned = branch.parent;
+      }
+
+      let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
+      let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
+
+      tokens.push(owner.entity.dbName + '.' + foreignKeyColumn.dbName);
+      tokens.push('=');
+      tokens.push(owned.entity.dbName + '.' + fkTargetPK.dbName);
+    }
+    else {
+      tokens.push(branch.entity.dbName);
+    }
+
+    branch.childs.forEach(subBranch => {
+      tokens.push(...this.resolveFromBranch(subBranch));
+    });
+    return tokens;
+  }
+
+  private getTableAlias(path: PropertyPath) {
+    return '';
+  }
+
+
+  protected escapeAlias(alias: string) {
+    return '[' + alias + ']';
+  }
+
+
+  /**
+   * Run the commands and get the result
+   *
+   * @returns
+   * @memberof QueryRunner
+   */
   run() {
 
     let tokens: string[] = [];
@@ -208,49 +253,14 @@ export class QueryRunner {
     return this.runQuery(query);
   }
 
-  resolveFrom(): string {
-    let tokens = this.resolveFromBranch(this.joinPathRoot);
-    return tokens.filter(x => !!x).join(' ');
-  }
 
-  resolveFromBranch(branch: JoinPath): string[] {
-    let tokens: string[] = [];
-
-    if (branch.parent) {
-      tokens.push('LEFT JOIN');
-      tokens.push(branch.entity.dbName);
-      tokens.push(this.getTableAlias(branch.path));
-      tokens.push('ON');
-
-      let fk = branch.column.foreignKey;
-      let owner = branch.parent;
-      let owned = branch;
-      if (fk.owner === branch.entity.type) {
-        owner = branch;
-        owned = branch.parent;
-      }
-
-      let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
-      let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
-
-      tokens.push(owner.entity.dbName + '.' + foreignKeyColumn.dbName);
-      tokens.push('=');
-      tokens.push(owned.entity.dbName + '.' + fkTargetPK.dbName);
-    }
-    else {
-      tokens.push(branch.entity.dbName);
-    }
-
-    branch.childs.forEach(subBranch => {
-      tokens.push(...this.resolveFromBranch(subBranch));
-    });
-    return tokens;
-  }
-
-  getTableAlias(path: PropertyPath) {
-    return '';
-  }
-
+  /**
+   * Run a SQL string against the database
+   *
+   * @param {string} sql
+   * @returns
+   * @memberof QueryRunner
+   */
   runQuery(sql: string) {
     return Promise.resolve([]);
   }

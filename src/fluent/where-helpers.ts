@@ -11,7 +11,7 @@ export function createWhereExpressionQueryBase<EntityType>(
   let entity = DecoratorStorage.getEntity(entityType as any);
   let columns = entity.columns;
 
-  let parameter: WhereSelector<EntityType> = <any>{};
+  let parameter = {};
   for (let index = 0; index < columns.length; index++) {
     let column = columns[index];
 
@@ -20,7 +20,7 @@ export function createWhereExpressionQueryBase<EntityType>(
     parameter[column.name] = new WherePropertyBase<EntityType, any>(propPath, column, entity);
   }
 
-  return parameter;
+  return parameter as WhereSelector<EntityType>;
 }
 
 class WherePropertyBase<EntityType, PropertyType> implements WhereProperty<EntityType, PropertyType> {

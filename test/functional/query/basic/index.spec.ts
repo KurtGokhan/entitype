@@ -8,9 +8,6 @@ describe('query > basic', async () => {
     let ctx = new DbSet(Model);
     let loadModelQuery = ctx.toList.query;
     expect(loadModelQuery).to.be.equalIgnoreCase('SELECT * FROM model');
-
-    let results = await ctx.toList();
-    expect(results).to.be.eql([]);
   });
 
 
