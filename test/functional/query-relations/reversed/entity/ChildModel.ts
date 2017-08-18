@@ -6,4 +6,7 @@ export class ChildModel {
 
   @Column()
   name: string;
+
+  @Column()
+  parent_id: number;
 }

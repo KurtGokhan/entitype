@@ -45,8 +45,8 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return runner.run();
   }
 
-  include(): IIncludable<EntityType> {
-    return this.rootCommand.include();
+  include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType> {
+    return this.rootCommand.include(expression);
   }
   groupBy(): IGrouped<EntityType> {
     return this.rootCommand.groupBy();

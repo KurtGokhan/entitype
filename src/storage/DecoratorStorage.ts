@@ -1,3 +1,7 @@
+import { ColumnOptions } from 'src/decorators';
+import { PropertyExpression, ObjectType } from 'src/fluent';
+import { resolvePropertyExpression } from 'src/fluent/property-selector';
+
 export namespace DecoratorStorage {
   export class Entity {
     type: Function;
@@ -23,14 +27,16 @@ export namespace DecoratorStorage {
 
     foreignKey: ForeignKey;
 
+    options: ColumnOptions;
+
     constructor(init?: Partial<Column>) {
       Object.assign(this, init);
     }
   }
 
   export class ForeignKey {
-    entity: Function;
-    column: string;
+    owner: ObjectType<any>;
+    readonly column: string;
   }
 
   let targetStorage: Entity[] = [];
@@ -46,7 +52,7 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addColumn(parent: Function, columnName: string, metadataType: any): Column {
+  export function addColumn(parent: Function, columnName: string, metadataType: any, options: ColumnOptions): Column {
     let type = Number;
     if (metadataType) {
       type = metadataType;
@@ -58,12 +64,14 @@ export namespace DecoratorStorage {
       dbName: columnName.toString(),
       name: columnName,
       parent: entity,
-      type: type
+      type: type,
+      options: options
     });
 
     if (!entity.columns.find(x => x.name === column.name))
       entity.columns.push(column);
 
+    updateEntityReferences(column.parent);
     return column;
   }
 
@@ -77,5 +85,26 @@ export namespace DecoratorStorage {
         return entity;
     }
     return null;
+  }
+
+
+  /**
+   * Update the owning and referencing entities to this column if there is any
+   * Should be called after a navigation property is registered
+   *
+   * @export
+   * @param {Column} column
+   */
+  export function updateColumnReferences(column: Column) {
+    if (column.foreignKey) {
+      let entity = getEntity(column.foreignKey.owner);
+      let col = entity.columns.find(x => x.name === column.foreignKey.column);
+      if (col)
+        col.isForeignKey = true;
+    }
+  }
+
+  export function updateEntityReferences(entity: Entity) {
+    entity.columns.forEach(updateColumnReferences);
   }
 }

@@ -26,6 +26,7 @@ import { SelectCommand } from './command-types/SelectCommand';
 import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
+import { IncludeCommand } from 'src/command/command-types/IncludeCommand';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
   get or(): IWhereable<EntityType> {
@@ -85,9 +86,13 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.callback(commands.map(x => x.command).reverse());
   }
 
-  include(): IIncludable<EntityType> {
-    throw new Error('Method not implemented.');
+  include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType> {
+    let include = new IncludeCommand();
+    include.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
+
+    return this.createNextCommand(include);
   }
+
   groupBy(): IGrouped<EntityType> {
     throw new Error('Method not implemented.');
   }

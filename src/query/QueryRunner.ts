@@ -13,6 +13,7 @@ import { IncludeCommand } from 'src/command/command-types/IncludeCommand';
 import { SkipCommand } from 'src/command/command-types/SkipCommand';
 import { OrCommand } from 'src/command/command-types/OrCommand';
 import { PropertyPath } from 'src/fluent';
+import { JoinPath } from 'src/algorithms/data-structures/JoinPath';
 
 export class QueryRunner {
   includes: IncludeCommand[];
@@ -25,6 +26,7 @@ export class QueryRunner {
   take: TakeCommand;
   count: CountCommand;
   first: FirstCommand;
+
   whereGroups: WhereCommand[][];
 
 
@@ -37,8 +39,12 @@ export class QueryRunner {
   private typeAliases: { type: DecoratorStorage.Entity, alias: string }[] = [];
   private columnAliases: { column: DecoratorStorage.Column, alias: string }[] = [];
 
+
+  joinPathRoot: JoinPath;
+
   constructor(private commandChain: Command[], private entity: DecoratorStorage.Entity) {
     this.resolveCommands();
+    this.resolveJoins();
   }
 
   private resolveCommands() {
@@ -88,19 +94,48 @@ export class QueryRunner {
     return col;
   }
 
-
   protected escapeAlias(alias: string) {
     return '[' + alias + ']';
   }
 
   private resolveJoins() {
-    let paths = [];
+    let paths: PropertyPath[] = [];
     if (this.select)
-      paths.push(...this.select.columns.filter(x => x.path.length > 1));
+      paths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1));
+    paths.push(...this.wheres.map(x => x.propertyPath).filter(x => x.length > 1));
+    paths.push(...this.orders.map(x => x.propertyPath).filter(x => x.length > 1));
 
-    paths.push(...this.wheres.filter(x => x.propertyPath.length > 1));
+    paths = paths.map(x => x.slice(0, x.length - 1));
     paths.push(...this.includes.map(x => x.propertyPath));
-    paths.push(...this.orders.filter(x => x.propertyPath.length > 1));
+
+
+
+    this.joinPathRoot = { entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {} };
+
+    paths.forEach(path => {
+      let currentPathNode = this.joinPathRoot;
+
+      path.forEach(node => {
+        let pathNode = currentPathNode.childDic[node];
+
+        if (!pathNode) {
+          let col = currentPathNode.entity.columns.find(x => x.name === node);
+          let colEntity = DecoratorStorage.getEntity(col.type);
+          pathNode = currentPathNode.childDic[node] = {
+            path: currentPathNode.path.concat(node),
+            pathPart: node,
+            entity: colEntity,
+            column: col,
+            parent: currentPathNode,
+            childs: [],
+            childDic: {}
+          };
+          currentPathNode.childs.push(pathNode);
+        }
+        currentPathNode = pathNode;
+      });
+    });
+
 
   }
 
@@ -126,8 +161,9 @@ export class QueryRunner {
     tokens.push(limitQuery);
     tokens.push(columnsQuery);
     tokens.push('FROM');
-    tokens.push(this.entity.dbName);
 
+    let from = this.resolveFrom();
+    tokens.push(from);
 
     if (this.whereGroups.length && this.whereGroups[0].length) {
       tokens.push('WHERE');
@@ -170,6 +206,49 @@ export class QueryRunner {
 
     if (this.isQuery) return query;
     return this.runQuery(query);
+  }
+
+  resolveFrom(): string {
+    let tokens = this.resolveFromBranch(this.joinPathRoot);
+    return tokens.filter(x => !!x).join(' ');
+  }
+
+  resolveFromBranch(branch: JoinPath): string[] {
+    let tokens: string[] = [];
+
+    if (branch.parent) {
+      tokens.push('LEFT JOIN');
+      tokens.push(branch.entity.dbName);
+      tokens.push(this.getTableAlias(branch.path));
+      tokens.push('ON');
+
+      let fk = branch.column.foreignKey;
+      let owner = branch.parent;
+      let owned = branch;
+      if (fk.owner === branch.entity.type) {
+        owner = branch;
+        owned = branch.parent;
+      }
+
+      let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
+      let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
+
+      tokens.push(owner.entity.dbName + '.' + foreignKeyColumn.dbName);
+      tokens.push('=');
+      tokens.push(owned.entity.dbName + '.' + fkTargetPK.dbName);
+    }
+    else {
+      tokens.push(branch.entity.dbName);
+    }
+
+    branch.childs.forEach(subBranch => {
+      tokens.push(...this.resolveFromBranch(subBranch));
+    });
+    return tokens;
+  }
+
+  getTableAlias(path: PropertyPath) {
+    return '';
   }
 
   runQuery(sql: string) {

@@ -15,12 +15,16 @@ export function OneToOne<EntityType, SelectType>(
   let propertyDecorator = (target, propertyKey) => {
     let type = Reflect.getMetadata('design:type', target, propertyKey);
 
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type);
+    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type, {});
     column.isNavigationProperty = true;
     column.foreignKey = {
-      entity: foreignKeyEntity,
-      column: resolvePropertyExpression(foreignKey, foreignKeyEntity)
+      owner: foreignKeyEntity,
+      get column() {
+        return resolvePropertyExpression(foreignKey, foreignKeyEntity);
+      }
     };
+
+    DecoratorStorage.updateColumnReferences(column);
   };
 
 
