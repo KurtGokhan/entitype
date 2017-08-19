@@ -16,6 +16,7 @@ import { PropertyPath } from 'src/fluent';
 import { JoinPath } from 'src/algorithms/data-structures/JoinPath';
 
 export class QueryRunner {
+
   private includes: IncludeCommand[];
   private wheres: WhereCommand[];
   private orders: OrderByCommand[];
@@ -129,10 +130,44 @@ export class QueryRunner {
     });
   }
 
-  private resolveFrom(): string {
-    let tokens = this.resolveFromBranch(this.joinPathRoot);
-    return tokens.filter(x => !!x).join(' ');
+  private resolveFrom(): string[] {
+    return this.resolveFromBranch(this.joinPathRoot);
   }
+  resolveWhere(): string[] {
+    let tokens: string[] = [];
+    if (this.whereGroups.length && this.whereGroups[0].length) {
+      tokens.push('WHERE');
+
+      for (let index = 0; index < this.whereGroups.length; index++) {
+        let group = this.whereGroups[index];
+
+        if (index > 0) tokens.push('OR');
+
+        tokens.push('(');
+        for (let cmdIndex = 0; cmdIndex < group.length; cmdIndex++) {
+          let cmd = group[cmdIndex];
+
+          if (cmdIndex > 0) tokens.push('AND');
+
+
+          let prop = cmd.propertyPath[cmd.propertyPath.length - 1];
+          if (cmd.propertyPath.length > 1) {
+            let entity = this.getColumnInfoForPropertyPath(cmd.propertyPath).parent;
+            prop = entity.dbName + '.' + prop;
+          }
+          let whereQuery = prop + cmd.condition;
+
+          tokens.push('(');
+          if (cmd.negated) tokens.push('NOT');
+          tokens.push(whereQuery);
+          tokens.push(')');
+        }
+        tokens.push(')');
+      }
+    }
+    return tokens;
+  }
+
 
   private resolveFromBranch(branch: JoinPath): string[] {
     let tokens: string[] = [];
@@ -207,33 +242,8 @@ export class QueryRunner {
     tokens.push(columnsQuery);
     tokens.push('FROM');
 
-    let from = this.resolveFrom();
-    tokens.push(from);
-
-    if (this.whereGroups.length && this.whereGroups[0].length) {
-      tokens.push('WHERE');
-
-      for (let index = 0; index < this.whereGroups.length; index++) {
-        let group = this.whereGroups[index];
-
-        if (index > 0) tokens.push('OR');
-
-        tokens.push('(');
-        for (let cmdIndex = 0; cmdIndex < group.length; cmdIndex++) {
-          let cmd = group[cmdIndex];
-
-          if (cmdIndex > 0) tokens.push('AND');
-
-          let whereQuery = cmd.propertyPath + cmd.condition;
-
-          tokens.push('(');
-          if (cmd.negated) tokens.push('NOT');
-          tokens.push(whereQuery);
-          tokens.push(')');
-        }
-        tokens.push(')');
-      }
-    }
+    tokens.push(...this.resolveFrom());
+    tokens.push(...this.resolveWhere());
 
     if (this.orders.length) {
       tokens.push('ORDER BY');

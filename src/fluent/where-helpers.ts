@@ -15,7 +15,7 @@ export function createWhereExpressionQueryBase<EntityType>(
   for (let index = 0; index < columns.length; index++) {
     let column = columns[index];
 
-    let propPath = path.slice().concat(column.name);
+    let propPath = path.concat(column.name);
 
     parameter[column.name] = new WherePropertyBase<EntityType, any>(propPath, column, entity);
   }
