@@ -20,6 +20,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "dotenv": "^4.0.0",
+    "mysql2": "^1.4.1",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -43,7 +44,7 @@
   "scripts": {
     "test": "nyc mocha & npm run coverage:show",
     "coverage:show": "start ./tmp/lcov-report/index.html",
-    "test:debug": "mocha --inspect=5858 --inspect-brk",
+    "test:debug": "mocha --inspect=25650 --inspect-brk",
     "compile": "tsc"
   }
 }

@@ -14,7 +14,7 @@
         "run",
         "test:debug"
       ],
-      "port": 5858,
+      "port": 25650,
       "env": {
         "NODE_ENV": "test"
       },
@@ -27,9 +27,9 @@
       "request": "attach",
       "showAsyncStacks": true,
       "smartStep": true,
-      "port": 5858,
+      "port": 25650,
       "name": "Attach Program",
-      "address": "localhost:5858"
+      "address": "localhost:25650"
     }
   ]
 }
