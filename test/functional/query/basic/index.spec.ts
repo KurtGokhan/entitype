@@ -1,6 +1,8 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
 import { expect } from 'chai';
+import { DbSet } from 'src/collections/DbSet';
+
+import { Context } from './entity/Context';
+import { Model } from './entity/Model';
 
 describe('query > basic', async () => {
 
@@ -47,5 +49,11 @@ describe('query > basic', async () => {
     let listNode = ctx.first;
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase('SELECT TOP 1 * FROM model');
+  });
+
+  it('should be able to work with context', async () => {
+    let ctx = new Context();
+    let loadModelQuery = ctx.models.toList.query;
+    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT * FROM model');
   });
 });

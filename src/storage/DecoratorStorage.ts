@@ -39,7 +39,30 @@ export namespace DecoratorStorage {
     readonly column: string;
   }
 
+  export class Context {
+    name: string;
+    type: Function;
+    collections: DbCollection[] = [];
+
+    public constructor(init?: Partial<Context>) {
+      Object.assign(this, init);
+    }
+  }
+
+  export class DbCollection {
+    context: Context;
+    type: Function;
+    name: string;
+    entity: Entity;
+
+    public constructor(init?: Partial<DbCollection>) {
+      Object.assign(this, init);
+    }
+  }
+
+
   let targetStorage: Entity[] = [];
+  let contextStorage: Context[] = [];
 
   export function addEntity(entityType: Function): Entity {
     let entity = new Entity({
@@ -72,6 +95,31 @@ export namespace DecoratorStorage {
     return column;
   }
 
+
+  export function addDbCollection(parent: Function, columnName: string, type: ObjectType<any>): DbCollection {
+    let context = getContext(parent) || addContext(parent);
+    let entity = getEntity(type);
+
+    if (!entity) {
+      // TODO: probably an error, log error
+    }
+
+    let collection = new DbCollection({
+      name: columnName,
+      context: context,
+      type: type
+    });
+
+    if (!context.collections.find(x => x.name === collection.name))
+      context.collections.push(collection);
+    else {
+      // TODO: probably an error, log error
+    }
+
+    return collection;
+  }
+
+
   export function getEntity(type: Function | Entity): Entity {
     if (typeof type === 'object')
       return type;
@@ -80,6 +128,28 @@ export namespace DecoratorStorage {
       let entity = targetStorage[index];
       if (entity.type === type)
         return entity;
+    }
+    return null;
+  }
+
+
+  export function addContext(contextType: Function): Context {
+    let ctx = new Context({
+      name: contextType.name,
+      type: contextType
+    });
+    contextStorage.push(ctx);
+    return ctx;
+  }
+
+  export function getContext(type: Function | Context): Context {
+    if (typeof type === 'object' && type instanceof Context)
+      return type;
+
+    for (let index = 0; index < contextStorage.length; index++) {
+      let context = contextStorage[index];
+      if (context.type === type)
+        return context;
     }
     return null;
   }

@@ -26,6 +26,5 @@ export type ColumnOptions = {
 };
 
 
-
-
-type OneToOneDecorator = PropertyDecorator;
+export type DbCollectionDecorator = PropertyDecorator;
+export type OneToOneDecorator = PropertyDecorator;
