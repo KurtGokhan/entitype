@@ -8,7 +8,7 @@ describe('query > one-to-one > where > join', async () => {
   it('should be able to filter from owned side', async () => {
     let ctx = new DbSet(Model);
     let loadModelQuery = ctx
-      .where(x => x.child.asEntity().name.equals('childname'))
+      .where(x => x.child.name().equals('childname'))
       .select(x => x.name)
       .toList.query;
 

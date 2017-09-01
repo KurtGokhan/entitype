@@ -9,4 +9,7 @@ export class Model {
 
   @Column()
   active: boolean;
+
+  @Column()
+  date: Date;
 }

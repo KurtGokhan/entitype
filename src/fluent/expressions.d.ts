@@ -30,16 +30,16 @@ export declare type DeepPropertySelector<Entity> = {
 export declare type PropertyMapExpression<Entity, SelectType> = (expression: DeepPropertySelector<Entity>) => SelectType;
 
 
-export declare type WhereExpression<Entity> = (expression: WhereSelector<Entity>) => WhereCommand;
+export declare type WhereExpression<Entity> = (expression: WhereProperty<Entity>) => WhereCommand;
 
 
-export declare type WhereSelector<Entity> = {
-  [P in keyof Entity]: WhereProperty<Entity, Entity[P]>;
-};
+export declare type WhereProperty<Entity> = {
+  [P in keyof Entity]: WhereProperty<Entity[P]>;
+} & { (): WhereConditionBuilder<Entity> };
 
 
-export declare type WhereProperty<Entity, PropertyType> = {
-  not: WhereProperty<Entity, PropertyType>;
+export declare type WhereConditionBuilder<PropertyType> = {
+  not: WhereConditionBuilder<PropertyType>;
 
   equals(value: PropertyType): WhereCommand;
   gt(value: PropertyType): WhereCommand;
@@ -50,6 +50,4 @@ export declare type WhereProperty<Entity, PropertyType> = {
   like(value: string): WhereCommand;
   isNull(): WhereCommand;
   in(array: PropertyType[]): WhereCommand;
-
-  asEntity(): WhereSelector<PropertyType>;
 };

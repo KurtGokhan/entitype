@@ -1,38 +1,62 @@
-import { valueAsDbString } from '../common/dbUtil';
-import { WhereCommand } from '../command/command-types/WhereCommand';
-import { ObjectType, WhereProperty, WhereSelector } from './';
+import { UnknownPropertyError } from 'src/errors/UnknownPropertyError';
 import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+
+import { WhereCommand } from '../command/command-types/WhereCommand';
+import { valueAsDbString } from '../common/dbUtil';
+import { ObjectType, WhereConditionBuilder, WhereProperty } from './';
 
 export function createWhereExpressionQueryBase<EntityType>(
   entityType: ObjectType<EntityType> | DecoratorStorage.Entity,
-  path: string[] = []):
-  WhereSelector<EntityType> {
+  path: string[] = [],
+  columnOfEntity: DecoratorStorage.Column = null
+):
+  WhereProperty<EntityType> {
+
+  let parameter = () => new WherePropertyBase<any>(path);
 
   let entity = DecoratorStorage.getEntity(entityType as any);
-  let columns = entity.columns;
 
-  let parameter = {};
-  for (let index = 0; index < columns.length; index++) {
-    let column = columns[index];
+  let props = {};
+  let handler = {
+    get: function (target, name) {
+      if (name in props)
+        return props[name];
+      throw new UnknownPropertyError(name);
+    }
+  };
 
-    let propPath = path.concat(column.name);
+  let proxy = new Proxy(parameter, handler);
 
-    parameter[column.name] = new WherePropertyBase<EntityType, any>(propPath, column, entity);
+
+  if (entity || (columnOfEntity && columnOfEntity.isNavigationProperty)) {
+    let columns = entity.columns;
+
+    for (let index = 0; index < columns.length; index++) {
+      let column = columns[index];
+
+      let propPath = path.concat(column.name);
+
+      Object.defineProperty(props, column.name, {
+        get() {
+          let colEntity = DecoratorStorage.getEntity(column.type);
+
+          return createWhereExpressionQueryBase<any>(colEntity, propPath);
+        }
+      });
+    }
   }
 
-  return parameter as WhereSelector<EntityType>;
+  return proxy;
 }
 
-class WherePropertyBase<EntityType, PropertyType> implements WhereProperty<EntityType, PropertyType> {
+class WherePropertyBase<PropertyType> implements WhereConditionBuilder<PropertyType> {
 
-  get not(): WhereProperty<EntityType, PropertyType> {
-    return new WherePropertyBase(this.path, this.column, this.entity, !this.negated);
+  get not(): WhereConditionBuilder<PropertyType> {
+    return new WherePropertyBase(this.path, !this.negated);
   }
 
   constructor(
     private path: string[],
-    private column: DecoratorStorage.Column,
-    private entity: DecoratorStorage.Entity,
     private negated: boolean = false) {
   }
 
@@ -78,14 +102,5 @@ class WherePropertyBase<EntityType, PropertyType> implements WhereProperty<Entit
 
   in(array: PropertyType[]): WhereCommand {
     return this.createWhereCommand(' IN ' + '(' + array.map(x => valueAsDbString(x)).join(',') + ')');
-  }
-
-  asEntity(): WhereSelector<PropertyType> {
-    let entity = DecoratorStorage.getEntity(this.column.type);
-
-    if (!this.column.isNavigationProperty)
-      throw Error('Only navigation properties can be queried as entity.');
-
-    return createWhereExpressionQueryBase<PropertyType>(entity, this.path);
   }
 }

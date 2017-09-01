@@ -6,7 +6,7 @@ describe('query > where > with count', async () => {
   it('should be able to filter selection and take count', async () => {
     let ctx = new DbSet(Model);
     let listNode = ctx
-      .where(x => x.name.isNull())
+      .where(x => x.name().isNull())
       .count;
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase(`SELECT Count(*) FROM model WHERE ( ( name IS NULL ) )`);
@@ -15,7 +15,7 @@ describe('query > where > with count', async () => {
   it('should be able to filter selection with not and take count', async () => {
     let ctx = new DbSet(Model);
     let listNode = ctx
-      .where(x => x.name.not.isNull())
+      .where(x => x.name().not.isNull())
       .count;
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase(`SELECT Count(*) FROM model WHERE ( ( NOT name IS NULL ) )`);

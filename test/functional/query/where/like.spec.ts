@@ -6,7 +6,7 @@ describe('query > where > like', async () => {
   it('should be able to filter selection', async () => {
     let ctx = new DbSet(Model);
     let listNode = ctx
-      .where(x => x.name.like('%name%'))
+      .where(x => x.name().like('%name%'))
       .toList;
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( ( name like '%name%' ) )`);
@@ -15,7 +15,7 @@ describe('query > where > like', async () => {
   it('should be able to filter selection with not', async () => {
     let ctx = new DbSet(Model);
     let listNode = ctx
-      .where(x => x.name.not.like('%name%'))
+      .where(x => x.name().not.like('%name%'))
       .toList;
     let query = listNode.query;
     expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( ( NOT name like '%name%' ) )`);
