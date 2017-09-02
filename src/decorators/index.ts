@@ -1,5 +1,7 @@
-import { PropertyExpression } from '../fluent';
-import { ObjectType } from "src/fluent/expressions";
+export * from './Column';
+export * from './DbCollection';
+export * from './Entity';
+export * from './OneToOne';
 
 export type ColumnDecorator = PropertyDecorator & ColumnDecoratorBuilder;
 
@@ -12,7 +14,7 @@ export type ColumnDecoratorBuilder = {
   length(value: number | 'max' | undefined): ColumnDecorator;
   primaryKey(generated?: boolean): ColumnDecorator;
   index(value?: boolean): ColumnDecorator;
-}
+};
 
 export type ColumnOptions = {
   type?: string;
