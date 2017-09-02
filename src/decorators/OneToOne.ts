@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { ObjectType, PropertyExpression } from '../fluent';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
-import { OneToOneDecorator } from 'src/decorators';
-import { resolvePropertyExpression } from 'src/fluent/property-selector';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { OneToOneDecorator } from '../decorators';
+import { resolvePropertyExpression } from '../fluent/property-selector';
 
 
 export function OneToOne<EntityType, SelectType>(

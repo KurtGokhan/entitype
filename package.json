@@ -50,6 +50,6 @@
     "test:debug": "mocha --inspect=25650 --inspect-brk",
     "compile": "tsc"
   },
-  "main": "dist/entitype.js",
+  "main": "./dist/entitype.js",
   "typings": "./dist/entitype.d.ts"
 }

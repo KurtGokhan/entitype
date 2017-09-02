@@ -14,13 +14,15 @@
     "noImplicitReturns": true,
     "stripInternal": true,
     "pretty": true,
-    "baseUrl": "./"
+    "baseUrl": "."
   },
   "exclude": [
+    "test",
     "tmp",
     "temp",
     "build",
     "dist",
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

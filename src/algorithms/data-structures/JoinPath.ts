@@ -1,6 +1,6 @@
 
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
-import { PropertyPath } from 'src/fluent';
+import { DecoratorStorage } from '../../storage/DecoratorStorage';
+import { PropertyPath } from '../../fluent';
 
 export class JoinPath {
   path: PropertyPath;

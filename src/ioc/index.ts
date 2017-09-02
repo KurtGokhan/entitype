@@ -1,3 +1,4 @@
+import { ConnectionOptions } from '../configuration/ConnectionOptions';
 import { Container } from 'inversify';
 export * from './driver-decorator';
 
@@ -8,7 +9,7 @@ export const ADAPTER_TYPES = {
 };
 
 export interface DriverAdapter {
-  runQuery(query: string): Promise<any>;
+  runQuery(query: string, options: string | ConnectionOptions): Promise<any>;
 }
 
 export interface LoggerAdapter {

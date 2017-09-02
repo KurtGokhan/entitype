@@ -1,4 +1,4 @@
-import { OrCommand } from 'src/command/command-types/OrCommand';
+import { OrCommand } from '../command/command-types/OrCommand';
 import {
   ObjectType,
   IFilteredFilterable,
@@ -26,7 +26,7 @@ import { SelectCommand } from './command-types/SelectCommand';
 import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
-import { IncludeCommand } from 'src/command/command-types/IncludeCommand';
+import { IncludeCommand } from '../command/command-types/IncludeCommand';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
   get or(): IWhereable<EntityType> {

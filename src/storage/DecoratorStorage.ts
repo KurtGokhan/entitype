@@ -1,6 +1,6 @@
-import { ColumnOptions } from 'src/decorators';
-import { PropertyExpression, ObjectType } from 'src/fluent';
-import { resolvePropertyExpression } from 'src/fluent/property-selector';
+import { ColumnOptions } from '../decorators';
+import { PropertyExpression, ObjectType } from '../fluent';
+import { resolvePropertyExpression } from '../fluent/property-selector';
 
 export namespace DecoratorStorage {
   export class Entity {

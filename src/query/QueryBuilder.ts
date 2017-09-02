@@ -1,8 +1,8 @@
-import { JoinPath } from 'src/algorithms/data-structures/JoinPath';
-import { IncludeCommand } from 'src/command/command-types/IncludeCommand';
-import { SkipCommand } from 'src/command/command-types/SkipCommand';
-import { PropertyPath } from 'src/fluent';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { JoinPath } from '../algorithms/data-structures/JoinPath';
+import { IncludeCommand } from '../command/command-types/IncludeCommand';
+import { SkipCommand } from '../command/command-types/SkipCommand';
+import { PropertyPath } from '../fluent';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 import { Command } from '../command/Command';
 import { CountCommand } from '../command/command-types/CountCommand';
@@ -174,7 +174,6 @@ export class QueryBuilder {
     if (branch.parent) {
       tokens.push('LEFT JOIN');
       tokens.push(branch.entity.dbName);
-      tokens.push(this.getTableAlias(branch.path));
       tokens.push('ON');
 
       let fk = branch.column.foreignKey;
@@ -208,7 +207,7 @@ export class QueryBuilder {
 
 
   protected escapeAlias(alias: string) {
-    return '[' + alias + ']';
+    return '"' + alias + '"';
   }
 
 

@@ -9,7 +9,7 @@ import {
   PropertyExpression
 } from './';
 import { SelectMapping } from '../command/command-types/SelectCommand';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 function createPropertySelector<EntityType>(entityType: ObjectType<EntityType>): PropertySelector<EntityType> {

@@ -1,5 +1,5 @@
-import { UnknownPropertyError } from 'src/errors/UnknownPropertyError';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { UnknownPropertyError } from '../errors/UnknownPropertyError';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { valueAsDbString } from '../common/dbUtil';

@@ -1,13 +1,13 @@
 import { DriverAdapter } from '../ioc';
 import { ADAPTER_TYPES } from '../ioc';
 import { container } from '../ioc';
-import { QueryBuilder } from 'src/query/QueryBuilder';
-import { Command } from 'src/command/Command';
-import { QueryCommand } from 'src/command/command-types/QueryCommand';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
-import { CommandType } from 'src/command/CommandType';
+import { QueryBuilder } from '../query/QueryBuilder';
+import { Command } from '../command/Command';
+import { QueryCommand } from '../command/command-types/QueryCommand';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { CommandType } from '../command/CommandType';
 
-export class QueryRunner {
+export class CommandRunner {
   private isQuery: QueryCommand;
   private driver: DriverAdapter;
 
@@ -37,6 +37,6 @@ export class QueryRunner {
    * @memberof QueryRunner
    */
   runQuery(sql: string) {
-    return this.driver.runQuery(sql);
+    return this.driver.runQuery(sql, null);
   }
 }

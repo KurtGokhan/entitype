@@ -1,4 +1,4 @@
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { Command } from '../command/Command';
 import { CommandNode } from '../command/CommandNode';
 import {
@@ -15,7 +15,7 @@ import {
   PropertyMapExpression,
   WhereExpression,
 } from '../fluent';
-import { QueryRunner } from '../query/QueryRunner';
+import { CommandRunner } from '../query/CommandRunner';
 
 export class DbSet<EntityType> implements IQueryable<EntityType> {
 
@@ -41,7 +41,7 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
   }
 
   private runCommandChain(commands: Command[]) {
-    let runner: QueryRunner = new QueryRunner(commands, this.entity);
+    let runner: CommandRunner = new CommandRunner(commands, this.entity);
     return runner.run();
   }
 

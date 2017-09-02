@@ -1,6 +1,6 @@
 import { DbSet } from '../collections/DbSet';
 import { ConnectionOptions } from '../configuration/ConnectionOptions';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 export abstract class EntitypeContext {
   readonly connectionOptions: ConnectionOptions;

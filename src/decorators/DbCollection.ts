@@ -2,7 +2,7 @@ import { DbCollectionDecorator } from './';
 import { ObjectType } from '../fluent';
 import 'reflect-metadata';
 import { ColumnDecorator, ColumnOptions } from './';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 export function DbCollection(type: ObjectType<any>): DbCollectionDecorator {
