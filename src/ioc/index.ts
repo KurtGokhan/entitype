@@ -2,10 +2,11 @@ import { ConnectionOptions } from '../configuration/ConnectionOptions';
 import { Container } from 'inversify';
 export * from './driver-decorator';
 
-export const ADAPTER_TYPES = {
+export const DI_TYPES = {
   driver: Symbol('Driver'),
   logger: Symbol('Logger'),
-  queryBuilder: Symbol('QueryBuilder')
+  queryBuilder: Symbol('QueryBuilder'),
+  configuration: Symbol('Configuration')
 };
 
 export interface DriverAdapter {

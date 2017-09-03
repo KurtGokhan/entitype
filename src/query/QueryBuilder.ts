@@ -1,4 +1,5 @@
-import { JoinPath } from '../algorithms/data-structures/JoinPath';
+import { QueryContext } from './QueryContext';
+import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { SkipCommand } from '../command/command-types/SkipCommand';
 import { PropertyPath } from '../fluent';
@@ -15,130 +16,21 @@ import { WhereCommand } from '../command/command-types/WhereCommand';
 import { CommandType } from '../command/CommandType';
 
 export class QueryBuilder {
-
-  private includes: IncludeCommand[];
-  private wheres: WhereCommand[];
-  private orders: OrderByCommand[];
-
-  private select: SelectCommand;
-  private isQuery: QueryCommand;
-  private skip: SkipCommand;
-  private take: TakeCommand;
-  private count: CountCommand;
-  private first: FirstCommand;
-
-  private whereGroups: WhereCommand[][];
-
-
-  private joinPathRoot: JoinPath;
-
-  constructor(private commandChain: Command[], private entity: DecoratorStorage.Entity) {
-    this.resolveCommands();
-    this.resolveJoins();
-  }
-
-  private resolveCommands() {
-    this.includes = this.commandChain.filter(x => x.type === CommandType.Include) as IncludeCommand[];
-    this.wheres = this.commandChain.filter(x => x.type === CommandType.Where) as WhereCommand[];
-    this.orders = this.commandChain.filter(x => x.type === CommandType.OrderBy) as OrderByCommand[];
-
-    this.select = this.commandChain.find(x => x.type === CommandType.Select) as SelectCommand;
-    this.isQuery = this.commandChain.find(x => x.type === CommandType.Query) as QueryCommand;
-    this.take = this.commandChain.find(x => x.type === CommandType.Take) as TakeCommand;
-    this.skip = this.commandChain.find(x => x.type === CommandType.Skip) as SkipCommand;
-    this.count = this.commandChain.find(x => x.type === CommandType.Count) as CountCommand;
-    this.first = this.commandChain.find(x => x.type === CommandType.First) as FirstCommand;
-
-
-    this.whereGroups = [[]];
-    let currentWhereGroup = this.whereGroups[0];
-    let firstWhereIndex = this.commandChain.findIndex(x => x.type === CommandType.Where);
-    if (firstWhereIndex >= 0) {
-      for (let index = firstWhereIndex; index < this.commandChain.length; index++) {
-        let cmd = this.commandChain[index];
-
-        if (cmd.type === CommandType.OrWhere) {
-          currentWhereGroup = [];
-          this.whereGroups.push(currentWhereGroup);
-        }
-        else if (cmd.type === CommandType.Where) {
-          currentWhereGroup.push(cmd as WhereCommand);
-        }
-        else break;
-      }
-    }
-  }
-
-  private getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {
-    let entity = this.entity;
-    let col = null;
-
-    for (let index = 0; index < path.length; index++) {
-      let prop = path[index];
-
-      if (!entity) throw Error('Wrong property path in the query');
-
-      col = entity.columns.find(x => x.name === prop);
-      entity = DecoratorStorage.getEntity(col.type);
-    }
-    return col;
-  }
-
-
-  /**
-   * Creates a join tree so that it can be used easily in the query
-   *
-   * @private
-   * @memberof QueryRunner
-   */
-  private resolveJoins() {
-    let paths: PropertyPath[] = [];
-    if (this.select)
-      paths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1));
-    paths.push(...this.wheres.map(x => x.propertyPath).filter(x => x.length > 1));
-    paths.push(...this.orders.map(x => x.propertyPath).filter(x => x.length > 1));
-
-    paths = paths.map(x => x.slice(0, x.length - 1));
-    paths.push(...this.includes.map(x => x.propertyPath));
-
-
-    this.joinPathRoot = { entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {} };
-
-    paths.forEach(path => {
-      let currentPathNode = this.joinPathRoot;
-
-      path.forEach(node => {
-        let pathNode = currentPathNode.childDic[node];
-
-        if (!pathNode) {
-          let col = currentPathNode.entity.columns.find(x => x.name === node);
-          let colEntity = DecoratorStorage.getEntity(col.type);
-          pathNode = currentPathNode.childDic[node] = {
-            path: currentPathNode.path.concat(node),
-            pathPart: node,
-            entity: colEntity,
-            column: col,
-            parent: currentPathNode,
-            childs: [],
-            childDic: {}
-          };
-          currentPathNode.childs.push(pathNode);
-        }
-        currentPathNode = pathNode;
-      });
-    });
-  }
+  constructor(private context: QueryContext) { }
 
   private resolveFrom(): string[] {
-    return this.resolveFromBranch(this.joinPathRoot);
+    return this.resolveFromBranch(this.context.joinTreeRoot);
   }
+
   resolveWhere(): string[] {
+    let ctx = this.context;
+
     let tokens: string[] = [];
-    if (this.whereGroups.length && this.whereGroups[0].length) {
+    if (ctx.whereGroups.length && ctx.whereGroups[0].length) {
       tokens.push('WHERE');
 
-      for (let index = 0; index < this.whereGroups.length; index++) {
-        let group = this.whereGroups[index];
+      for (let index = 0; index < ctx.whereGroups.length; index++) {
+        let group = ctx.whereGroups[index];
 
         if (index > 0) tokens.push('OR');
 
@@ -151,7 +43,7 @@ export class QueryBuilder {
 
           let prop = cmd.propertyPath[cmd.propertyPath.length - 1];
           if (cmd.propertyPath.length > 1) {
-            let entity = this.getColumnInfoForPropertyPath(cmd.propertyPath).parent;
+            let entity = ctx.getColumnInfoForPropertyPath(cmd.propertyPath).parent;
             prop = entity.dbName + '.' + prop;
           }
           let whereQuery = prop + cmd.condition;
@@ -168,7 +60,7 @@ export class QueryBuilder {
   }
 
 
-  private resolveFromBranch(branch: JoinPath): string[] {
+  private resolveFromBranch(branch: JoinTreeNode): string[] {
     let tokens: string[] = [];
 
     if (branch.parent) {
@@ -218,22 +110,24 @@ export class QueryBuilder {
    * @memberof QueryRunner
    */
   build() {
+    let ctx = this.context;
 
     let tokens: string[] = [];
 
-    let selectedColumns = this.select ? this.select.columns : [];
+    let selectedColumns = ctx.select ? ctx.select.columns : [];
     let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.mapPath.length);
 
     let columnsQuery = '';
-    if (this.count) columnsQuery = 'COUNT(*)';
+    if (ctx.count) columnsQuery = 'COUNT(*)';
     else if (isScalar) columnsQuery = selectedColumns[0].path.toString();
-    else if (selectedColumns.length) columnsQuery = selectedColumns.map(x => `${x.path} as ${x.mapPath}`).join(', ');
+    else if (selectedColumns.length) columnsQuery = selectedColumns
+      .map(x => `${x.path} as ${this.context.getAliasForPath(x.path).name}`).join(', ');
     else columnsQuery = '*';
 
 
     let limitQuery = '';
-    if (this.first) limitQuery = 'TOP 1';
-    else if (this.take) limitQuery = 'TOP ' + this.take.amount;
+    if (ctx.first) limitQuery = 'TOP 1';
+    else if (ctx.take) limitQuery = 'TOP ' + ctx.take.amount;
 
     tokens.push('SELECT');
     tokens.push(limitQuery);
@@ -243,10 +137,10 @@ export class QueryBuilder {
     tokens.push(...this.resolveFrom());
     tokens.push(...this.resolveWhere());
 
-    if (this.orders.length) {
+    if (ctx.orders.length) {
       tokens.push('ORDER BY');
 
-      this.orders.forEach(order => {
+      ctx.orders.forEach(order => {
         tokens.push(<any>order.propertyPath);
         tokens.push(order.descending ? 'DESC' : 'ASC');
         tokens.push(',');

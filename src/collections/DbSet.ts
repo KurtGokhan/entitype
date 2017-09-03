@@ -1,3 +1,4 @@
+import { ConnectionOptions } from '../configuration';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { Command } from '../command/Command';
 import { CommandNode } from '../command/CommandNode';
@@ -35,13 +36,13 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.count;
   }
 
-  constructor(entityType: ObjectType<EntityType>) {
+  constructor(entityType: ObjectType<EntityType>, private config?: ConnectionOptions) {
     this.entity = DecoratorStorage.getEntity(entityType);
     this.rootCommand = new CommandNode(null, this.runCommandChain.bind(this), this.entity.type as any);
   }
 
   private runCommandChain(commands: Command[]) {
-    let runner: CommandRunner = new CommandRunner(commands, this.entity);
+    let runner: CommandRunner = new CommandRunner(commands, this.entity, this.config);
     return runner.run();
   }
 

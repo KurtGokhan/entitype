@@ -49,21 +49,20 @@ export interface IGroupFiltered<EntityType> extends ISelectable<EntityType> {
 
 export interface ISelectable<EntityType> extends IOrderable<EntityType> {
   select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType>;
+  count: { (): Promise<number>; query: string; };
 }
 
-export interface IOrderable<EntityType> extends ICountable<EntityType> {
+export interface IOrderable<EntityType> extends ISkipable<EntityType> {
   orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
   orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
-export interface IOrdered<EntityType> extends ICountable<EntityType> {
+export interface IOrdered<EntityType> extends ISkipable<EntityType> {
   thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
   thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
-export interface ICountable<EntityType> extends ITakeable<EntityType> {
-  count: { (): Promise<number>; query: string; };
-
+export interface ISkipable<EntityType> extends ITakeable<EntityType> {
   skip(amount: number): ITakeable<EntityType>;
 }
 
