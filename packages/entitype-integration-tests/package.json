@@ -1,0 +1,51 @@
+{
+  "name": "integration-tests",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Entitype integration tests",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "Gökhan Kurt",
+    "email": "krtgokhan@hotmail.com"
+  },
+  "tags": [
+    "entitype",
+    "test"
+  ],
+  "dependencies": {
+    "mysql2": "^1.4.2",
+    "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.3",
+    "@types/chai-as-promised": "0.0.31",
+    "@types/chai-string": "^1.1.30",
+    "@types/mocha": "^2.2.41",
+    "@types/mysql2": "github:types/mysql2",
+    "@types/node": "^8.0.24",
+    "chai": "^4.1.1",
+    "chai-as-promised": "^7.1.1",
+    "chai-string": "^1.4.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "mochawesome": "^2.3.0",
+    "nyc": "^11.1.0",
+    "ts-node": "^3.3.0",
+    "tsconfig-paths": "^2.2.0",
+    "tslint": "^5.6.0",
+    "tslint-stylish": "^2.1.0",
+    "typescript": "^2.5.2",
+    "entitype": "file:..\\entitype",
+    "entitype-mysql": "file:..\\entitype-mysql"
+  },
+  "peerDependencies": {
+    "mysql2": "^1.4.1"
+  },
+  "scripts": {
+    "test": "nyc mocha & npm run coverage:show",
+    "coverage:show": "start ./tmp/lcov-report/index.html",
+    "test:debug": "mocha --inspect=25750 --inspect-brk",
+    "compile": "tsc"
+  }
+}
