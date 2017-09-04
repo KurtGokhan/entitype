@@ -8,7 +8,7 @@ import {
   PropertyMapExpression,
   PropertyExpression
 } from './';
-import { SelectMapping } from '../command/command-types/SelectCommand';
+import { SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
@@ -67,27 +67,36 @@ function createDeepPropertySelector<EntityType>(entityType: ObjectType<EntityTyp
   return createDeepPropertySelectorInternal(entityType, [], {});
 }
 
-function getPropertyMappingInner(map: PropertyMapGetter, baseMapPath: string[]): SelectMapping[] {
-  let columns = [];
+function getPropertyMappingInner(map: PropertyMapGetter, baseMapPath: string[]): [SelectMapping[], SelectMappingStructure[]] {
+  let columns: SelectMapping[] = [];
+  let structure: SelectMappingStructure[] = [];
 
   if (typeof map === 'function') {
     columns.push({ path: map(), mapPath: baseMapPath });
   }
   else {
-    for (let key in map) {
-      if (map.hasOwnProperty(key)) {
-        let prop = map[key];
+    let isArray = Array.isArray(map);
+    let isObject = map && typeof map === 'object';
+    let st = { isArray, isObject, mapPath: baseMapPath, value: map };
+    structure.push(st);
 
-        let childColumns = getPropertyMappingInner(prop, baseMapPath.concat(key));
-        columns.push(...childColumns);
+    if (isObject || isArray) {
+      for (let key in map) {
+        if (map.hasOwnProperty(key)) {
+          let prop = map[key];
+
+          let childColumns = getPropertyMappingInner(prop, baseMapPath.concat(key));
+          columns.push(...childColumns[0]);
+          structure.push(...childColumns[1]);
+        }
       }
     }
   }
 
-  return columns;
+  return [columns, structure];
 }
 
-function getPropertyMapping(map: PropertyMapGetter): SelectMapping[] {
+function getPropertyMapping(map: PropertyMapGetter): [SelectMapping[], SelectMappingStructure[]] {
   return getPropertyMappingInner(map, []);
 }
 
@@ -109,7 +118,7 @@ export function resolveDeepPropertyExpression<EntityType, SelectType>(
 
 export function resolvePropertyMapExpression<EntityType, SelectType>(
   expression: PropertyMapExpression<EntityType, SelectType>,
-  entityType: ObjectType<EntityType>): SelectMapping[] {
+  entityType: ObjectType<EntityType>): [SelectMapping[], SelectMappingStructure[]] {
 
   let parameter = createDeepPropertySelector(entityType);
   let selectObject = <any>expression(parameter);

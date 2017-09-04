@@ -87,4 +87,45 @@ describe('query > mapping > basic', async () => {
     expect(result.mappedId).to.be.equal(specId);
     expect(result.mappedChild.mappedId).to.be.equal(specChildId);
   });
+
+
+  it('should be able to get single map to arrays', async () => {
+    let specName = 'my-name';
+    let specId = 5;
+    let specChildId = 15;
+    let dataResult = [{ a1: specName, a2: specId, a3: specChildId }];
+
+    useConfiguration(mockConfig);
+    mockDriverToReturnData(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => [x.name, x.id, x.child_id]).first();
+
+    expect(result[0]).to.be.equal(specName);
+    expect(result[1]).to.be.equal(specId);
+    expect(result[2]).to.be.equal(specChildId);
+    expect(result.length).to.be.equal(3);
+    expect(Array.isArray(result));
+  });
+
+  it('should be able to get single deep map to arrays', async () => {
+    let specName = 'my-name';
+    let specId = 5;
+    let specChildId = 15;
+    let dataResult = [{ a1: specName, a2: specId, a3: specChildId }];
+
+    useConfiguration(mockConfig);
+    mockDriverToReturnData(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => ({
+      mappedArray: [x.name, x.id, x.child_id]
+    })).first();
+
+    expect(result.mappedArray[0]).to.be.equal(specName);
+    expect(result.mappedArray[1]).to.be.equal(specId);
+    expect(result.mappedArray[2]).to.be.equal(specChildId);
+    expect(result.mappedArray.length).to.be.equal(3);
+    expect(Array.isArray(result.mappedArray));
+  });
 });

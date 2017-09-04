@@ -14,7 +14,7 @@ export class ResultMapper {
     }
 
     let columns = this.context.select.columns;
-    let resultArray = dataResult.map(x => ({}));
+    let resultArray = this.getStructure(dataResult.length);
 
     for (let index = 0; index < columns.length; index++) {
       let column = columns[index];
@@ -25,26 +25,55 @@ export class ResultMapper {
         let data = row[alias.name];
         let target = resultArray[rowIndex];
 
-        // Scalar
-        if (column.mapPath.length === 0) {
-          resultArray[rowIndex] = data;
+        for (let mapIndex = 0; mapIndex < column.mapPath.length - 1; mapIndex++) {
+          let mapPart = column.mapPath[mapIndex];
+          target = target[mapPart];
         }
-        else {
-          for (let mapIndex = 0; mapIndex < column.mapPath.length - 1; mapIndex++) {
-            let mapPart = column.mapPath[mapIndex];
-            let childTarget = target[mapPart];
-            if (!childTarget) childTarget = target[mapPart] = {};
-            target = childTarget;
-          }
-          let lastPart = column.mapPath[column.mapPath.length - 1];
-          target[lastPart] = data;
-        }
+        let lastPart = column.mapPath[column.mapPath.length - 1];
+        if (lastPart) target[lastPart] = data;
+        else resultArray[rowIndex] = data;
       }
     }
 
     if (this.context.first) {
       return resultArray[0];
     }
+    return resultArray;
+  }
+
+  getStructure(count: number) {
+    let structure = this.context.select.structure;
+    let resultArray = [];
+
+    for (let index = 0; index < count; index++) {
+      let result;
+
+      for (let stIndex = 0; stIndex < structure.length; stIndex++) {
+        let st = structure[stIndex];
+        let value;
+        if (st.isArray) value = [];
+        else if (st.isObject) value = {};
+        else value = st.value;
+
+        let target = result;
+
+        for (let mapIndex = 0; mapIndex < st.mapPath.length - 1; mapIndex++) {
+          let mapPart = st.mapPath[mapIndex];
+          let childTarget = target[mapPart];
+          if (!childTarget) childTarget = target[mapPart] = {};
+          target = childTarget;
+        }
+
+        let lastPart = st.mapPath[st.mapPath.length - 1];
+        if (lastPart) target[lastPart] = value;
+        else target = value;
+
+        if (!result) result = target;
+      }
+
+      resultArray.push(result);
+    }
+
     return resultArray;
   }
 }
