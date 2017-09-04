@@ -13,7 +13,7 @@ describe('query > one-to-one > where > join', async () => {
       .toList.query;
 
     expect(loadModelQuery).to.be.equalIgnoreSpaces(
-      `SELECT name FROM Model LEFT JOIN
+      `SELECT name as a1 FROM Model LEFT JOIN
        ChildModel ON ChildModel.parent_id = Model.id WHERE
        ( ( ChildModel.name = 'childname' ) )`);
   });

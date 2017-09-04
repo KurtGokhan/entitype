@@ -103,6 +103,26 @@ export class QueryBuilder {
   }
 
 
+
+  resolveOrderBy(): string[] {
+    let ctx = this.context;
+    let tokens: string[] = [];
+
+    if (ctx.orders.length) {
+      let orderList = [];
+      ctx.orders.forEach(order => {
+        let orderTokens = [];
+        orderTokens.push(<any>order.propertyPath);
+        orderTokens.push(order.descending ? 'DESC' : 'ASC');
+        orderList.push(orderTokens.join(' '));
+      });
+
+      tokens.push('ORDER BY');
+      tokens.push(orderList.join(', '));
+    }
+    return tokens;
+  }
+
   /**
    * Gets the query for commands
    *
@@ -118,8 +138,8 @@ export class QueryBuilder {
     let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.mapPath.length);
 
     let columnsQuery = '';
-    if (ctx.count) columnsQuery = 'COUNT(*)';
-    else if (isScalar) columnsQuery = selectedColumns[0].path.toString();
+    if (ctx.count) columnsQuery = 'COUNT(*) as count';
+    // else if (isScalar) columnsQuery = selectedColumns[0].path.toString();
     else if (selectedColumns.length) columnsQuery = selectedColumns
       .map(x => `${x.path} as ${this.context.getAliasForPath(x.path).name}`).join(', ');
     else columnsQuery = '*';
@@ -136,18 +156,7 @@ export class QueryBuilder {
 
     tokens.push(...this.resolveFrom());
     tokens.push(...this.resolveWhere());
-
-    if (ctx.orders.length) {
-      tokens.push('ORDER BY');
-
-      ctx.orders.forEach(order => {
-        tokens.push(<any>order.propertyPath);
-        tokens.push(order.descending ? 'DESC' : 'ASC');
-        tokens.push(',');
-      });
-      tokens.pop();
-    }
-
+    tokens.push(...this.resolveOrderBy());
 
     let query = tokens.filter(x => !!x).join(' ');
     return query;

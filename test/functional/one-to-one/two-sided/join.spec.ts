@@ -8,7 +8,7 @@ describe('query > one-to-one > two-sided > join', async () => {
   it('should be able to select from owned side', async () => {
     let ctx = new DbSet(Model);
     let loadModelQuery = ctx.include(x => x.child).select(x => x.name).toList.query;
-    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT name FROM model LEFT JOIN'
+    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT name as a1 FROM model LEFT JOIN'
       + ' childmodel ON childmodel.parent_id = model.id');
   });
 
@@ -16,7 +16,7 @@ describe('query > one-to-one > two-sided > join', async () => {
   it('should be able to select from owner side', async () => {
     let ctx = new DbSet(ChildModel);
     let loadModelQuery = ctx.include(x => x.parent).select(x => x.name).toList.query;
-    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT name FROM childmodel LEFT JOIN'
+    expect(loadModelQuery).to.be.equalIgnoreCase('SELECT name as a1 FROM childmodel LEFT JOIN'
       + ' model ON childmodel.parent_id = model.id');
   });
 });
