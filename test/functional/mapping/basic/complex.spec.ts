@@ -4,7 +4,7 @@ import { container } from 'src/ioc';
 import { Context } from './entity/Context';
 import { expect } from 'chai';
 
-describe('query > mapping > basic', async () => {
+describe('mapping > basic', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 
