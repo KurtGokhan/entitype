@@ -1,6 +1,4 @@
-import { DbSet } from 'src/collections/DbSet';
-import { EntitypeContext } from 'src/context/EntitypeContext';
-import { DbCollection } from 'src/decorators/DbCollection';
+import { IQueryable, EntitypeContext, DbCollection } from 'src';
 
 import { Model } from './Model';
 import { ChildModel } from './ChildModel';
@@ -11,8 +9,8 @@ export class Context extends EntitypeContext {
   }
 
   @DbCollection(Model)
-  models: DbSet<Model>;
+  models: IQueryable<Model>;
 
   @DbCollection(ChildModel)
-  childmodels: DbSet<ChildModel>;
+  childmodels: IQueryable<ChildModel>;
 }

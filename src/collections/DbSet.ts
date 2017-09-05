@@ -5,6 +5,7 @@ import { CommandNode } from '../command/CommandNode';
 import {
   DeepPropertyExpression,
   IFiltered,
+  ISkipped,
   IGrouped,
   IIncludable,
   IListable,
@@ -71,7 +72,7 @@ export class DbSet<EntityType> implements IQueryable<EntityType> {
     return this.rootCommand.take(amount);
   }
 
-  skip(amount: number): ITakeable<EntityType> {
+  skip(amount: number): ISkipped<EntityType> {
     return this.rootCommand.skip(amount);
   }
 }

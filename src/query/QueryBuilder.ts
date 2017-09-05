@@ -145,17 +145,23 @@ export class QueryBuilder {
 
 
     let limitQuery = '';
-    if (ctx.first) limitQuery = 'TOP 1';
-    else if (ctx.take) limitQuery = 'TOP ' + ctx.take.amount;
+    if (ctx.first) limitQuery = 'LIMIT 1';
+    else if (ctx.take) limitQuery = 'LIMIT ' + ctx.take.amount;
+
+    let offsetQuery = '';
+    if (ctx.skip) offsetQuery = 'OFFSET ' + ctx.skip.amount;
+
 
     tokens.push('SELECT');
-    tokens.push(limitQuery);
     tokens.push(columnsQuery);
     tokens.push('FROM');
 
     tokens.push(...this.resolveFrom());
     tokens.push(...this.resolveWhere());
     tokens.push(...this.resolveOrderBy());
+
+    tokens.push(limitQuery);
+    tokens.push(offsetQuery);
 
     let query = tokens.filter(x => !!x).join(' ');
     return query;

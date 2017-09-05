@@ -63,13 +63,15 @@ export interface IOrdered<EntityType> extends ISkipable<EntityType> {
 }
 
 export interface ISkipable<EntityType> extends ITakeable<EntityType> {
-  skip(amount: number): ITakeable<EntityType>;
+  skip(amount: number): ISkipped<EntityType>;
 }
 
-export interface ITakeable<EntityType> extends IListable<EntityType> {
-  first: { (): Promise<EntityType>; query: string; };
-
+export interface ISkipped<EntityType> {
   take(amount: number): IListable<EntityType>;
+  first: { (): Promise<EntityType>; query: string; };
+}
+
+export interface ITakeable<EntityType> extends IListable<EntityType>, ISkipped<EntityType> {
 }
 
 export interface IListable<EntityType> {
