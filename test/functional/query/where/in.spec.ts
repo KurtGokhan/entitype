@@ -9,7 +9,7 @@ describe('query > where > in', async () => {
       .where(x => x.id().in([1, 2]))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( id in (1,2) ) )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( t0.id in (1,2) ) )');
   });
 
   it('should be able to filter selection with not', async () => {
@@ -18,6 +18,6 @@ describe('query > where > in', async () => {
       .where(x => x.id().not.in([1, 2]))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( NOT id in (1,2) ) )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( NOT t0.id in (1,2) ) )');
   });
 });

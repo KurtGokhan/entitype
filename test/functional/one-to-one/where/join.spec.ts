@@ -12,6 +12,6 @@ describe('query > one-to-one > where > join', async () => {
       .toList.query;
 
     expect(loadModelQuery).to
-      .match(/SELECT .* FROM Model as t0 LEFT JOIN ChildModel as t\d+ ON t\d+.parent_id = t0.id WHERE .*ChildModel.name = 'childname'.*/i);
+      .match(/SELECT .* FROM Model as t0 LEFT JOIN ChildModel as t\d+ ON t\d+.parent_id = t0.id WHERE .*t\d+.name = 'childname'.*/i);
   });
 });

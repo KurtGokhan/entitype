@@ -41,11 +41,7 @@ export class QueryBuilder {
           if (cmdIndex > 0) tokens.push('AND');
 
 
-          let prop = cmd.propertyPath[cmd.propertyPath.length - 1];
-          if (cmd.propertyPath.length > 1) {
-            let entity = ctx.getColumnInfoForPropertyPath(cmd.propertyPath).parent;
-            prop = entity.dbName + '.' + prop;
-          }
+          let prop = this.context.getAliasedColumnForPath(cmd.propertyPath);
           let whereQuery = prop + cmd.condition;
 
           tokens.push('(');
