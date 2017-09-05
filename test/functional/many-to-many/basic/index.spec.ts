@@ -1,10 +1,10 @@
 import { Context } from './entity/Context';
 import { expect } from 'chai';
-import { multilineRegExp } from '../../../helper';
+import { multilineRegExp } from 'test/helper';
 
 describe('query > many-to-many > basic', async () => {
 
-  it.only('should be able to select basic', async () => {
+  it('should be able to select basic', async () => {
     let ctx = new Context();
     let loadModelQuery = ctx.students.include(x => x.courses).select(x => x.name).toList.query;
     expect(loadModelQuery).to

@@ -159,7 +159,7 @@ export class QueryBuilder {
 
     let tokens: string[] = [];
 
-    let selectedColumns = ctx.select ? ctx.select.columns : [];
+    let selectedColumns = ctx.selectedColumns;
 
     let columnsQuery = '';
     if (ctx.count) columnsQuery = 'COUNT(*) as count';
@@ -171,7 +171,7 @@ export class QueryBuilder {
           return `${aliasedColumnName} as ${alias}`;
         }).join(', ');
     }
-    else columnsQuery = '*';
+    else columnsQuery = 'null';
 
 
     let limitQuery = '';

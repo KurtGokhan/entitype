@@ -1,3 +1,4 @@
+import { multilineRegExp } from '../../../helper';
 import { Context } from './entity/Context';
 import { expect } from 'chai';
 
@@ -10,8 +11,10 @@ describe('query > where > combine', async () => {
       .andWhere(x => x.id().not.equals(6))
       .toList;
     let query = listNode.query;
-    expect(query).to.be
-      .equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( t0.name IS NULL ) AND ( t0.id BETWEEN 5 AND 10 ) AND ( NOT t0.id = 6 ) )`);
+    expect(query).to.match(multilineRegExp([
+      /SELECT .* FROM model as t0 WHERE /,
+      /\( \( t0.name IS NULL \) AND \( t0.id BETWEEN 5 AND 10 \) AND \( NOT t0.id = 6 \) \)/
+    ], 'i'));
   });
 
   it('should be able to combine multiple conditions with or', async () => {
@@ -22,7 +25,9 @@ describe('query > where > combine', async () => {
       .where(x => x.id().between(5, 10))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( t0.name IS NULL ) ) OR ( ( t0.id BETWEEN 5 AND 10 ) )`);
+    expect(query).to.match(multilineRegExp([
+      /SELECT .* FROM model as t0 WHERE \( \( t0.name IS NULL \) \) OR \( \( t0.id BETWEEN 5 AND 10 \) \)/
+    ], 'i'));
   });
 
 
@@ -35,7 +40,8 @@ describe('query > where > combine', async () => {
       .andWhere(x => x.id().not.equals(6))
       .toList;
     let query = listNode.query;
-    expect(query).to.be
-      .equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( t0.name IS NULL ) ) OR ( ( t0.id BETWEEN 5 AND 10 ) AND ( NOT t0.id = 6 ) )`);
+    expect(query).to.match(multilineRegExp([
+      /SELECT .* FROM model as t0 WHERE \( \( t0.name IS NULL \) \) OR \( \( t0.id BETWEEN 5 AND 10 \) AND \( NOT t0.id = 6 \) \)/
+    ], 'i'));
   });
 });

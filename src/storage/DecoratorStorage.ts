@@ -21,6 +21,7 @@ export namespace DecoratorStorage {
     name: string;
     dbName: string;
 
+    isColumn: boolean = false;
     isArray: boolean = false;
     isNavigationProperty: boolean = false;
     isForeignKey: boolean = false;

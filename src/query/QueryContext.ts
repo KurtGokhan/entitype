@@ -5,7 +5,7 @@ import { FirstCommand } from '../command/command-types/FirstCommand';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrderByCommand } from '../command/command-types/OrderByCommand';
 import { QueryCommand } from '../command/command-types/QueryCommand';
-import { SelectCommand } from '../command/command-types/SelectCommand';
+import { SelectCommand, SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
 import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
@@ -31,12 +31,17 @@ export class QueryContext {
 
   public joinTreeRoot: JoinTreeNode;
 
+  public selectedColumns: SelectMapping[];
+  public selectStructure: SelectMappingStructure[];
+
+
   private aliasContainer: AliasTree = new AliasTree();
 
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
     this.resolveCommands();
     this.resolveJoins();
+    this.resolveSelectedColumns();
   }
 
   private resolveCommands() {
@@ -71,45 +76,96 @@ export class QueryContext {
     }
   }
 
+  private resolveSelectedColumns() {
+    if (this.select) {
+      this.selectedColumns = [];
+      this.selectStructure = this.select.structure;
+
+      this.select.columns.forEach(selectedCol => {
+        let colInfo = this.getColumnInfoForPropertyPath(selectedCol.path);
+        if (colInfo.isColumn)
+          this.selectedColumns.push(selectedCol);
+        else {
+          let node = this.getJoinTreeNodeForPath(selectedCol.path);
+          this.addEntityToSelectedColumnsAndStructure(selectedCol.mapPath, node);
+        }
+      });
+    }
+    else {
+      this.selectStructure = [];
+      this.selectedColumns = [];
+      this.addEntityToSelectedColumnsAndStructure([], this.joinTreeRoot);
+    }
+  }
+
+  private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
+    let path = node.path;
+    this.selectStructure.push({ isObject: true, mapPath: baseMappedPath, isArray: false, value: null });
+    node.entity.columns.filter(x => x.isColumn).forEach(prop => {
+      this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
+    });
+
+    node.childs.filter(x => x.include).forEach(childNode => {
+      this.addEntityToSelectedColumnsAndStructure(baseMappedPath.concat(childNode.pathPart), childNode);
+    });
+  }
 
   /** Creates a join tree so that it can be used easily in the query */
   private resolveJoins() {
     let paths: PropertyPath[] = [];
-    if (this.select)
-      paths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1));
     paths.push(...this.wheres.map(x => x.propertyPath).filter(x => x.length > 1));
     paths.push(...this.orders.map(x => x.propertyPath).filter(x => x.length > 1));
 
     paths = paths.map(x => x.slice(0, x.length - 1));
-    paths.push(...this.includes.map(x => x.propertyPath));
 
 
-    this.joinTreeRoot = { entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {}, alias: null };
+    let includedPaths: PropertyPath[] = [];
+    includedPaths.push(...this.includes.map(x => x.propertyPath));
+    if (this.select) {
+      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1).map(x => x.slice(0, -1)));
+      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
+    }
 
-    paths.forEach(path => {
-      let currentPathNode = this.joinTreeRoot;
+    this.joinTreeRoot = {
+      entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {}, alias: null, include: true
+    };
+    includedPaths.forEach(path => this.createBranchesForPath(path, true));
+    paths.forEach(path => this.createBranchesForPath(path, false));
+  }
 
-      path.forEach(node => {
-        let pathNode = currentPathNode.childDic[node];
+  private createBranchesForPath(path: PropertyPath, include: boolean) {
+    let currentPathNode = this.joinTreeRoot;
 
-        if (!pathNode) {
-          let col = currentPathNode.entity.columns.find(x => x.name === node);
-          let colEntity = DecoratorStorage.getEntity(col.type);
-          pathNode = currentPathNode.childDic[node] = {
-            path: currentPathNode.path.concat(node),
-            pathPart: node,
-            entity: colEntity,
-            column: col,
-            parent: currentPathNode,
-            childs: [],
-            childDic: {},
-            alias: null
-          };
-          currentPathNode.childs.push(pathNode);
-        }
-        currentPathNode = pathNode;
-      });
+    path.forEach(node => {
+      let pathNode = currentPathNode.childDic[node];
+
+      if (!pathNode) {
+        let col = currentPathNode.entity.columns.find(x => x.name === node);
+        let colEntity = DecoratorStorage.getEntity(col.type);
+        pathNode = currentPathNode.childDic[node] = {
+          path: currentPathNode.path.concat(node),
+          pathPart: node,
+          entity: colEntity,
+          column: col,
+          parent: currentPathNode,
+          childs: [],
+          childDic: {},
+          alias: null,
+          include: include
+        };
+        currentPathNode.childs.push(pathNode);
+      }
+      currentPathNode = pathNode;
     });
+  }
+
+  getJoinTreeNodeForPath(path: PropertyPath): JoinTreeNode {
+    let currentPathNode = this.joinTreeRoot;
+
+    path.forEach(node => {
+      currentPathNode = currentPathNode.childDic[node];
+    });
+    return currentPathNode;
   }
 
   getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {

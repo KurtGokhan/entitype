@@ -13,4 +13,6 @@ export class JoinTreeNode {
   parent: JoinTreeNode;
   childs: JoinTreeNode[];
   childDic: { [key: string]: JoinTreeNode };
+
+  include: boolean;
 }
