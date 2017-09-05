@@ -11,7 +11,8 @@ describe('query > where > combine', async () => {
       .andWhere(x => x.id().not.equals(6))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( ( name IS NULL ) AND ( id BETWEEN 5 AND 10 ) AND ( NOT id = 6 ) )`);
+    expect(query).to.be
+      .equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( name IS NULL ) AND ( id BETWEEN 5 AND 10 ) AND ( NOT id = 6 ) )`);
   });
 
   it('should be able to combine multiple conditions with or', async () => {
@@ -22,7 +23,7 @@ describe('query > where > combine', async () => {
       .where(x => x.id().between(5, 10))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( ( name IS NULL ) ) OR ( ( id BETWEEN 5 AND 10 ) )`);
+    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( name IS NULL ) ) OR ( ( id BETWEEN 5 AND 10 ) )`);
   });
 
 
@@ -35,6 +36,7 @@ describe('query > where > combine', async () => {
       .andWhere(x => x.id().not.equals(6))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase(`SELECT * FROM model WHERE ( ( name IS NULL ) ) OR ( ( id BETWEEN 5 AND 10 ) AND ( NOT id = 6 ) )`);
+    expect(query).to.be
+      .equalIgnoreCase(`SELECT * FROM model as t0 WHERE ( ( name IS NULL ) ) OR ( ( id BETWEEN 5 AND 10 ) AND ( NOT id = 6 ) )`);
   });
 });

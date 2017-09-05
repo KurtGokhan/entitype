@@ -9,7 +9,7 @@ describe('query > where > boolean', async () => {
       .where(x => x.active().equals(true))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( active = 1 ) )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( active = 1 ) )');
   });
 
   it('should be able to filter by false boolean columns', async () => {
@@ -18,6 +18,6 @@ describe('query > where > boolean', async () => {
       .where(x => x.active().equals(false))
       .toList;
     let query = listNode.query;
-    expect(query).to.be.equalIgnoreCase('SELECT * FROM model WHERE ( ( active = 0 ) )');
+    expect(query).to.be.equalIgnoreCase('SELECT * FROM model as t0 WHERE ( ( active = 0 ) )');
   });
 });

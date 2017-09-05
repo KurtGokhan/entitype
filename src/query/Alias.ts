@@ -1,7 +1,7 @@
 import { PropertyPath } from '../fluent';
 
 export class Alias {
-  name: string;
+  name: number;
   path: PropertyPath;
   mapPath: PropertyPath;
   isTable: boolean;
@@ -16,11 +16,8 @@ export class AliasTree {
   }
 
   newAlias(): AliasContainer {
-    let name = 'a' + this.aliasIndex;
-    this.aliasIndex++;
-
     let alias = new Alias();
-    alias.name = name;
+    alias.name = this.aliasIndex++;
 
     return { alias: alias, children: {}, tree: this };
   }

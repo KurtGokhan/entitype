@@ -18,11 +18,11 @@ export class ResultMapper {
 
     for (let index = 0; index < columns.length; index++) {
       let column = columns[index];
-      let alias = this.context.getAliasForPath(column.path);
+      let alias = this.context.getAliasForColumn(column.path);
 
       for (let rowIndex = 0; rowIndex < dataResult.length; rowIndex++) {
         let row = dataResult[rowIndex];
-        let data = row[alias.name];
+        let data = row[alias];
         let target = resultArray[rowIndex];
 
         for (let mapIndex = 0; mapIndex < column.mapPath.length - 1; mapIndex++) {

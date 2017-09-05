@@ -12,9 +12,7 @@ describe('query > one-to-one > where > join', async () => {
       .select(x => x.name)
       .toList.query;
 
-    expect(loadModelQuery).to.be.equalIgnoreSpaces(
-      `SELECT name as a1 FROM Model LEFT JOIN
-       ChildModel ON ChildModel.parent_id = Model.id WHERE
-       ( ( ChildModel.name = 'childname' ) )`);
+    expect(loadModelQuery).to
+      .match(/SELECT .* FROM Model as t0 LEFT JOIN ChildModel as t\d+ ON t\d+.parent_id = t0.id WHERE .*ChildModel.name = 'childname'.*/i);
   });
 });

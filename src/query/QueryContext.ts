@@ -127,7 +127,7 @@ export class QueryContext {
     return col;
   }
 
-  getAliasForPath(path: PropertyPath): Alias {
+  getAlias(path: PropertyPath): Alias {
     let cont = this.aliasContainer.rootContainer;
     for (let index = 0; index < path.length; index++) {
       let pathPart = path[index];
@@ -139,5 +139,20 @@ export class QueryContext {
     }
 
     return cont.alias;
+  }
+
+  getAliasForColumn(path: PropertyPath): string {
+    return 'a' + this.getAlias(path).name;
+  }
+
+  getAliasForTable(path: PropertyPath): string {
+    return 't' + this.getAlias(path).name;
+  }
+
+  getAliasedColumnForPath(path: PropertyPath): string {
+    let tableAlias = this.getAliasForTable(path.slice(0, -1));
+    let column = this.getColumnInfoForPropertyPath(path);
+
+    return tableAlias + '.' + column.dbName;
   }
 }

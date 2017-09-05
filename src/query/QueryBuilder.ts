@@ -61,11 +61,14 @@ export class QueryBuilder {
 
 
   private resolveFromBranch(branch: JoinTreeNode): string[] {
+    let ctx = this.context;
     let tokens: string[] = [];
 
+    let alias = ctx.getAliasForTable(branch.path);
+    let tableWithAlias = `${branch.entity.dbName} as ${alias}`;
     if (branch.parent) {
       tokens.push('LEFT JOIN');
-      tokens.push(branch.entity.dbName);
+      tokens.push(tableWithAlias);
       tokens.push('ON');
 
       let fk = branch.column.foreignKey;
@@ -79,12 +82,14 @@ export class QueryBuilder {
       let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
       let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
 
-      tokens.push(owner.entity.dbName + '.' + foreignKeyColumn.dbName);
+      let ownerAlias = ctx.getAliasForTable(owner.path);
+      let ownedAlias = ctx.getAliasForTable(owned.path);
+      tokens.push(ownerAlias + '.' + foreignKeyColumn.dbName);
       tokens.push('=');
-      tokens.push(owned.entity.dbName + '.' + fkTargetPK.dbName);
+      tokens.push(ownedAlias + '.' + fkTargetPK.dbName);
     }
     else {
-      tokens.push(branch.entity.dbName);
+      tokens.push(tableWithAlias);
     }
 
     branch.childs.forEach(subBranch => {
@@ -92,17 +97,6 @@ export class QueryBuilder {
     });
     return tokens;
   }
-
-  private getTableAlias(path: PropertyPath) {
-    return '';
-  }
-
-
-  protected escapeAlias(alias: string) {
-    return '"' + alias + '"';
-  }
-
-
 
   resolveOrderBy(): string[] {
     let ctx = this.context;
@@ -112,7 +106,8 @@ export class QueryBuilder {
       let orderList = [];
       ctx.orders.forEach(order => {
         let orderTokens = [];
-        orderTokens.push(<any>order.propertyPath);
+        let aliasedColumn = this.context.getAliasedColumnForPath(order.propertyPath);
+        orderTokens.push(aliasedColumn);
         orderTokens.push(order.descending ? 'DESC' : 'ASC');
         orderList.push(orderTokens.join(' '));
       });
@@ -135,13 +130,17 @@ export class QueryBuilder {
     let tokens: string[] = [];
 
     let selectedColumns = ctx.select ? ctx.select.columns : [];
-    let isScalar = selectedColumns.length === 1 && selectedColumns.find(x => !x.mapPath.length);
 
     let columnsQuery = '';
     if (ctx.count) columnsQuery = 'COUNT(*) as count';
-    // else if (isScalar) columnsQuery = selectedColumns[0].path.toString();
-    else if (selectedColumns.length) columnsQuery = selectedColumns
-      .map(x => `${x.path} as ${this.context.getAliasForPath(x.path).name}`).join(', ');
+    else if (selectedColumns.length) {
+      columnsQuery = selectedColumns
+        .map(col => {
+          let aliasedColumnName = this.context.getAliasedColumnForPath(col.path);
+          let alias = this.context.getAliasForColumn(col.path);
+          return `${aliasedColumnName} as ${alias}`;
+        }).join(', ');
+    }
     else columnsQuery = '*';
 
 
