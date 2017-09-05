@@ -1,11 +1,10 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
+import { Context } from './entity/Context';
 import { expect } from 'chai';
 
 describe('query > where > null', async () => {
   it('should be able to filter selection where null', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().isNull())
       .toList;
     let query = listNode.query;
@@ -13,8 +12,8 @@ describe('query > where > null', async () => {
   });
 
   it('should be able to filter selection where not null', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().not.isNull())
       .toList;
     let query = listNode.query;

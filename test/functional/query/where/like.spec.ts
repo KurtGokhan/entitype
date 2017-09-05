@@ -1,11 +1,10 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
+import { Context } from './entity/Context';
 import { expect } from 'chai';
 
 describe('query > where > like', async () => {
   it('should be able to filter selection', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().like('%name%'))
       .toList;
     let query = listNode.query;
@@ -13,8 +12,8 @@ describe('query > where > like', async () => {
   });
 
   it('should be able to filter selection with not', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().not.like('%name%'))
       .toList;
     let query = listNode.query;

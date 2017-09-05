@@ -96,18 +96,19 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addDbCollection(parent: Function, columnName: string, type: ObjectType<any>): DbCollection {
-    let context = getContext(parent) || addContext(parent);
-    let entity = getEntity(type);
+  export function addDbCollection(parentContext: Function, propertyName: string, entityType: ObjectType<any>): DbCollection {
+    let context = getContext(parentContext) || addContext(parentContext);
+    let entity = getEntity(entityType);
 
     if (!entity) {
       // TODO: probably an error, log error
     }
 
     let collection = new DbCollection({
-      name: columnName,
+      name: propertyName,
       context: context,
-      type: type
+      type: entityType,
+      entity: entity
     });
 
     if (!context.collections.find(x => x.name === collection.name))

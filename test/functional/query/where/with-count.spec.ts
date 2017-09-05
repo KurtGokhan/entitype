@@ -1,11 +1,10 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
+import { Context } from './entity/Context';
 import { expect } from 'chai';
 
 describe('query > where > with count', async () => {
   it('should be able to filter selection and take count', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().isNull())
       .count;
     let query = listNode.query;
@@ -13,8 +12,8 @@ describe('query > where > with count', async () => {
   });
 
   it('should be able to filter selection with not and take count', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.name().not.isNull())
       .count;
     let query = listNode.query;

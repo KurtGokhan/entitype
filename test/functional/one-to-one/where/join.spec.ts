@@ -1,13 +1,12 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
+import { Context } from './entity/Context';
 import { ChildModel } from './entity/ChildModel';
 import { expect } from 'chai';
 
 describe('query > one-to-one > where > join', async () => {
 
   it('should be able to filter from owned side', async () => {
-    let ctx = new DbSet(Model);
-    let loadModelQuery = ctx
+    let ctx = new Context();
+    let loadModelQuery = ctx.models
       .where(x => x.child.name().equals('childname'))
       .select(x => x.name)
       .toList.query;

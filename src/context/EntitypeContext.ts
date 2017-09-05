@@ -1,7 +1,9 @@
-import { DI_TYPES } from '../ioc';
-import { container } from '../ioc';
-import { DbSet } from '../collections/DbSet';
+import { Command } from '../command/Command';
+import { CommandNode } from '../command/CommandNode';
 import { ConnectionOptions } from '../configuration/ConnectionOptions';
+import { ObjectType } from '../fluent';
+import { container, DI_TYPES } from '../ioc';
+import { CommandRunner } from '../query/CommandRunner';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 export abstract class EntitypeContext {
@@ -45,10 +47,15 @@ export abstract class EntitypeContext {
         let targetProperty = target[name];
 
         // The called property is not decorated with DbSet, or it was already created
-        if (!collection || targetProperty instanceof DbSet)
+        if (!collection || targetProperty instanceof CommandNode)
           return targetProperty;
 
-        return new DbSet(collection.type as any, self.connectionOptions);
+        let runCommandChain = (commands: Command[]) => {
+          let runner: CommandRunner = new CommandRunner(commands, collection.entity as any, self.connectionOptions);
+          return runner.run();
+        };
+
+        return new CommandNode(null, runCommandChain, collection.type as ObjectType<any>);
       }
     });
   }

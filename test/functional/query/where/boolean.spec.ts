@@ -1,11 +1,10 @@
-import { DbSet } from 'src/collections/DbSet';
-import { Model } from './entity/Model';
+import { Context } from './entity/Context';
 import { expect } from 'chai';
 
 describe('query > where > boolean', async () => {
   it('should be able to filter by true boolean columns', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.active().equals(true))
       .toList;
     let query = listNode.query;
@@ -13,8 +12,8 @@ describe('query > where > boolean', async () => {
   });
 
   it('should be able to filter by false boolean columns', async () => {
-    let ctx = new DbSet(Model);
-    let listNode = ctx
+    let ctx = new Context();
+    let listNode = ctx.models
       .where(x => x.active().equals(false))
       .toList;
     let query = listNode.query;

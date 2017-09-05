@@ -1,6 +1,4 @@
 import { expect } from 'chai';
-import { DbSet } from 'src/collections/DbSet';
-
 import { Context } from './entity/Context';
 import { Model } from './entity/Model';
 
