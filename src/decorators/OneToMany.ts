@@ -5,11 +5,10 @@ import { NavigationPropertyDecorator } from '../decorators';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 
 
-export function OneToOne<EntityType, SelectType>(
+export function OneToMany<EntityType, SelectType>(
   foreignKeyEntity: ObjectType<EntityType>,
   foreignKey: PropertyExpression<EntityType, SelectType>)
   : NavigationPropertyDecorator {
-
 
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
@@ -23,6 +22,7 @@ export function OneToOne<EntityType, SelectType>(
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type, {});
     column.isNavigationProperty = true;
+    column.isArray = true;
     column.foreignKey = fk;
 
     DecoratorStorage.updateColumnReferences(column);

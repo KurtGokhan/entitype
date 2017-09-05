@@ -149,6 +149,10 @@ export class QueryContext {
     return 't' + this.getAlias(path).name;
   }
 
+  getAliasForMappingTable(path: PropertyPath): string {
+    return 'm' + this.getAlias(path).name;
+  }
+
   getAliasedColumnForPath(path: PropertyPath): string {
     let tableAlias = this.getAliasForTable(path.slice(0, -1));
     let column = this.getColumnInfoForPropertyPath(path);

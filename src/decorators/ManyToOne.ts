@@ -5,11 +5,10 @@ import { NavigationPropertyDecorator } from '../decorators';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 
 
-export function OneToOne<EntityType, SelectType>(
+export function ManyToOne<EntityType, SelectType>(
   foreignKeyEntity: ObjectType<EntityType>,
   foreignKey: PropertyExpression<EntityType, SelectType>)
   : NavigationPropertyDecorator {
-
 
   let propertyDecorator = (target, propertyKey) => {
     let fk = {

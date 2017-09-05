@@ -26,6 +26,7 @@ export namespace DecoratorStorage {
     isForeignKey: boolean = false;
 
     foreignKey: ForeignKey;
+    manyToManyMapping: ManyToManyMapping;
 
     options: ColumnOptions;
 
@@ -37,6 +38,12 @@ export namespace DecoratorStorage {
   export class ForeignKey {
     owner: ObjectType<any>;
     readonly column: string;
+  }
+
+  export class ManyToManyMapping {
+    owner: ObjectType<any>;
+    readonly leftKey: string;
+    readonly rightKey: string;
   }
 
   export class Context {

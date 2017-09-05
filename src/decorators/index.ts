@@ -29,4 +29,4 @@ export type ColumnOptions = {
 
 
 export type DbCollectionDecorator = PropertyDecorator;
-export type OneToOneDecorator = PropertyDecorator;
+export type NavigationPropertyDecorator = PropertyDecorator;

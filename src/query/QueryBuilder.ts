@@ -63,26 +63,60 @@ export class QueryBuilder {
     let alias = ctx.getAliasForTable(branch.path);
     let tableWithAlias = `${branch.entity.dbName} as ${alias}`;
     if (branch.parent) {
-      tokens.push('LEFT JOIN');
-      tokens.push(tableWithAlias);
-      tokens.push('ON');
-
+      let mmp = branch.column.manyToManyMapping;
       let fk = branch.column.foreignKey;
-      let owner = branch.parent;
-      let owned = branch;
-      if (fk.owner === branch.entity.type) {
-        owner = branch;
-        owned = branch.parent;
+      if (mmp) {
+        let owner = DecoratorStorage.getEntity(mmp.owner);
+        let leftEntity = branch.parent.entity;
+        let rightEntity = branch.entity;
+
+        let leftPK = leftEntity.columns.find(x => x.options.primaryKey);
+        let rightPK = rightEntity.columns.find(x => x.options.primaryKey);
+
+        let leftFK = owner.columns.find(x => x.name === mmp.leftKey);
+        let rightFK = owner.columns.find(x => x.name === mmp.rightKey);
+
+        let leftAlias = ctx.getAliasForTable(branch.parent.path);
+        let rightAlias = ctx.getAliasForTable(branch.path);
+        let ownerAlias = ctx.getAliasForMappingTable(branch.path);
+        let ownerTableWithAlias = owner.dbName + ' as ' + ownerAlias;
+
+        tokens.push('LEFT JOIN');
+        tokens.push(ownerTableWithAlias);
+        tokens.push('ON');
+        tokens.push(ownerAlias + '.' + leftFK.dbName);
+        tokens.push('=');
+        tokens.push(leftAlias + '.' + leftPK.dbName);
+
+        tokens.push('LEFT JOIN');
+        tokens.push(tableWithAlias);
+        tokens.push('ON');
+        tokens.push(ownerAlias + '.' + rightFK.dbName);
+        tokens.push('=');
+        tokens.push(rightAlias + '.' + rightPK.dbName);
       }
+      else {
+        tokens.push('LEFT JOIN');
+        tokens.push(tableWithAlias);
 
-      let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
-      let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
+        let owner = branch.parent;
+        let owned = branch;
+        if (fk.owner === branch.entity.type) {
+          owner = branch;
+          owned = branch.parent;
+        }
 
-      let ownerAlias = ctx.getAliasForTable(owner.path);
-      let ownedAlias = ctx.getAliasForTable(owned.path);
-      tokens.push(ownerAlias + '.' + foreignKeyColumn.dbName);
-      tokens.push('=');
-      tokens.push(ownedAlias + '.' + fkTargetPK.dbName);
+        let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
+        let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
+
+        let ownerAlias = ctx.getAliasForTable(owner.path);
+        let ownedAlias = ctx.getAliasForTable(owned.path);
+
+        tokens.push('ON');
+        tokens.push(ownerAlias + '.' + foreignKeyColumn.dbName);
+        tokens.push('=');
+        tokens.push(ownedAlias + '.' + fkTargetPK.dbName);
+      }
     }
     else {
       tokens.push(tableWithAlias);
