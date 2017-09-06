@@ -2,7 +2,7 @@ import { Context } from './entity/Context';
 import { ChildModel } from './entity/ChildModel';
 import { expect } from 'chai';
 
-describe('query > one-to-one > where > join', async () => {
+describe('query > one-to-one > where', async () => {
 
   it('should be able to filter from owned side', async () => {
     let ctx = new Context();

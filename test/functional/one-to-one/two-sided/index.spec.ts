@@ -2,7 +2,7 @@ import { Context } from './entity/Context';
 import { ChildModel } from './entity/ChildModel';
 import { expect } from 'chai';
 
-describe('query > one-to-one > two-sided > join', async () => {
+describe('query > one-to-one > two-sided', async () => {
 
   it('should be able to select from owned side', async () => {
     let ctx = new Context();
