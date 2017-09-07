@@ -5,7 +5,7 @@ import { ChildModel } from './entity/ChildModel';
 import { OtherModel } from './entity/OtherModel';
 import { assertEntities, assertColumns, assertForeignKeys } from './helper';
 
-describe.only('decorators', async () => {
+describe('decorators', async () => {
 
   it('should create and store entities', assertEntities);
 

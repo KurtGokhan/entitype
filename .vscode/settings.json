@@ -6,5 +6,6 @@
     "temp": true,
     "tmp": true
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "mocha.enabled": false
 }

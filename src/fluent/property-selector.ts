@@ -13,28 +13,11 @@ import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 function createPropertySelector<EntityType>(entityType: ObjectType<EntityType>): PropertySelector<EntityType> {
-  let parameter: PropertySelector<EntityType> = <any>{};
-
-  let entity = DecoratorStorage.getEntity(entityType);
-
-  if (entity) {
-    let columns = entity.columns;
-    for (let index = 0; index < columns.length; index++) {
-      let column = columns[index];
-
-      parameter[<any>column.name] = <any>column.name;
+  return <any>new Proxy({}, {
+    get: function (target, propertyName) {
+      return propertyName;
     }
-  }
-  else {
-    // TODO: make sure this works
-    return <any>new Proxy({}, {
-      get: function (target, propertyName) {
-        return propertyName;
-      }
-    });
-  }
-
-  return <any>Object.freeze(parameter);
+  });
 }
 
 

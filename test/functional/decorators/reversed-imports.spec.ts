@@ -5,7 +5,7 @@ import { OtherModel } from './entity/OtherModel';
 import { Model } from './entity/Model';
 import { assertEntities, assertColumns, assertForeignKeys } from './helper';
 
-describe.only('decorators > reversed imports', async () => {
+describe('decorators > reversed imports', async () => {
 
   it('should create and store entities', assertEntities);
 
