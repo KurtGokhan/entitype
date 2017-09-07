@@ -1,6 +1,7 @@
 import { IQueryable, EntitypeContext, DbCollection } from 'src';
 import { Model } from './Model';
 import { ChildModel } from './ChildModel';
+import { OtherModel } from './OtherModel';
 
 export class Context extends EntitypeContext {
   constructor() {
@@ -12,4 +13,7 @@ export class Context extends EntitypeContext {
 
   @DbCollection(ChildModel)
   childmodels: IQueryable<ChildModel>;
+
+  @DbCollection(OtherModel)
+  othermodels: IQueryable<OtherModel>;
 }

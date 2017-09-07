@@ -1,6 +1,6 @@
+import { Column, OneToOne } from 'src';
+
 import { ChildModel } from './ChildModel';
-import { Column } from 'src/decorators/Column';
-import { OneToOne } from 'src/decorators/OneToOne';
 import { OtherModel } from './OtherModel';
 
 export class Model {

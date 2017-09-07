@@ -13,7 +13,7 @@ export class ResultMapper {
       return +dataResult[0].count;
     }
 
-    let columns = this.context.select.columns;
+    let columns = this.context.selectedColumns;
     let resultArray = this.getStructure(dataResult.length);
 
     for (let index = 0; index < columns.length; index++) {
@@ -42,7 +42,7 @@ export class ResultMapper {
   }
 
   getStructure(count: number) {
-    let structure = this.context.select.structure;
+    let structure = this.context.selectStructure;
     let resultArray = [];
 
     for (let index = 0; index < count; index++) {

@@ -174,6 +174,11 @@ export namespace DecoratorStorage {
   export function updateColumnReferences(column: Column) {
     if (column.foreignKey) {
       let entity = getEntity(column.foreignKey.owner);
+      if (!entity) {
+        // TODO: resolve
+        console.warn('Foreign key owner was undefined', column.foreignKey);
+        return;
+      }
       let col = entity.columns.find(x => x.name === column.foreignKey.column);
       if (col)
         col.isForeignKey = true;
