@@ -60,7 +60,6 @@ export class ResultMapper {
         for (let mapIndex = 0; mapIndex < st.mapPath.length - 1; mapIndex++) {
           let mapPart = st.mapPath[mapIndex];
           let childTarget = target[mapPart];
-          if (!childTarget) childTarget = target[mapPart] = {};
           target = childTarget;
         }
 

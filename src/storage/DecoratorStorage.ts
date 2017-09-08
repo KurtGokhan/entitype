@@ -175,8 +175,10 @@ export namespace DecoratorStorage {
     if (column.foreignKey) {
       let entity = getEntity(column.foreignKey.owner);
       if (!entity) {
-        // TODO: resolve
-        console.warn('Foreign key owner was undefined', column.foreignKey);
+        console.warn(
+          `Foreign key owner could not be resolved for column '${column.name}' on entity '${column.parent.name}' due to cyclic references.`,
+          `Use forwardRef for better support.`
+        );
         return;
       }
       let col = entity.columns.find(x => x.name === column.foreignKey.column);
@@ -200,8 +202,10 @@ export namespace DecoratorStorage {
 
           let fkCounterPart = DecoratorStorage.getForeignKeyCounterPart(col);
 
-          if (fkCounterPart)
+          if (fkCounterPart) {
             col.type = fkCounterPart.parent.type;
+            col.foreignKey = fkCounterPart.foreignKey;
+          }
         }
       });
     });
@@ -211,6 +215,7 @@ export namespace DecoratorStorage {
     let fk = baseColumn.foreignKey;
     let baseEntity = getEntity(fk.owner);
 
+    // Solves reversed cyclic references
     for (let index = 0; index < targetStorage.length; index++) {
       let entity = targetStorage[index];
 
@@ -223,6 +228,23 @@ export namespace DecoratorStorage {
           return col;
       }
     }
+
+
+    // Solves cyclic references
+    for (let index = 0; index < targetStorage.length; index++) {
+      let entity = targetStorage[index];
+
+      for (let colIndex = 0; colIndex < entity.columns.length; colIndex++) {
+        let col = entity.columns[colIndex];
+
+        if (col.isNavigationProperty && col.foreignKey) {
+          if (col.type === baseColumn.parent.type && col.foreignKey.column === fk.column) {
+            return col;
+          }
+        }
+      }
+    }
+
     return null;
   }
 }

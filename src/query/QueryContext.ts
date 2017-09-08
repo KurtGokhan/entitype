@@ -1,3 +1,4 @@
+import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
 import { Command } from '../command/Command';
 import { CountCommand } from '../command/command-types/CountCommand';
@@ -175,7 +176,7 @@ export class QueryContext {
     for (let index = 0; index < path.length; index++) {
       let prop = path[index];
 
-      if (!entity) throw Error('Wrong property path in the query');
+      if (!entity) throw new UnknownPropertyError(prop);
 
       col = entity.columns.find(x => x.name === prop);
       entity = DecoratorStorage.getEntity(col.type);

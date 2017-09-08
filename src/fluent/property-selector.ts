@@ -25,6 +25,7 @@ function createDeepPropertySelectorInternal<EntityType>(
   entityType: ObjectType<EntityType> | DecoratorStorage.Entity,
   basePath: PropertyPath,
   extend: any) {
+  // TODO: use proxies
 
   let selector: DeepPropertySelector<EntityType> = extend;
 
