@@ -2,6 +2,9 @@ export * from './Column';
 export * from './DbCollection';
 export * from './Entity';
 export * from './OneToOne';
+export * from './ManyToMany';
+export * from './ManyToOne';
+export * from './OneToMany';
 
 export type ColumnDecorator = PropertyDecorator & ColumnDecoratorBuilder;
 

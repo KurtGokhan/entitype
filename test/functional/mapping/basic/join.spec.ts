@@ -1,8 +1,9 @@
-import { useConfiguration, ConnectionOptions } from 'src/configuration';
-import { mockDriverToReturnData } from 'test/mock/driver-mock';
-import { container } from 'src/ioc';
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { ConnectionOptions, useConfiguration } from 'src/configuration';
+import { container } from 'src/ioc';
+import { mockDriverToReturnData } from 'test/mock/driver-mock';
+
+import { Context } from './entity/Context';
 
 describe('mapping > join', async () => {
   beforeEach(() => container.snapshot());
@@ -12,7 +13,7 @@ describe('mapping > join', async () => {
     adapter: 'mock'
   };
 
-  it('should be able to map explicitly joined tables from the owning side', async () => {
+  it.only('should be able to map explicitly joined tables from the owning side', async () => {
     let specName = 'my-name';
     let specId = 5;
     let specChildId = 15;

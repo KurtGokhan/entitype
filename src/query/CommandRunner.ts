@@ -3,7 +3,6 @@ import { QueryCommand } from '../command/command-types/QueryCommand';
 import { CommandType } from '../command/CommandType';
 import { ConnectionOptions } from '../configuration';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from '../ioc';
-import { QueryBuilder } from '../query/QueryBuilder';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { QueryContext } from './QueryContext';
 import { ResultMapper } from './ResultMapper';
@@ -28,8 +27,14 @@ export class CommandRunner {
     if (container.isBoundNamed(DI_TYPES.driver, this.config.adapter))
       this.driver = container.getNamed(DI_TYPES.driver, this.config.adapter);
 
-    if (container.isBoundNamed(DI_TYPES.queryBuilder, this.config.adapter))
-      this.builder = container.getNamed(DI_TYPES.queryBuilder, this.config.adapter);
+    let adapterName = this.config.adapter;
+    if (container.isBoundNamed(DI_TYPES.queryBuilder, adapterName))
+      this.builder = container.getNamed(DI_TYPES.queryBuilder, adapterName);
+    else
+      throw Error(`
+      Could not find a Query Builder that matches the name '${adapterName}'.
+      Did you forget to add the plugin?
+      `);
   }
 
   private resolveCommands() {
@@ -40,21 +45,17 @@ export class CommandRunner {
    * Run the commands and get the result
    */
   run() {
-    let query = new QueryBuilder(this.context).build();
+    let query = this.buildQuery();
     if (this.isQuery) return query;
     let queryResult = this.runQuery(query);
     return new ResultMapper(this.context).mapResult(queryResult as any);
   }
 
+  private buildQuery() {
+    return this.builder.buildQuery(this.context);
+  }
 
-  /**
-   * Run a SQL string against the database
-   *
-   * @param {string} sql
-   * @returns
-   * @memberof QueryRunner
-   */
-  runQuery(sql: string) {
+  private runQuery(sql: string) {
     return this.driver.runQuery(sql, this.config);
   }
 }

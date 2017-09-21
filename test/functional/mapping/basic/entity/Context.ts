@@ -1,6 +1,7 @@
-import { IQueryable, EntitypeContext, DbCollection } from 'src';
-import { Model } from './Model';
+import { DbCollection, EntitypeContext, IQueryable } from 'src';
+
 import { ChildModel } from './ChildModel';
+import { Model } from './Model';
 import { OtherModel } from './OtherModel';
 
 export class Context extends EntitypeContext {

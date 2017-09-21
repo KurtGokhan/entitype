@@ -1,5 +1,5 @@
-import { DeepPropertyExpression } from './expressions';
 import { PropertyMapExpression, WhereExpression } from './';
+import { DeepPropertyExpression } from './expressions';
 
 export interface IQueryable<EntityType> extends IIncludable<EntityType> { }
 

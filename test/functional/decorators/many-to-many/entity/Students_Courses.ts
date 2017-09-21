@@ -1,4 +1,4 @@
-import { Column } from 'src/decorators/Column';
+import { Column } from 'src';
 
 export class StudentsCourses {
   @Column().primaryKey()

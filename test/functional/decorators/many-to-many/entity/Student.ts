@@ -1,7 +1,7 @@
-import { StudentsCourses } from './Students_Courses';
+import { Column, ManyToMany } from 'src';
+
 import { Course } from './Course';
-import { Column } from 'src/decorators/Column';
-import { ManyToMany } from 'src/decorators/ManyToMany';
+import { StudentsCourses } from './Students_Courses';
 
 export class Student {
   @Column().primaryKey()
