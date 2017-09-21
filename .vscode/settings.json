@@ -6,6 +6,11 @@
     "temp": true,
     "tmp": true
   },
-  "editor.formatOnSave": true,
-  "mocha.enabled": false
+  "typescriptHero.resolver.ignorePatterns": [
+    "build",
+    "out",
+    "dist",
+    "tmp"
+  ],
+  "editor.formatOnSave": true
 }

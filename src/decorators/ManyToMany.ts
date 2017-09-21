@@ -1,7 +1,7 @@
-import { NavigationPropertyDecorator } from './';
-import { resolvePropertyExpression } from '../fluent/property-selector';
 import { ObjectType, PropertyExpression } from '../fluent';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { resolvePropertyExpression } from '../fluent/property-selector';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { NavigationPropertyDecorator } from './';
 
 export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
   arrayType: ObjectType<ArrayType>,
@@ -12,7 +12,9 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
 
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
-      owner: joinTableType,
+      get owner() {
+        return DecoratorStorage.getEntity(joinTableType);
+      },
       get leftKey() {
         return resolvePropertyExpression(leftKey, joinTableType);
       },

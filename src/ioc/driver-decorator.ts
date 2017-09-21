@@ -1,7 +1,8 @@
+import { injectable } from 'inversify';
+
 import { DI_TYPES } from './';
 import { DriverAdapter } from './';
 import { container } from './';
-import { injectable } from 'inversify';
 
 export function Driver(name: string): ClassDecorator {
   return (target) => {

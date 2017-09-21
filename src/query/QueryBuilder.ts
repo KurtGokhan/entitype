@@ -1,19 +1,6 @@
-import { QueryContext } from './QueryContext';
 import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
-import { IncludeCommand } from '../command/command-types/IncludeCommand';
-import { SkipCommand } from '../command/command-types/SkipCommand';
-import { PropertyPath } from '../fluent';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
-
-import { Command } from '../command/Command';
-import { CountCommand } from '../command/command-types/CountCommand';
-import { FirstCommand } from '../command/command-types/FirstCommand';
-import { OrderByCommand } from '../command/command-types/OrderByCommand';
-import { QueryCommand } from '../command/command-types/QueryCommand';
-import { SelectCommand } from '../command/command-types/SelectCommand';
-import { TakeCommand } from '../command/command-types/TakeCommand';
-import { WhereCommand } from '../command/command-types/WhereCommand';
-import { CommandType } from '../command/CommandType';
+import { QueryContext } from './QueryContext';
 
 export class QueryBuilder {
   constructor(private context: QueryContext) { }
@@ -148,12 +135,6 @@ export class QueryBuilder {
     return tokens;
   }
 
-  /**
-   * Gets the query for commands
-   *
-   * @returns
-   * @memberof QueryRunner
-   */
   build() {
     let ctx = this.context;
 

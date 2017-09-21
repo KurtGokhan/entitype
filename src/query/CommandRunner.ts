@@ -1,16 +1,17 @@
-import { QueryContext } from './QueryContext';
-import { ResultMapper } from './ResultMapper';
-import { DriverAdapter, DI_TYPES, container } from '../ioc';
-import { QueryBuilder } from '../query/QueryBuilder';
 import { Command } from '../command/Command';
 import { QueryCommand } from '../command/command-types/QueryCommand';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { CommandType } from '../command/CommandType';
 import { ConnectionOptions } from '../configuration';
+import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from '../ioc';
+import { QueryBuilder } from '../query/QueryBuilder';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { QueryContext } from './QueryContext';
+import { ResultMapper } from './ResultMapper';
 
 export class CommandRunner {
   private isQuery: QueryCommand;
   private driver: DriverAdapter;
+  private builder: QueryBuilderAdapter;
   private context: QueryContext;
 
   constructor(
@@ -26,6 +27,9 @@ export class CommandRunner {
   private resolveDependencies() {
     if (container.isBoundNamed(DI_TYPES.driver, this.config.adapter))
       this.driver = container.getNamed(DI_TYPES.driver, this.config.adapter);
+
+    if (container.isBoundNamed(DI_TYPES.queryBuilder, this.config.adapter))
+      this.builder = container.getNamed(DI_TYPES.queryBuilder, this.config.adapter);
   }
 
   private resolveCommands() {

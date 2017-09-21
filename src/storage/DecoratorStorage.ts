@@ -1,6 +1,5 @@
 import { ColumnOptions } from '../decorators';
-import { PropertyExpression, ObjectType } from '../fluent';
-import { resolvePropertyExpression } from '../fluent/property-selector';
+import { ObjectType } from '../fluent';
 
 export namespace DecoratorStorage {
   export class Entity {
@@ -42,7 +41,7 @@ export namespace DecoratorStorage {
   }
 
   export class ManyToManyMapping {
-    owner: ObjectType<any>;
+    readonly owner: Entity;
     readonly leftKey: string;
     readonly rightKey: string;
   }

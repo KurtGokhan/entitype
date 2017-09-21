@@ -1,6 +1,10 @@
-import { ConnectionOptions } from '../configuration/ConnectionOptions';
 import { Container } from 'inversify';
+
+import { ConnectionOptions } from '../configuration/ConnectionOptions';
+import { QueryContext } from '../query/QueryContext';
+
 export * from './driver-decorator';
+export * from './query-builder-decorator';
 
 export const DI_TYPES = {
   driver: Symbol('Driver'),
@@ -18,7 +22,7 @@ export interface LoggerAdapter {
 }
 
 export interface QueryBuilderAdapter {
-  buildQuery(): string;
+  buildQuery(context: QueryContext): string;
 }
 
 export const container = new Container();

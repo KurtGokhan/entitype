@@ -1,5 +1,6 @@
-import { ConnectionOptions, DriverAdapter, Driver, container, DI_TYPES } from 'src';
 import { expect } from 'chai';
+import { ConnectionOptions } from 'src';
+import { container, DI_TYPES, Driver, DriverAdapter } from 'src/plugins';
 
 describe('ioc > Driver', async () => {
   beforeEach(() => container.snapshot());
