@@ -14,11 +14,11 @@
     "mysql"
   ],
   "dependencies": {
-    "entitype": "file:..\\entitype",
     "mysql2": "^1.4.2",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
+    "entitype": "file:..\\entitype",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/chai-string": "^1.1.30",
@@ -39,6 +39,7 @@
     "typescript": "^2.5.2"
   },
   "peerDependencies": {
+    "entitype": "file:..\\entitype",
     "mysql2": "^1.4.1"
   },
   "scripts": {

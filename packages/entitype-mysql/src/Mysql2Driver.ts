@@ -1,5 +1,5 @@
-import { MysqlConnectionOptions } from './MysqlConnectionOptions';
-import { Driver, DriverAdapter, ConnectionOptions } from 'entitype';
+import { ConnectionOptions } from 'entitype';
+import { Driver, DriverAdapter } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
 @Driver('mysql2')
