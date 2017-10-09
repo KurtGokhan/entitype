@@ -13,7 +13,7 @@ describe('mapping > join', async () => {
     adapter: 'mock'
   };
 
-  it.only('should be able to map explicitly joined tables from the owning side', async () => {
+  it('should be able to map explicitly joined tables from the owning side', async () => {
     let specName = 'my-name';
     let specId = 5;
     let specChildId = 15;
