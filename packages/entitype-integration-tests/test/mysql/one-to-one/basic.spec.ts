@@ -5,7 +5,7 @@ import { expect } from 'chai';
 describe('query > one-to-one > basic', async () => {
   beforeEach(integrationTestDatabaseSeed);
 
-  it.only('should be able to select from owning side', async () => {
+  it('should be able to select from owning side', async () => {
     let ctx = new Context();
     let models = await ctx.models.select(x => x.name).toList();
     expect(models).not.to.be.equal(null);

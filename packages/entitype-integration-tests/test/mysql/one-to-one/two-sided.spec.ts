@@ -1,6 +1,6 @@
 import { integrationTestDatabaseSeed } from '../integration-helper';
 import { expect } from 'chai';
-import { Context } from 'test/integration/config/entities/Context';
+import { Context } from 'test/mysql/config/entities/Context';
 
 describe('query > one-to-one > two-sided > join', async () => {
   beforeEach(integrationTestDatabaseSeed);
