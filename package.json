@@ -1,6 +1,6 @@
 {
   "name": "entitype",
-  "version": "0.0.2-0",
+  "version": "0.0.2-1",
   "description": "An orm framework for typescript that lets you fluently query the database",
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -49,8 +49,7 @@
     "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=25650 --inspect-brk",
     "build": "tsc",
-    "clean": "rimraf dist && rimraf tmp",
-    "clean:all": "npm run clean && rimraf node_modules"
+    "prepublish": "npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"
