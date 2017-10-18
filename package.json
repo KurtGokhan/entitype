@@ -1,7 +1,6 @@
 {
   "name": "entitype",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-0",
   "description": "An orm framework for typescript that lets you fluently query the database",
   "license": "MIT",
   "readmeFilename": "README.md",
