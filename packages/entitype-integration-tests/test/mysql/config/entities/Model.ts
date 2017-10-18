@@ -9,6 +9,6 @@ export class Model {
   @Column()
   name: string;
 
-  @OneToOne(ChildModel, x => x.parent_id)
+  @OneToOne(() => ChildModel, x => x.parent_id)
   child: ChildModel;
 }

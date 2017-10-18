@@ -8,3 +8,5 @@ dist/
 build/
 
 package-lock.json
+
+test/config.json

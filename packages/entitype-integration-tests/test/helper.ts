@@ -3,6 +3,8 @@ import 'reflect-metadata';
 import * as chai from 'chai';
 import { createConnection } from 'mysql2/promise';
 import { useConfiguration, ConnectionOptions } from 'entitype';
+import 'entitype';
+import 'entitype-mysql';
 
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
