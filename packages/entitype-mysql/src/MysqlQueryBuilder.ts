@@ -125,7 +125,7 @@ export class MysqlQueryBuilder implements QueryBuilderAdapter {
 
         let owner = branch.parent;
         let owned = branch;
-        if (fk.owner === branch.entity.type) {
+        if (fk.owner.type === branch.entity.type) {
           owner = branch;
           owned = branch.parent;
         }

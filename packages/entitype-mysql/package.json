@@ -18,7 +18,6 @@
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "entitype": "file:..\\entitype",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/chai-string": "^1.1.30",
@@ -28,6 +27,7 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
+    "entitype": "file:..\\entitype",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
@@ -36,7 +36,8 @@
     "tsconfig-paths": "^2.2.0",
     "tslint": "^5.6.0",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typescript-json-schema": "^0.17.0"
   },
   "peerDependencies": {
     "entitype": "file:..\\entitype",
@@ -46,7 +47,8 @@
     "test": "nyc mocha & npm run coverage:show",
     "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
-    "compile": "tsc"
+    "compile": "tsc",
+    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"

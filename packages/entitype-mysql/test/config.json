@@ -1,8 +1,9 @@
 {
+  "$schema": "../schema.json",
   "adapter": "mysql2",
   "host": "localhost",
   "port": 3306,
   "database": "test",
   "user": "root",
-  "password": "19681962"
+  "password": "sarcms"
 }

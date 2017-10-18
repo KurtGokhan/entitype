@@ -13,11 +13,10 @@ describe('driver > runQuery', async () => {
 
   it('should be able to run basic select all query', async () => {
     let driver = new Mysql2Driver();
-    let result = await driver.runQuery('select * from test_table', connectionOptions);
-    let rows = result[0];
-    let cols = result[1];
-    expect(rows).to.have.length(2);
-    expect(cols).to.have.length(4);
-    expect(rows[0]['name']).to.be.equal('hello');
+    let result = await driver.runQuery('select * from model', connectionOptions);
+    let [rows, cols] = result;
+    expect(rows).to.have.length(3);
+    expect(cols).to.have.length(2);
+    expect(rows[0]['name']).to.be.equal('Model 1');
   });
 });
