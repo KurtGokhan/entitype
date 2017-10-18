@@ -27,7 +27,7 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
-    "entitype": "file:..\\entitype",
+    "entitype": "file:../entitype",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
@@ -40,14 +40,14 @@
     "typescript-json-schema": "^0.17.0"
   },
   "peerDependencies": {
-    "entitype": "file:..\\entitype",
+    "entitype": "*",
     "mysql2": "^1.4.1"
   },
   "scripts": {
     "test": "nyc mocha & npm run coverage:show",
     "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
-    "compile": "tsc",
+    "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json"
   },
   "main": "./dist/index.js",
