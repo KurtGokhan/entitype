@@ -13,20 +13,20 @@ export function assertForeignKeys() {
   let modelChild = model.columns.find(x => x.name === 'child');
   let modelOther = model.columns.find(x => x.name === 'other');
 
-  expect(modelChild.foreignKey.owner).to.be.equal(Model);
+  expect(modelChild.foreignKey.owner.type).to.be.equal(Model);
   expect(modelChild.foreignKey.column).to.be.equal('child_id');
 
-  expect(modelOther.foreignKey.owner).to.be.equal(OtherModel);
+  expect(modelOther.foreignKey.owner.type).to.be.equal(OtherModel);
   expect(modelOther.foreignKey.column).to.be.equal('parent_id');
 
   let childmodelParent = childmodel.columns.find(x => x.name === 'parent');
 
-  expect(childmodelParent.foreignKey.owner).to.be.equal(Model);
+  expect(childmodelParent.foreignKey.owner.type).to.be.equal(Model);
   expect(childmodelParent.foreignKey.column).to.be.equal('child_id');
 
   let othermodelParent = othermodel.columns.find(x => x.name === 'parent');
 
-  expect(othermodelParent.foreignKey.owner).to.be.equal(OtherModel);
+  expect(othermodelParent.foreignKey.owner.type).to.be.equal(OtherModel);
   expect(othermodelParent.foreignKey.column).to.be.equal('parent_id');
 }
 

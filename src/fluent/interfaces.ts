@@ -48,8 +48,8 @@ export interface IGroupFiltered<EntityType> extends ISelectable<EntityType> {
 
 
 export interface ISelectable<EntityType> extends IOrderable<EntityType> {
-  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType>;
   count: { (): Promise<number>; query: string; };
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType>;
 }
 
 export interface IOrderable<EntityType> extends ISkipable<EntityType> {
@@ -67,8 +67,8 @@ export interface ISkipable<EntityType> extends ITakeable<EntityType> {
 }
 
 export interface ISkipped<EntityType> {
-  take(amount: number): IListable<EntityType>;
   first: { (): Promise<EntityType>; query: string; };
+  take(amount: number): IListable<EntityType>;
 }
 
 export interface ITakeable<EntityType> extends IListable<EntityType>, ISkipped<EntityType> {

@@ -23,9 +23,8 @@ export function OneToMany<EntityType, SelectType>(
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type, {});
     column.isNavigationProperty = true;
     column.isArray = true;
-    column.foreignKey = fk;
-
-    DecoratorStorage.updateColumnReferences(column);
+    // column.foreignKey = fk;
+    DecoratorStorage.updateEntityReferences(column.parent);
   };
 
 

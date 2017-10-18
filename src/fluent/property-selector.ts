@@ -12,13 +12,12 @@ import { SelectMapping, SelectMappingStructure } from '../command/command-types/
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
-function createPropertySelector<EntityType>(entityType: ObjectType<EntityType>): PropertySelector<EntityType> {
-  return <any>new Proxy({}, {
-    get: function (target, propertyName) {
-      return propertyName;
-    }
-  });
-}
+const propertySelector: PropertySelector<any> = new Proxy({}, {
+  get: function (target, propertyName) {
+    return propertyName;
+  }
+});
+
 
 
 function createDeepPropertySelectorInternal<EntityType>(
@@ -99,8 +98,8 @@ function getPropertyMapping(map: PropertyMapGetter): [SelectMapping[], SelectMap
 
 export function resolvePropertyExpression<EntityType, SelectType>(
   expression: PropertyExpression<EntityType, SelectType>,
-  entityType: ObjectType<EntityType>): string {
-  let parameter = createPropertySelector(entityType);
+  entityType?: ObjectType<EntityType>): string {
+  let parameter = propertySelector;
   let selectObject = <any>expression(parameter);
   return selectObject;
 }

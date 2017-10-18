@@ -1,6 +1,7 @@
 import { Column, OneToOne } from 'src';
 
 import { Model } from './Model';
+import { forwardRef } from 'src/common/forwardRef';
 
 export class OtherModel {
   @Column().primaryKey()
@@ -9,7 +10,7 @@ export class OtherModel {
   @Column()
   name: string;
 
-  @OneToOne(OtherModel, x => x.parent_id)
+  @OneToOne((() => OtherModel), x => x.parent_id)
   parent: Model;
 
   @Column()

@@ -1,3 +1,4 @@
+import { forwardRef } from 'src/common/forwardRef';
 import { Column, OneToOne } from 'src';
 
 import { ChildModel } from './ChildModel';
@@ -10,13 +11,13 @@ export class Model {
   @Column()
   name: string;
 
-  @OneToOne(Model, x => x.child_id)
+  @OneToOne((() => Model), x => x.child_id)
   child: ChildModel;
 
   @Column()
   child_id: number;
 
-  @OneToOne(OtherModel, x => x.parent_id)
+  @OneToOne((() => OtherModel), x => x.parent_id)
   other: OtherModel;
 
 }

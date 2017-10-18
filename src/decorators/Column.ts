@@ -9,8 +9,9 @@ export function Column(options?: ColumnOptions): ColumnDecorator {
   let retType = (target, propertyKey) => {
     let metadata = Reflect.getMetadata('design:type', target, propertyKey);
 
-    let prop = DecoratorStorage.addColumn(target.constructor, propertyKey, metadata, options);
-    prop.isColumn = true;
+    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, metadata, options);
+    column.isColumn = true;
+    DecoratorStorage.updateEntityReferences(column.parent);
   };
 
   retType['type'] = type => Column(Object.assign({}, options, { type }));

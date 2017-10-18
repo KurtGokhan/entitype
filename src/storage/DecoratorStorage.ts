@@ -1,3 +1,4 @@
+import { ForwardRef } from '../common/forwardRef';
 import { ColumnOptions } from '../decorators';
 import { ObjectType } from '../fluent';
 
@@ -36,7 +37,7 @@ export namespace DecoratorStorage {
   }
 
   export class ForeignKey {
-    owner: ObjectType<any>;
+    owner: ForwardRef<any>;
     readonly column: string;
   }
 
@@ -163,6 +164,7 @@ export namespace DecoratorStorage {
   }
 
 
+
   /**
    * Update the owning and referencing entities to this column if there is any
    * Should be called after a navigation property is registered
@@ -172,7 +174,7 @@ export namespace DecoratorStorage {
    */
   export function updateColumnReferences(column: Column) {
     if (column.foreignKey) {
-      let entity = getEntity(column.foreignKey.owner);
+      let entity = getEntity(column.foreignKey.owner.type);
       if (!entity) {
         console.warn(
           `Foreign key owner could not be resolved for column '${column.name}' on entity '${column.parent.name}' due to cyclic references.`,
@@ -212,7 +214,7 @@ export namespace DecoratorStorage {
 
   export function getForeignKeyCounterPart(baseColumn: Column): Column {
     let fk = baseColumn.foreignKey;
-    let baseEntity = getEntity(fk.owner);
+    let baseEntity = getEntity(fk.owner.type);
 
     // Solves reversed cyclic references
     for (let index = 0; index < targetStorage.length; index++) {
@@ -222,7 +224,7 @@ export namespace DecoratorStorage {
         let col = entity.columns[colIndex];
         if (baseColumn === col || !col.foreignKey) continue;
 
-        let fkEntity = getEntity(col.foreignKey.owner);
+        let fkEntity = getEntity(col.foreignKey.owner.type);
         if (fkEntity === baseEntity && col.foreignKey.column === fk.column)
           return col;
       }

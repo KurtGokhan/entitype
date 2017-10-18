@@ -1,11 +1,12 @@
+import { ForwardRef } from '../common/forwardRef';
 import { ObjectType, PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { NavigationPropertyDecorator } from './';
 
 export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
-  arrayType: ObjectType<ArrayType>,
-  joinTableType: ObjectType<JoinTableType>,
+  arrayType: ForwardRef<ArrayType>,
+  joinTableType: ForwardRef<JoinTableType>,
   leftKey: PropertyExpression<JoinTableType, LeftKeyType>,
   rightKey?: PropertyExpression<JoinTableType, RightKeyType>)
   : NavigationPropertyDecorator {
@@ -13,13 +14,13 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
       get owner() {
-        return DecoratorStorage.getEntity(joinTableType);
+        return DecoratorStorage.getEntity(joinTableType.type);
       },
       get leftKey() {
-        return resolvePropertyExpression(leftKey, joinTableType);
+        return resolvePropertyExpression(leftKey, joinTableType.type);
       },
       get rightKey() {
-        return resolvePropertyExpression(rightKey, joinTableType);
+        return resolvePropertyExpression(rightKey, joinTableType.type);
       }
     };
 
@@ -29,8 +30,7 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
     column.isNavigationProperty = true;
     column.isArray = true;
     column.manyToManyMapping = fk;
-
-    DecoratorStorage.updateColumnReferences(column);
+    DecoratorStorage.updateEntityReferences(column.parent);
   };
 
 
