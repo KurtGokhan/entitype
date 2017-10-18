@@ -1,4 +1,4 @@
-import { ForwardRef } from '../common/forwardRef';
+import { ForwardRef, TypeResolver, resolveType } from '../common/forwardRef';
 import { ColumnOptions } from '../decorators';
 import { ObjectType } from '../fluent';
 
@@ -83,8 +83,8 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addColumn(parent: Function, columnName: string, metadataType: any, options: ColumnOptions): Column {
-    let type = metadataType;
+  export function addColumn(parent: Function, columnName: string, metadataType: TypeResolver<any>, options: ColumnOptions): Column {
+    let type = resolveType(metadataType);
 
     let entity = getEntity(parent) || addEntity(parent);
 
@@ -92,8 +92,18 @@ export namespace DecoratorStorage {
       dbName: columnName.toString(),
       name: columnName,
       parent: entity,
-      type: type,
+      type: null,
       options: options
+    });
+
+    let setType = null;
+    Object.defineProperty(column, 'type', {
+      get() {
+        return setType || (type as ForwardRef<any>).type;
+      },
+      set(value) {
+        setType = value;
+      }
     });
 
     if (!entity.columns.find(x => x.name === column.name))

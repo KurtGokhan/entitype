@@ -20,7 +20,7 @@ export function ManyToOne<EntityType, SelectType>(
 
     let type = Reflect.getMetadata('design:type', target, propertyKey);
 
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, type, {});
+    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => type, {});
     column.isNavigationProperty = true;
     // column.foreignKey = fk;
     DecoratorStorage.updateEntityReferences(column.parent);
