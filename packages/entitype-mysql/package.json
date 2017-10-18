@@ -1,6 +1,5 @@
 {
   "name": "entitype-mysql",
-  "private": true,
   "version": "0.0.1-0",
   "description": "Entitype mysql adapter",
   "license": "MIT",
