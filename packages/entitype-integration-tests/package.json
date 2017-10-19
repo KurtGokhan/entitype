@@ -9,12 +9,15 @@
     "name": "Gökhan Kurt",
     "email": "krtgokhan@hotmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KurtGokhan/entitype-integration-tests"
+  },
   "tags": [
     "entitype",
     "test"
   ],
   "dependencies": {
-    "mysql2": "^1.4.2",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -27,11 +30,12 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
-    "entitype": "latest",
-    "entitype-mysql": "latest",
+    "entitype": "KurtGokhan/entitype#develop",
+    "entitype-mysql": "KurtGokhan/entitype-mysql#develop",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
+    "mysql2": "^1.4.2",
     "nyc": "^11.1.0",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.2.0",
@@ -42,7 +46,6 @@
   "scripts": {
     "test": "nyc mocha & npm run coverage:show",
     "coverage:show": "start ./tmp/lcov-report/index.html",
-    "test:debug": "mocha --inspect=25750 --inspect-brk",
-    "compile": "tsc"
+    "test:debug": "mocha --inspect=25750 --inspect-brk"
   }
 }

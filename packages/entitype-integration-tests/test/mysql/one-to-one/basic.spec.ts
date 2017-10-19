@@ -9,5 +9,7 @@ describe('query > one-to-one > basic', async () => {
     let ctx = new Context();
     let models = await ctx.models.select(x => x.name).toList();
     expect(models).not.to.be.equal(null);
+    expect(models.length).to.be.equal(3);
+    expect(models[0]).to.be.equal('Model 1');
   });
 });
