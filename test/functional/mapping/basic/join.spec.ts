@@ -123,4 +123,31 @@ describe('mapping > join', async () => {
     expect(result.parent.id).to.be.equal(dataResult.a4);
     expect(result.parent.name).to.be.equal(dataResult.a5);
   });
+
+
+  it('should return null child if child does not exist on join', async () => {
+    let specName = 'my-name';
+    let specId = 5;
+    let specChildId = null;
+    let childId = specChildId;
+    let childName = null;
+
+    let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: childId, a6: childName }];
+
+    useConfiguration(mockConfig);
+    mockDriverToReturnData(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => ({
+      mappedName: x.name,
+      mappedId: x.id,
+      mappedChild: { mappedId: x.child_id },
+      child: x.child
+    })).first();
+
+    expect(result.mappedName).to.be.equal(specName);
+    expect(result.mappedId).to.be.equal(specId);
+    expect(result.mappedChild.mappedId).to.be.equal(specChildId);
+    expect(result.child).to.be.equal(null);
+  });
 });

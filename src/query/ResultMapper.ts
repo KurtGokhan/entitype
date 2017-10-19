@@ -1,3 +1,4 @@
+import { RowData } from '../ioc/index';
 import { QueryContext } from './QueryContext';
 import { CountCommand } from '../command/command-types/CountCommand';
 import { CommandType } from '../command/CommandType';
@@ -8,13 +9,13 @@ export class ResultMapper {
 
   constructor(private context: QueryContext) { }
 
-  mapResult(dataResult: { [key: string]: any }[]) {
+  mapResult(dataResult: RowData[]) {
     if (this.context.count) {
       return +dataResult[0].count;
     }
 
     let columns = this.context.selectedColumns;
-    let resultArray = this.getStructure(dataResult.length);
+    let resultArray = this.getStructure(dataResult);
 
     for (let index = 0; index < columns.length; index++) {
       let column = columns[index];
@@ -30,7 +31,10 @@ export class ResultMapper {
           target = target[mapPart];
         }
         let lastPart = column.mapPath[column.mapPath.length - 1];
-        if (lastPart) target[lastPart] = data;
+        if (lastPart) {
+          // If target is null, it means the column depends on a foreign key to exist
+          if (target) target[lastPart] = data;
+        }
         else resultArray[rowIndex] = data;
       }
     }
@@ -41,12 +45,14 @@ export class ResultMapper {
     return resultArray;
   }
 
-  getStructure(count: number) {
+  getStructure(data: RowData[]) {
+    let count = data.length;
     let structure = this.context.selectStructure;
     let resultArray = [];
 
     for (let index = 0; index < count; index++) {
       let result;
+      let row = data[index];
 
       for (let stIndex = 0; stIndex < structure.length; stIndex++) {
         let st = structure[stIndex];
@@ -54,6 +60,12 @@ export class ResultMapper {
         if (st.isArray) value = [];
         else if (st.isObject) value = {};
         else value = st.value;
+
+        if (st.dependsOn) {
+          let dependAlias = this.context.getAliasForColumn(st.dependsOn);
+          if (row[dependAlias] == null) value = null;
+        }
+
 
         let target = result;
 

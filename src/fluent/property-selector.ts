@@ -73,7 +73,7 @@ function getPropertyMappingInner(map: PropertyMapGetter, baseMapPath: string[]):
   else {
     let isArray = Array.isArray(map);
     let isObject = map && typeof map === 'object';
-    let st = { isArray, isObject, mapPath: baseMapPath, value: map };
+    let st: SelectMappingStructure = { isArray, isObject, mapPath: baseMapPath, value: map, dependsOn: null };
     structure.push(st);
 
     if (isObject || isArray) {

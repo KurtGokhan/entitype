@@ -43,6 +43,7 @@ export class QueryContext {
     this.resolveCommands();
     this.resolveJoins();
     this.resolveSelectedColumns();
+    this.resolveAliases();
   }
 
   private resolveCommands() {
@@ -101,7 +102,7 @@ export class QueryContext {
 
   private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
     let path = node.path;
-    this.selectStructure.push({ isObject: true, mapPath: baseMappedPath, isArray: false, value: null });
+    this.selectStructure.push({ isObject: true, mapPath: baseMappedPath, isArray: false, value: null, dependsOn: node.dependsOn });
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {
       this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
     });
@@ -128,7 +129,8 @@ export class QueryContext {
     }
 
     this.joinTreeRoot = {
-      entity: this.entity, path: [], pathPart: '', parent: null, column: null, childs: [], childDic: {}, alias: null, include: true
+      entity: this.entity, path: [], pathPart: '', parent: null,
+      column: null, childs: [], childDic: {}, alias: null, include: true, dependsOn: null
     };
     includedPaths.forEach(path => this.createBranchesForPath(path, true));
     paths.forEach(path => this.createBranchesForPath(path, false));
@@ -141,13 +143,23 @@ export class QueryContext {
       let pathNode = currentPathNode.childDic[node];
 
       if (!pathNode) {
+        let parentPath = currentPathNode.path;
+        let currentPath = parentPath.concat(node);
         let col = currentPathNode.entity.columns.find(x => x.name === node);
+        let fk = col.foreignKey;
+        let dependsOn = null;
         let colEntity = DecoratorStorage.getEntity(col.type);
+
+        if (fk && col.isNavigationProperty) {
+          let pk = colEntity.columns.find(x => x.options.primaryKey);
+          dependsOn = currentPath.concat(pk.name);
+        }
         pathNode = currentPathNode.childDic[node] = {
-          path: currentPathNode.path.concat(node),
+          path: currentPath,
           pathPart: node,
           entity: colEntity,
           column: col,
+          dependsOn,
           parent: currentPathNode,
           childs: [],
           childDic: {},
@@ -159,6 +171,11 @@ export class QueryContext {
       currentPathNode = pathNode;
     });
   }
+
+  private resolveAliases() {
+    let aliases = this.selectedColumns.map(x => ({ alias: this.getAliasForColumn(x.path), col: x }));
+  }
+
 
   getJoinTreeNodeForPath(path: PropertyPath): JoinTreeNode {
     let currentPathNode = this.joinTreeRoot;

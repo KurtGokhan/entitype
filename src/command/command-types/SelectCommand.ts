@@ -20,5 +20,6 @@ export class SelectMappingStructure {
   isArray: boolean;
   isObject: boolean;
   value: any;
+  dependsOn: PropertyPath;
   mapPath: PropertyPath;
 }

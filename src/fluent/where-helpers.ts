@@ -2,7 +2,6 @@ import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 import { WhereCommand } from '../command/command-types/WhereCommand';
-import { valueAsDbString } from '../common/dbUtil';
 import { ObjectType, WhereConditionBuilder, WhereProperty } from './';
 
 export function createWhereExpressionQueryBase<EntityType>(
@@ -60,40 +59,41 @@ class WherePropertyBase<PropertyType> implements WhereConditionBuilder<PropertyT
     private negated: boolean = false) {
   }
 
-  private createWhereCommand(condition: string): WhereCommand {
+  private createWhereCommand(condition: string, ...parameters: any[]): WhereCommand {
     let cmd = new WhereCommand();
     cmd.propertyPath = this.path;
     cmd.negated = this.negated;
     cmd.condition = condition;
+    cmd.parameters = parameters || [];
     return cmd;
   }
 
   equals(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' = ' + valueAsDbString(value));
+    return this.createWhereCommand(' = {0}', value);
   }
 
   gt(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' > ' + valueAsDbString(value));
+    return this.createWhereCommand(' > {0}', value);
   }
 
   gte(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' >= ' + valueAsDbString(value));
+    return this.createWhereCommand(' >= {0}', value);
   }
 
   lt(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' < ' + valueAsDbString(value));
+    return this.createWhereCommand(' < {0}', value);
   }
 
   lte(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' <= ' + valueAsDbString(value));
+    return this.createWhereCommand(' <= {0}', value);
   }
 
   between(minValue: PropertyType, maxValue: PropertyType): WhereCommand {
-    return this.createWhereCommand(' BETWEEN ' + valueAsDbString(minValue) + ' AND ' + valueAsDbString(maxValue));
+    return this.createWhereCommand(' BETWEEN {0} AND {1}', minValue, maxValue);
   }
 
   like(value: string): WhereCommand {
-    return this.createWhereCommand(' LIKE ' + valueAsDbString(value, true));
+    return this.createWhereCommand(' LIKE {0}', value);
   }
 
   isNull(): WhereCommand {
@@ -101,6 +101,6 @@ class WherePropertyBase<PropertyType> implements WhereConditionBuilder<PropertyT
   }
 
   in(array: PropertyType[]): WhereCommand {
-    return this.createWhereCommand(' IN ' + '(' + array.map(x => valueAsDbString(x)).join(',') + ')');
+    return this.createWhereCommand(' IN ({0})', array);
   }
 }

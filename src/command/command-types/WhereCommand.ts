@@ -6,6 +6,7 @@ export class WhereCommand extends Command {
   negated: boolean = false;
   propertyPath: PropertyPath;
   condition: string;
+  parameters: any[];
 
   constructor() {
     super(CommandType.Where);
