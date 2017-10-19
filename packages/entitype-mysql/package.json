@@ -1,6 +1,6 @@
 {
   "name": "entitype-mysql",
-  "version": "0.0.1-0",
+  "version": "0.0.1-1",
   "description": "Entitype mysql adapter",
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -47,8 +47,8 @@
     "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "build": "tsc",
-    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
-    "prepare": "npm run build"
+    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "prepare": "scheme:generat && npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"

@@ -1,45 +1,48 @@
 {
+    "$ref": "#/definitions/MysqlConnectionOptions",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "defaultProperties": [
-    ],
-    "properties": {
-        "adapter": {
-            "type": "string"
-        },
-        "connectTimeout": {
-            "type": "number"
-        },
-        "database": {
-            "type": "string"
-        },
-        "host": {
-            "type": "string"
-        },
-        "password": {
-            "type": "string"
-        },
-        "port": {
-            "type": "number"
-        },
-        "toMysqlOptions": {
+    "definitions": {
+        "MysqlConnectionOptions": {
             "defaultProperties": [
             ],
+            "properties": {
+                "adapter": {
+                    "type": "string"
+                },
+                "connectTimeout": {
+                    "type": "number"
+                },
+                "database": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "number"
+                },
+                "toMysqlOptions": {
+                    "typeof": "function"
+                },
+                "user": {
+                    "description": "Username",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "adapter",
+                "connectTimeout",
+                "database",
+                "host",
+                "password",
+                "toMysqlOptions",
+                "user"
+            ],
             "type": "object"
-        },
-        "user": {
-            "description": "Username",
-            "type": "string"
         }
-    },
-    "required": [
-        "adapter",
-        "connectTimeout",
-        "database",
-        "host",
-        "password",
-        "toMysqlOptions",
-        "user"
-    ],
-    "type": "object"
+    }
 }
 
