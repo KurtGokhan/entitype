@@ -44,11 +44,12 @@ export class CommandRunner {
   /**
    * Run the commands and get the result
    */
-  async run() {
+  run() {
     let query = this.buildQuery();
     if (this.isQuery) return query;
-    let queryResult = await this.runQuery(query);
-    return new ResultMapper(this.context).mapResult(queryResult as any);
+    let queryPromise = this.runQuery(query);
+
+    return queryPromise.then(queryResult => new ResultMapper(this.context).mapResult(queryResult[0]));
   }
 
   private buildQuery() {

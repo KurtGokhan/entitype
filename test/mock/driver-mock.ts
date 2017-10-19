@@ -6,9 +6,9 @@ import { QueryBuilderAdapter } from '../../src/ioc/index';
 export function mockDriverToReturnData(data) {
   let driver: DriverAdapter = {
     runQuery: (query) => {
-      return data;
+      return Promise.resolve([data]);
     }
-  };
+  } as any;
 
   let builder: QueryBuilderAdapter = {
     buildQuery: () => ''

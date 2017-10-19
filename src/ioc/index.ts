@@ -13,8 +13,11 @@ export const DI_TYPES = {
   configuration: Symbol('Configuration')
 };
 
+export type RowData = { [column: string]: any };
+export type ColumnData = any;
+
 export interface DriverAdapter {
-  runQuery(query: string, options: string | ConnectionOptions): Promise<any>;
+  runQuery(query: string, options: string | ConnectionOptions): Promise<[RowData[], ColumnData[]]>;
 }
 
 export interface LoggerAdapter {
