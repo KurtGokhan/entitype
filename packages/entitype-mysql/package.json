@@ -8,6 +8,10 @@
     "name": "Gökhan Kurt",
     "email": "krtgokhan@hotmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KurtGokhan/entitype-mysql"
+  },
   "tags": [
     "entitype",
     "mysql"
@@ -25,7 +29,7 @@
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
-    "entitype": "file:../entitype",
+    "entitype": "KurtGokhan/entitype#develop",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
@@ -48,7 +52,7 @@
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
-    "prepare": "scheme:generat && npm run build"
+    "prepare": "npm run scheme:generate && npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"
