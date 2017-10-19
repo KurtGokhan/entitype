@@ -10,7 +10,15 @@ import { MysqlConnectionOptions } from 'entitype-mysql';
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
 
-export const connectionOptions: MysqlConnectionOptions = require('./config.json') || {};
+export let connectionOptions: MysqlConnectionOptions = {} as any;
+
+try {
+  connectionOptions = require('./config.json');
+}
+catch (err) {
+}
+
+
 connectionOptions.database = process.env.DB_NAME || connectionOptions.database;
 connectionOptions.user = process.env.DB_USER || connectionOptions.user;
 connectionOptions.password = process.env.DB_PASSWORD || connectionOptions.password;
