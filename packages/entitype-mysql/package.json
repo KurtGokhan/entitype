@@ -13,7 +13,6 @@
     "mysql"
   ],
   "dependencies": {
-    "mysql2": "^1.4.2",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -30,6 +29,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "mochawesome": "^2.3.0",
+    "mysql2": "^1.4.2",
     "nyc": "^11.1.0",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.2.0",
@@ -47,7 +47,8 @@
     "coverage:show": "start ./tmp/lcov-report/index.html",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "build": "tsc",
-    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json"
+    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "prepare": "npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"
