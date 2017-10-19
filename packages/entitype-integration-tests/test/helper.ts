@@ -5,11 +5,17 @@ import { createConnection } from 'mysql2/promise';
 import { useConfiguration, ConnectionOptions } from 'entitype';
 import 'entitype';
 import 'entitype-mysql';
+import { MysqlConnectionOptions } from 'entitype-mysql';
 
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
 
-export const connectionOptions = require('./config.json');
+export const connectionOptions: MysqlConnectionOptions = require('./config.json') || {};
+connectionOptions.database = process.env.DB_NAME || connectionOptions.database;
+connectionOptions.user = process.env.DB_USER || connectionOptions.user;
+connectionOptions.password = process.env.DB_PASSWORD || connectionOptions.password;
+connectionOptions.host = process.env.DB_HOST || connectionOptions.host;
+connectionOptions.port = +process.env.DB_PORT || connectionOptions.port;
 
 useConfiguration(connectionOptions);
 
