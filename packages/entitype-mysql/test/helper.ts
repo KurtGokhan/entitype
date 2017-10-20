@@ -11,9 +11,7 @@ let cc = createConnection;
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
 
-export const connectionOptions = require('./config.json') as MysqlConnectionOptions;
-
-useConfiguration(connectionOptions);
+useConfiguration({ adapter: 'mysql2' });
 
 export function multilineRegExp(regs: RegExp[], options?: string) {
   return new RegExp(regs.map(
