@@ -97,9 +97,8 @@ function getPropertyMapping(map: PropertyMapGetter): [SelectMapping[], SelectMap
 }
 
 export function resolvePropertyExpression<EntityType, SelectType>(
-  expression: PropertyExpression<EntityType, SelectType>,
-  entityType?: ObjectType<EntityType>): string {
-  let parameter = propertySelector;
+  expression: PropertyExpression<EntityType, SelectType>): string {
+  let parameter = propertySelector as PropertySelector<EntityType>;
   let selectObject = <any>expression(parameter);
   return selectObject;
 }

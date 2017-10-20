@@ -1,8 +1,8 @@
-import { useConfiguration, ConnectionOptions } from 'src/configuration';
-import { mockDriverToReturnData } from 'test/mock/driver-mock';
-import { container } from 'src/ioc';
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { ConnectionOptions, useConfiguration } from 'src/configuration';
+import { container } from 'src/ioc';
+import { mockDriverToReturnData } from 'test/mock/driver-mock';
+import { Context } from './entity/Context';
 
 describe('mapping > complex', async () => {
   beforeEach(() => container.snapshot());

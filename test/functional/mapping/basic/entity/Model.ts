@@ -2,7 +2,6 @@ import { Column, OneToOne } from 'src';
 
 import { ChildModel } from './ChildModel';
 import { OtherModel } from './OtherModel';
-import { forwardRef } from 'src/common/forwardRef';
 
 export class Model {
   @Column().primaryKey()

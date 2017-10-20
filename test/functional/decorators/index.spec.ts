@@ -1,9 +1,5 @@
-import { expect } from 'chai';
 
-import { Model } from './entity/Model';
-import { ChildModel } from './entity/ChildModel';
-import { OtherModel } from './entity/OtherModel';
-import { assertEntities, assertColumns, assertForeignKeys } from './helper';
+import { assertColumns, assertEntities, assertForeignKeys } from './helper';
 
 describe('decorators', async () => {
 

@@ -1,22 +1,21 @@
 import 'reflect-metadata';
-import { resolveType } from '../common/forwardRef';
+
+import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
-import { ObjectType, PropertyExpression } from '../fluent';
+import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 export function ManyToOne<EntityType, SelectType>(
-  foreignKeyEntity: ObjectType<EntityType>,
+  foreignKeyEntity: TypeResolver<EntityType>,
   foreignKey: PropertyExpression<EntityType, SelectType>)
   : NavigationPropertyDecorator {
 
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
-      owner: resolveType(() => foreignKeyEntity),
-      get column() {
-        return resolvePropertyExpression(foreignKey, foreignKeyEntity);
-      }
+      owner: resolveType(foreignKeyEntity),
+      column: resolvePropertyExpression(foreignKey)
     };
 
     let type = Reflect.getMetadata('design:type', target, propertyKey);

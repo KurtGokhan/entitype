@@ -1,4 +1,4 @@
-import { Column, ManyToMany, forwardRef } from 'src';
+import { Column, forwardRef, ManyToMany } from 'src';
 
 import { Course } from './Course';
 import { StudentsCourses } from './Students_Courses';
@@ -10,6 +10,6 @@ export class Student {
   @Column()
   name: string;
 
-  @ManyToMany(forwardRef(() => Course), forwardRef(() => StudentsCourses), x => x.student_id, x => x.course_id)
+  @ManyToMany(() => Course, () => StudentsCourses, x => x.student_id, x => x.course_id)
   courses: Course[];
 }

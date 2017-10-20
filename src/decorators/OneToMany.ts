@@ -14,9 +14,7 @@ export function OneToMany<EntityType, SelectType>(
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
       owner: resolveType(() => foreignKeyEntity),
-      get column() {
-        return resolvePropertyExpression(foreignKey, foreignKeyEntity);
-      }
+      column: resolvePropertyExpression(foreignKey)
     };
 
     let type = Reflect.getMetadata('design:type', target, propertyKey);

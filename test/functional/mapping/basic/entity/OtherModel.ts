@@ -1,7 +1,6 @@
 import { Column, OneToOne } from 'src';
 
 import { Model } from './Model';
-import { forwardRef } from 'src/common/forwardRef';
 
 export class OtherModel {
   @Column().primaryKey()

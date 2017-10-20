@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
-import { Model } from './entity/Model';
 import { ChildModel } from './entity/ChildModel';
+import { Model } from './entity/Model';
 import { OtherModel } from './entity/OtherModel';
 
 export function assertForeignKeys() {

@@ -1,4 +1,3 @@
-import { forwardRef } from 'src/common/forwardRef';
 import { Column, OneToOne } from 'src';
 
 import { ChildModel } from './ChildModel';

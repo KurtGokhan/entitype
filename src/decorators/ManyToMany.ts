@@ -18,12 +18,8 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
       get owner() {
         return DecoratorStorage.getEntity(joinTypeResolved.type);
       },
-      get leftKey() {
-        return resolvePropertyExpression(leftKey, joinTypeResolved.type);
-      },
-      get rightKey() {
-        return resolvePropertyExpression(rightKey, joinTypeResolved.type);
-      }
+      leftKey: resolvePropertyExpression(leftKey),
+      rightKey: resolvePropertyExpression(rightKey)
     };
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, arrayType, {});

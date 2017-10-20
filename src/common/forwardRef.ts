@@ -14,13 +14,9 @@ export class ForwardRef<T> {
   }
 }
 
-export function forwardRef<T>(reference: () => ObjectType<T>) {
-  return new ForwardRef(reference);
-}
-
 export function resolveType<T>(type: TypeResolver<T>): ForwardRef<T> {
   if (type instanceof ForwardRef) {
     return type;
   }
-  return forwardRef(type as any);
+  return new ForwardRef(type as any);
 }
