@@ -1,63 +1,78 @@
-import { QueryCommand } from './command-types/QueryCommand';
-import { ToListCommand } from './command-types/ToListCommand';
-import { CommandType } from './CommandType';
-import { SelectCommand } from './command-types/SelectCommand';
-import { Command } from './Command';
-import { SelectExpressionQuery } from '../fluent/types';
+import { IncludeCommand } from '../command/command-types/IncludeCommand';
+import { OrCommand } from '../command/command-types/OrCommand';
 import {
-  IExecutable,
+  DeepPropertyExpression,
   IFiltered,
+  IFilteredFilterable,
   IGrouped,
   IIncludable,
+  IListable,
   IOrderable,
   IOrdered,
   IQueryable,
   ITakeable,
-} from '../fluent/interfaces/types';
-import { DbSet } from '../collections/DbSet';
-import { SelectExpression } from 'src/fluent/types';
-import { DecoratorStorage } from 'src/context/DecoratorStorage';
+  IWhereable,
+  ObjectType,
+  PropertyMapExpression,
+  WhereExpression,
+} from '../fluent';
+import { resolveDeepPropertyExpression, resolvePropertyMapExpression } from '../fluent/property-selector';
+import { createWhereExpressionQueryBase } from '../fluent/where-helpers';
+import { Command } from './Command';
+import { CountCommand } from './command-types/CountCommand';
+import { FirstCommand } from './command-types/FirstCommand';
+import { OrderByCommand } from './command-types/OrderByCommand';
+import { QueryCommand } from './command-types/QueryCommand';
+import { SelectCommand } from './command-types/SelectCommand';
+import { SkipCommand } from './command-types/SkipCommand';
+import { TakeCommand } from './command-types/TakeCommand';
+import { ToListCommand } from './command-types/ToListCommand';
 
-export class CommandNode<EntityType> implements IQueryable<EntityType> {
+export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
+  get or(): IWhereable<EntityType> {
+    let nextCommand = this.createNextCommand(new OrCommand());
+    return nextCommand;
+  }
 
-  command: Command;
+  readonly command: Command;
 
   get toList(): { (): Promise<EntityType[]>; query: string; } {
-    let self = this;
+    return this.finalizerCommand(ToListCommand);
+  }
+
+  get first(): { (): Promise<EntityType>; query: string; } {
+    return this.finalizerCommand(FirstCommand);
+  }
+
+  get count(): { (): Promise<number>; query: string; } {
+    return this.finalizerCommand(CountCommand);
+  }
+
+
+  private finalizerCommand(commandCreator: typeof Command) {
+    let self: CommandNode<any> = this;
     let ret = () => {
-      this.command = new ToListCommand();
-      return this.runCommandChain();
+      let nextCommand: CommandNode<any> = self.createNextCommand(new commandCreator());
+      return nextCommand.runCommandChain();
     };
 
     Object.defineProperty(ret, 'query', {
       get() {
-        self.command = new ToListCommand();
-        let nextCommand = new CommandNode(self, self.runOn, self.callback, self.entityTypeOrObject);
-        nextCommand.command = new QueryCommand();
-
-        return nextCommand.runCommandChain();
+        let nextCommand = self.createNextCommand(new commandCreator());
+        let queryCommand: CommandNode<any> = nextCommand.createNextCommand(new QueryCommand());
+        return queryCommand.runCommandChain();
       }
     });
 
     return ret as any;
   }
 
-  first: { (): Promise<EntityType>; query: string; };
-  count: { (): Promise<number>; query: string; };
-
   constructor(
     public prevNode: CommandNode<EntityType>,
-    private runOn: DbSet<EntityType>,
     private callback: (commands: Command[]) => void,
-    private entityTypeOrObject: Function | Object) {
-  }
-
-  private getColumns(): DecoratorStorage.Column[] {
-    if (typeof this.entityTypeOrObject === 'function') {
-      let entity = DecoratorStorage.getEntity(this.entityTypeOrObject);
-      return entity.columns;
-    }
-    return null;
+    private entityType: ObjectType<EntityType>,
+    command?: Command) {
+    this.command = command || new Command();
   }
 
   private runCommandChain() {
@@ -71,55 +86,76 @@ export class CommandNode<EntityType> implements IQueryable<EntityType> {
     return this.callback(commands.map(x => x.command).reverse());
   }
 
-  include(): IIncludable<EntityType> {
-    throw new Error('Method not implemented.');
+  include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType> {
+    let include = new IncludeCommand();
+    include.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
+
+    return this.createNextCommand(include);
   }
+
   groupBy(): IGrouped<EntityType> {
     throw new Error('Method not implemented.');
   }
-  select<SelectType>(expression: SelectExpression<EntityType, SelectType>): IOrderable<SelectType> {
-    let parameter: SelectExpressionQuery<EntityType, EntityType> = <any>{};
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
+    let select = new SelectCommand();
+    let resolved = resolvePropertyMapExpression(expression, this.entityType);
+    select.columns = resolved[0];
+    select.structure = resolved[1];
 
-    let columns = this.getColumns();
-    for (let index = 0; index < columns.length; index++) {
-      let column = columns[index];
-
-      parameter[column.name] = <any>column.dbName;
-    }
-
-    let selectObject = expression(parameter);
-
-    let sel = new SelectCommand();
-    sel.columns = [];
-
-    for (let key in selectObject) {
-      if (selectObject.hasOwnProperty(key)) {
-        let prop = selectObject[key];
-
-        sel.columns.push({ alias: key, dbName: prop as any });
-      }
-    }
-
-    this.command = sel;
-
-    return <any>new CommandNode(this, this.runOn, this.callback, selectObject);
-  }
-  orderByAscending(): IOrdered<EntityType> {
-    throw new Error('Method not implemented.');
-  }
-  orderByDescending(): IOrdered<EntityType> {
-    throw new Error('Method not implemented.');
+    return this.createNextCommand(select);
   }
 
-  where(): IFiltered<EntityType> {
-    throw new Error('Method not implemented.');
+  orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.evaluateOrderExpression(expression, false);
+  }
+
+  orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.evaluateOrderExpression(expression, true);
+  }
+
+
+  thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.orderByAscending(expression);
+  }
+
+  thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+    return this.orderByDescending(expression);
+  }
+
+  private evaluateOrderExpression<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>, descending: boolean) {
+    let cmd = new OrderByCommand();
+    cmd.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
+    cmd.descending = descending;
+
+    return this.createNextCommand(cmd);
+  }
+
+
+  where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
+    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityType);
+    let whereCommand = expression(parameter);
+
+    return this.createNextCommand(whereCommand);
+  }
+
+  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType> {
+    return this.where(expression);
   }
 
   skip(amount: number): ITakeable<EntityType> {
-    throw new Error('Method not im.plemented.');
+    let skip = new SkipCommand();
+    skip.amount = amount;
+    return this.createNextCommand(skip);
   }
 
-  take(amount: number): IExecutable<EntityType> {
-    throw new Error('Method not implemented.');
+  take(amount: number): IListable<EntityType> {
+    let take = new TakeCommand();
+    take.amount = amount;
+    return this.createNextCommand(take);
   }
+
+  private createNextCommand(command: Command, entityTypeOrObject?: ObjectType<any>) {
+    return new CommandNode(this, this.callback, entityTypeOrObject || this.entityType, command) as any;
+  }
+
 }

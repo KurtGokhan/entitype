@@ -1,8 +1,8 @@
-import { CommandType } from '../CommandType';
 import { Command } from '../Command';
+import { CommandType } from '../CommandType';
 
 export class TakeCommand extends Command {
-  limit: number;
+  amount: number;
 
   constructor() {
     super(CommandType.Take);

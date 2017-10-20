@@ -6,5 +6,11 @@
     "temp": true,
     "tmp": true
   },
+  "typescriptHero.resolver.ignorePatterns": [
+    "build",
+    "out",
+    "dist",
+    "tmp"
+  ],
   "editor.formatOnSave": true
 }

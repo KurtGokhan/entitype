@@ -1,13 +1,16 @@
 {
   "name": "entitype",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.2-3",
   "description": "An orm framework for typescript that lets you fluently query the database",
   "license": "MIT",
   "readmeFilename": "README.md",
   "author": {
     "name": "Gökhan Kurt",
     "email": "krtgokhan@hotmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KurtGokhan/entitype"
   },
   "tags": [
     "orm",
@@ -20,27 +23,36 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "dotenv": "^4.0.0",
+    "inversify": "^4.3.0",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.2",
-    "@types/chai-string": "^1.1.30",
-    "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.20",
-    "chai": "^4.1.1",
+    "@types/chai": "^4.0.4",
+    "@types/chai-string": "^1.1.31",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.28",
+    "chai": "^4.1.2",
     "chai-string": "^1.4.0",
-    "mocha": "^3.5.0",
-    "mochawesome": "^2.3.0",
-    "sqlite3": "^3.1.9",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.3",
+    "mochawesome": "^2.3.1",
+    "nyc": "^11.2.1",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.2.0",
-    "tslint": "^5.6.0",
+    "tsconfig-paths": "^2.3.0",
+    "tslint": "^5.7.0",
     "tslint-stylish": "^2.1.0",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.2"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --reporter mochawesome",
-    "test:debug": "mocha test/**/*.spec.ts --recursive -r ts-node/register -r tsconfig-paths/register -r ./test/helper.ts --inspect=5858 --inspect-brk --reporter mochawesome",
-    "compile": "tsc"
-  }
+    "test": "mocha",
+    "test:debug": "mocha --inspect=25650 --inspect-brk",
+    "cover": "nyc mocha",
+    "cover:show": "start ./tmp/lcov-report/index.html",
+    "lint": "tslint --project tsconfig.json -c tslint.json --type-check",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts"
 }
