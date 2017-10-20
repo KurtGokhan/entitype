@@ -1,3 +1,4 @@
+import { ConditionType } from '../command/ConditionType';
 import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 
@@ -59,48 +60,49 @@ class WherePropertyBase<PropertyType> implements WhereConditionBuilder<PropertyT
     private negated: boolean = false) {
   }
 
-  private createWhereCommand(condition: string, ...parameters: any[]): WhereCommand {
+  private createWhereCommand(type: ConditionType, condition: string, ...parameters: any[]): WhereCommand {
     let cmd = new WhereCommand();
     cmd.propertyPath = this.path;
     cmd.negated = this.negated;
     cmd.condition = condition;
     cmd.parameters = parameters || [];
+    cmd.conditionType = type;
     return cmd;
   }
 
   equals(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' = {0}', value);
+    return this.createWhereCommand(ConditionType.Equals, ' = {0}', value);
   }
 
   gt(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' > {0}', value);
+    return this.createWhereCommand(ConditionType.GreaterThan, ' > {0}', value);
   }
 
   gte(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' >= {0}', value);
+    return this.createWhereCommand(ConditionType.GreaterThanOrEqual, ' >= {0}', value);
   }
 
   lt(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' < {0}', value);
+    return this.createWhereCommand(ConditionType.LessThan, ' < {0}', value);
   }
 
   lte(value: PropertyType): WhereCommand {
-    return this.createWhereCommand(' <= {0}', value);
+    return this.createWhereCommand(ConditionType.LessThanOrEqual, ' <= {0}', value);
   }
 
   between(minValue: PropertyType, maxValue: PropertyType): WhereCommand {
-    return this.createWhereCommand(' BETWEEN {0} AND {1}', minValue, maxValue);
+    return this.createWhereCommand(ConditionType.Between, ' BETWEEN {0} AND {1}', minValue, maxValue);
   }
 
   like(value: string): WhereCommand {
-    return this.createWhereCommand(' LIKE {0}', value);
+    return this.createWhereCommand(ConditionType.Like, ' LIKE {0}', value);
   }
 
   isNull(): WhereCommand {
-    return this.createWhereCommand(' IS NULL');
+    return this.createWhereCommand(ConditionType.IsNull, ' IS NULL');
   }
 
   in(array: PropertyType[]): WhereCommand {
-    return this.createWhereCommand(' IN ({0})', array);
+    return this.createWhereCommand(ConditionType.In, ' IN ({0})', array);
   }
 }
