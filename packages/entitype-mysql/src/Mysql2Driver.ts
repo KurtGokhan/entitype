@@ -1,7 +1,6 @@
 import { ConnectionOptions } from 'entitype';
-import { Driver, DriverAdapter, RowData, ColumnData } from 'entitype/dist/plugins';
+import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
-import { RowDataPacket } from 'mysql';
 
 @Driver('mysql2')
 export class Mysql2Driver implements DriverAdapter {

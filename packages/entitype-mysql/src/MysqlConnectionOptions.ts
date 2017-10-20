@@ -1,5 +1,5 @@
-import { ConnectionOptions } from 'mysql2';
 import { ConnectionOptions as EntitypeConnectionOptions } from 'entitype';
+import { ConnectionOptions } from 'mysql2';
 
 export class MysqlConnectionOptions extends EntitypeConnectionOptions {
   database: string;
