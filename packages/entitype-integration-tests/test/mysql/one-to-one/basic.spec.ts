@@ -49,6 +49,6 @@ describe('query > one-to-one > basic', async () => {
     let model = await ctx.models.include(x => x.child).where(x => x.id().equals(2)).first();
 
     expect(model).not.to.be.equal(null);
-    expect(model[0].child).to.be.equal(null);
+    expect(model.child).to.be.equal(null);
   });
 });

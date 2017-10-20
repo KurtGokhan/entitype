@@ -1,6 +1,6 @@
 USE `test`;
 DROP TABLE IF EXISTS `ChildModel`;
-CREATE TABLE `childmodel` (
+CREATE TABLE `ChildModel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
