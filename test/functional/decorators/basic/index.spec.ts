@@ -1,3 +1,4 @@
+
 import { expect } from 'chai';
 import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
@@ -83,3 +84,12 @@ export function assertEntities() {
   expect(othermodel);
   expect(othermodel.type).to.be.equal(OtherModel);
 }
+
+describe('decorators > basic', async () => {
+
+  it('should create and store entities', assertEntities);
+
+  it('should create and store all columns', assertColumns);
+
+  it('should create and store all foreign keys', assertForeignKeys);
+});

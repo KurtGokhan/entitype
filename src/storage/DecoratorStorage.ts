@@ -1,5 +1,5 @@
 import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
-import { ColumnOptions } from '../decorators';
+import { ColumnOptions, DefaultColumnOptions } from '../decorators';
 import { ObjectType } from '../fluent';
 
 export namespace DecoratorStorage {
@@ -86,10 +86,14 @@ export namespace DecoratorStorage {
   export function addColumn(parent: Function, columnName: string, metadataType: TypeResolver<any>, options: ColumnOptions): Column {
     let type = resolveType(metadataType);
 
+    options = Object.assign({}, DefaultColumnOptions, options);
+
+    options.columnName = options.columnName || columnName;
+
     let entity = getEntity(parent) || addEntity(parent);
 
     let column = new Column({
-      dbName: columnName.toString(),
+      dbName: options.columnName,
       name: columnName,
       parent: entity,
       type: null,

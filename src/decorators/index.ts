@@ -14,7 +14,7 @@ export type ColumnDecoratorBuilder = {
   default(value: (() => any) | any): ColumnDecorator;
   nullable(value?: boolean): ColumnDecorator;
   unique(value?: boolean): ColumnDecorator;
-  length(value: number | 'max' | undefined): ColumnDecorator;
+  varCharLength(value: number | 'max' | undefined): ColumnDecorator;
   primaryKey(generated?: boolean): ColumnDecorator;
   index(value?: boolean): ColumnDecorator;
 };
@@ -27,7 +27,20 @@ export type ColumnOptions = {
   nullable?: boolean;
   varCharLength?: number | 'max' | undefined;
   primaryKey?: boolean;
+  generated?: boolean;
   index?: boolean;
+};
+
+export const DefaultColumnOptions: ColumnOptions = {
+  type: undefined,
+  columnName: undefined,
+  default: undefined,
+  unique: false,
+  nullable: true,
+  varCharLength: undefined,
+  primaryKey: false,
+  index: false,
+  generated: false
 };
 
 

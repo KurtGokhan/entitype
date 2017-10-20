@@ -3,8 +3,17 @@ import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { ColumnDecorator, ColumnOptions } from './';
 
 
-export function Column(options?: ColumnOptions): ColumnDecorator {
-  options = options || {};
+export function Column(): ColumnDecorator;
+export function Column(columnName: string): ColumnDecorator;
+export function Column(options: ColumnOptions): ColumnDecorator;
+
+export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator {
+  let options: ColumnOptions;
+
+  if (typeof optionsOrName === 'string')
+    options = { columnName: optionsOrName } as ColumnOptions;
+  else
+    options = optionsOrName || {};
 
   let retType = (target, propertyKey) => {
     let metadata = Reflect.getMetadata('design:type', target, propertyKey);
@@ -19,7 +28,7 @@ export function Column(options?: ColumnOptions): ColumnDecorator {
   retType['nullable'] = nullable => Column(Object.assign({}, options, { nullable: nullable !== false }));
   retType['unique'] = unique => Column(Object.assign({}, options, { unique: unique !== false }));
   retType['varCharLength'] = varCharLength => Column(Object.assign({}, options, { varCharLength }));
-  retType['primaryKey'] = generated => Column(Object.assign({}, options, { primaryKey: true, generated }));
+  retType['primaryKey'] = generated => Column(Object.assign({}, options, { primaryKey: true, generated: !!generated }));
   retType['index'] = index => Column(Object.assign({}, options, { index: index !== false }));
   retType['default'] = defValue => Column(Object.assign({}, options, { default: defValue }));
 

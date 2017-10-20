@@ -1,4 +1,4 @@
-import { Column, forwardRef, ManyToMany } from 'src';
+import { Column, ManyToMany } from 'src';
 
 import { Course } from './Course';
 import { StudentsCourses } from './Students_Courses';
