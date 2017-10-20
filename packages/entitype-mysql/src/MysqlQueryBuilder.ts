@@ -1,4 +1,5 @@
-import { JoinTreeNode, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/dist/plugins';
+import { ConditionType, JoinTreeNode, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/dist/plugins';
+import { valueAsDbString } from './util';
 
 @QueryBuilder('mysql2')
 export class MysqlQueryBuilder implements QueryBuilderAdapter {
@@ -67,7 +68,22 @@ export class MysqlQueryBuilder implements QueryBuilderAdapter {
 
 
           let prop = ctx.getAliasedColumnForPath(cmd.propertyPath);
-          let whereQuery = prop + cmd.condition;
+
+          let condition = cmd.condition;
+
+          for (let paramIndex = 0; paramIndex < cmd.parameters.length; paramIndex++) {
+            let parameter = cmd.parameters[paramIndex];
+            let paramAsString = '';
+
+            if (cmd.conditionType === ConditionType.Like) paramAsString = valueAsDbString(parameter, true);
+            else if (cmd.conditionType === ConditionType.In)
+              paramAsString = '(' + (parameter as any[]).map(x => valueAsDbString(x)).join(',') + ')';
+            else paramAsString = valueAsDbString(parameter, false);
+
+            condition = condition.replace('{' + paramIndex + '}', paramAsString);
+          }
+
+          let whereQuery = prop + condition;
 
           tokens.push('(');
           if (cmd.negated) tokens.push('NOT');
