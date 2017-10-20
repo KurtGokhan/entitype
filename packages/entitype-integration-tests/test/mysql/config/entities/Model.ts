@@ -1,5 +1,5 @@
-import { ChildModel } from './ChildModel';
 import { Column, OneToOne } from 'entitype';
+import { ChildModel } from './ChildModel';
 
 
 export class Model {

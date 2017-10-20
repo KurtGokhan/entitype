@@ -1,6 +1,6 @@
-import { Profile } from './Profile';
-import { Column, OneToOne, Entity, OneToMany } from 'entitype';
+import { Column, Entity, OneToMany, OneToOne } from 'entitype';
 import { Course } from './Course';
+import { Profile } from './Profile';
 
 @Entity()
 export class Instructor {

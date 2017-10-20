@@ -1,6 +1,6 @@
-import { integrationTestDatabaseSeed } from '../integration-helper';
-import { Context } from '../config/entities/Context';
 import { expect } from 'chai';
+import { Context } from '../config/entities/Context';
+import { integrationTestDatabaseSeed } from '../integration-helper';
 
 describe('query > one-to-one > basic', async () => {
   beforeEach(integrationTestDatabaseSeed);

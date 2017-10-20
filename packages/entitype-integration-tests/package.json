@@ -18,35 +18,35 @@
     "test"
   ],
   "dependencies": {
-    "reflect-metadata": "^0.1.10"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.0.3",
-    "@types/chai-as-promised": "0.0.31",
-    "@types/chai-string": "^1.1.30",
-    "@types/mocha": "^2.2.41",
-    "@types/mysql2": "github:types/mysql2",
-    "@types/node": "^8.0.24",
-    "chai": "^4.1.1",
+    "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
     "entitype": "github:KurtGokhan/entitype#develop",
     "entitype-mysql": "github:KurtGokhan/entitype-mysql#develop",
     "istanbul": "^0.4.5",
-    "mocha": "^3.5.0",
-    "mochawesome": "^2.3.0",
+    "mocha": "^4.0.1",
+    "mochawesome": "^2.3.1",
     "mysql2": "^1.4.2",
-    "nyc": "^11.1.0",
+    "nyc": "^11.2.1",
+    "reflect-metadata": "^0.1.10",
     "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.2.0",
-    "tslint": "^5.6.0",
-    "tslint-stylish": "^2.1.0",
-    "typescript": "^2.5.2"
+    "tsconfig-paths": "^2.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/chai-string": "^1.1.31",
+    "@types/mocha": "^2.2.43",
+    "@types/mysql2": "github:types/mysql2",
+    "@types/node": "^8.0.46"
   },
   "scripts": {
     "test": "mocha",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "cover": "nyc mocha",
-    "cover:show": "start ./tmp/lcov-report/index.html"
+    "cover:show": "start ./tmp/lcov-report/index.html",
+    "lint": "tslint --project tsconfig.json -c tslint.json"
   }
 }

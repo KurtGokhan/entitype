@@ -1,7 +1,7 @@
-import { Student } from './Student';
-import { Instructor } from './Instructor';
+import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
 import { Course } from './Course';
-import { EntitypeContext, DbCollection, IQueryable } from 'entitype';
+import { Instructor } from './Instructor';
+import { Student } from './Student';
 
 export class UniversityContext extends EntitypeContext {
   constructor() {

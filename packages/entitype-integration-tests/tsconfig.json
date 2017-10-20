@@ -1,7 +1,10 @@
 {
   "version": "2.1.1",
   "compilerOptions": {
-    "lib": ["es5", "es6"],
+    "lib": [
+      "es5",
+      "es6"
+    ],
     "outDir": "build/compiled",
     "target": "es5",
     "module": "commonjs",
@@ -17,7 +20,6 @@
     "baseUrl": "./"
   },
   "exclude": [
-    "test",
     "tmp",
     "temp",
     "build",

@@ -1,7 +1,7 @@
-import { StudentCourseMap } from './StudentCourseMap';
+import { Column, Entity, ManyToMany, OneToOne } from 'entitype';
 import { Course } from './Course';
 import { Profile } from './Profile';
-import { Column, OneToOne, Entity, ManyToMany } from 'entitype';
+import { StudentCourseMap } from './StudentCourseMap';
 
 @Entity()
 export class Student {

@@ -1,11 +1,10 @@
-import 'reflect-metadata';
-
-import * as chai from 'chai';
-import { createConnection } from 'mysql2/promise';
-import { useConfiguration, ConnectionOptions } from 'entitype';
 import 'entitype';
 import 'entitype-mysql';
+
+import * as chai from 'chai';
+import { useConfiguration } from 'entitype';
 import { MysqlConnectionOptions } from 'entitype-mysql';
+import { createConnection } from 'mysql2/promise';
 
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
@@ -18,7 +17,7 @@ try {
 catch (err) {
 }
 
-connectionOptions.adapter = process.env.DB_ADAPTER || connectionOptions.adapter || 'mysql2';
+connectionOptions.adapter = process.env.DB_ADAPTER || connectionOptions.adapter || 'mysql';
 connectionOptions.database = process.env.DB_NAME || connectionOptions.database;
 connectionOptions.user = process.env.DB_USER || connectionOptions.user;
 connectionOptions.password = process.env.DB_PASSWORD || connectionOptions.password;

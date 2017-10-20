@@ -1,4 +1,4 @@
-import { Column, OneToOne, Entity } from 'entitype';
+import { Column, Entity } from 'entitype';
 
 @Entity()
 export class Profile {
