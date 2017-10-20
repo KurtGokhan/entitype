@@ -3,10 +3,6 @@ import 'src';
 
 import * as chai from 'chai';
 import { useConfiguration } from 'entitype';
-import { createConnection } from 'mysql2/promise';
-import { MysqlConnectionOptions } from 'src/MysqlConnectionOptions';
-
-let cc = createConnection;
 
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));

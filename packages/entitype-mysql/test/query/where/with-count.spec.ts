@@ -1,5 +1,5 @@
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { Context } from './entity/Context';
 
 describe('query > where > with count', async () => {
   it('should be able to filter selection and take count', async () => {

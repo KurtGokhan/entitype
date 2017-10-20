@@ -1,6 +1,6 @@
 
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { Context } from './entity/Context';
 
 describe('query > where > in', async () => {
   it('should be able to filter selection', async () => {

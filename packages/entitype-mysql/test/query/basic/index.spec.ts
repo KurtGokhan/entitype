@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
-import { Model } from './entity/Model';
 
 describe('query > basic', async () => {
 

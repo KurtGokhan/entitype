@@ -50,7 +50,9 @@
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "cover": "nyc mocha",
     "cover:show": "start ./tmp/lcov-report/index.html",
-    "lint": "tslint --project tsconfig.json -c tslint.json --type-check",
+    "lint": "npm run lint:src & npm run lint:test",
+    "lint:src": "tslint --project tsconfig.json -c tslint.json",
+    "lint:test": "tslint --project test/tsconfig.json -c tslint.json",
     "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"

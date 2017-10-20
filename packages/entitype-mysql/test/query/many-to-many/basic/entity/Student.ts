@@ -1,4 +1,4 @@
-import { Column, ManyToMany, forwardRef } from 'entitype';
+import { Column, ManyToMany } from 'entitype';
 
 import { Course } from './Course';
 import { StudentsCourses } from './Students_Courses';

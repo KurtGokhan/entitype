@@ -1,6 +1,6 @@
-import { Context } from './entity/Context';
 import { expect } from 'chai';
 import { multilineRegExp } from 'test/helper';
+import { Context } from './entity/Context';
 
 describe('query > many-to-many > basic', async () => {
 

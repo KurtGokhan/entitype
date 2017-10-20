@@ -1,5 +1,5 @@
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { Context } from './entity/Context';
 
 describe('query > where > comparison', async () => {
   it('should be able to filter with lessThan', async () => {

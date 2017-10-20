@@ -1,5 +1,5 @@
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { Context } from './entity/Context';
 
 describe('query > where > like', async () => {
   it('should be able to filter selection', async () => {

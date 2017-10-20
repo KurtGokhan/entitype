@@ -1,6 +1,5 @@
-import { Context } from './entity/Context';
-import { ChildModel } from './entity/ChildModel';
 import { expect } from 'chai';
+import { Context } from './entity/Context';
 
 describe('query > one-to-one > where', async () => {
 
