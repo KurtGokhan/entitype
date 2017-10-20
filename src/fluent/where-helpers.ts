@@ -59,7 +59,7 @@ class WherePropertyBase<PropertyType> implements WhereConditionBuilder<PropertyT
   }
 
   in(array: PropertyType[]): WhereCommand {
-    return this.createWhereCommand(ConditionType.In, ' IN ({0})', array);
+    return this.createWhereCommand(ConditionType.In, ' IN {0}', array);
   }
 }
 
