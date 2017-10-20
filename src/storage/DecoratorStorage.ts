@@ -1,4 +1,4 @@
-import { ForwardRef, TypeResolver, resolveType } from '../common/forwardRef';
+import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
 import { ColumnOptions } from '../decorators';
 import { ObjectType } from '../fluent';
 

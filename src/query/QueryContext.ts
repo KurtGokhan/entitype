@@ -1,4 +1,3 @@
-import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
 import { Command } from '../command/Command';
 import { CountCommand } from '../command/command-types/CountCommand';
@@ -11,6 +10,7 @@ import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { CommandType } from '../command/CommandType';
+import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { PropertyPath } from '../fluent';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { Alias, AliasContainer, AliasTree } from './Alias';
@@ -173,7 +173,7 @@ export class QueryContext {
   }
 
   private resolveAliases() {
-    let aliases = this.selectedColumns.map(x => ({ alias: this.getAliasForColumn(x.path), col: x }));
+    this.selectedColumns.map(x => ({ alias: this.getAliasForColumn(x.path), col: x }));
   }
 
 

@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import { ObjectType, PropertyExpression } from '../fluent';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { resolveType } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
+import { ObjectType, PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 export function ManyToOne<EntityType, SelectType>(
@@ -12,7 +13,7 @@ export function ManyToOne<EntityType, SelectType>(
 
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
-      owner: foreignKeyEntity,
+      owner: resolveType(() => foreignKeyEntity),
       get column() {
         return resolvePropertyExpression(foreignKey, foreignKeyEntity);
       }
@@ -22,7 +23,7 @@ export function ManyToOne<EntityType, SelectType>(
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => type, {});
     column.isNavigationProperty = true;
-    // column.foreignKey = fk;
+    column.foreignKey = fk;
     DecoratorStorage.updateEntityReferences(column.parent);
   };
 

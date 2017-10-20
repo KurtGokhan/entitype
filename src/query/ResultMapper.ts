@@ -1,10 +1,6 @@
 import { RowData } from '../ioc/index';
 import { QueryContext } from './QueryContext';
-import { CountCommand } from '../command/command-types/CountCommand';
-import { CommandType } from '../command/CommandType';
-import { SelectCommand } from '../command/command-types/SelectCommand';
-import { Command } from '../command/Command';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+
 export class ResultMapper {
 
   constructor(private context: QueryContext) { }

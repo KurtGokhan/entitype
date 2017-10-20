@@ -2,13 +2,6 @@ import { ObjectType } from '../fluent/index';
 
 export type TypeResolver<T> = ForwardRef<T> | ((...args: any[]) => ObjectType<T>);
 
-export function resolveType<T>(type: TypeResolver<T>): ForwardRef<T> {
-  if (type instanceof ForwardRef) {
-    return type;
-  }
-  return forwardRef(type as any);
-}
-
 export class ForwardRef<T> {
   private readonly reference: () => ObjectType<T>;
 
@@ -23,4 +16,11 @@ export class ForwardRef<T> {
 
 export function forwardRef<T>(reference: () => ObjectType<T>) {
   return new ForwardRef(reference);
+}
+
+export function resolveType<T>(type: TypeResolver<T>): ForwardRef<T> {
+  if (type instanceof ForwardRef) {
+    return type;
+  }
+  return forwardRef(type as any);
 }

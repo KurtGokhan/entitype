@@ -35,7 +35,7 @@ export declare type WhereExpression<Entity> = (expression: WhereProperty<Entity>
 
 export declare type WhereProperty<Entity> = {
   [P in keyof Entity]: WhereProperty<Entity[P]>;
-} & { (): WhereConditionBuilder<Entity> };
+} & (() => WhereConditionBuilder<Entity>);
 
 
 export declare type WhereConditionBuilder<PropertyType> = {

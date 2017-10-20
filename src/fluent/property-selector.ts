@@ -1,15 +1,15 @@
-import {
-  PropertySelector,
-  DeepPropertySelector,
-  PropertyPath,
-  ObjectType,
-  PropertyMapGetter,
-  DeepPropertyExpression,
-  PropertyMapExpression,
-  PropertyExpression
-} from './';
 import { SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
+import {
+  DeepPropertyExpression,
+  DeepPropertySelector,
+  ObjectType,
+  PropertyExpression,
+  PropertyMapExpression,
+  PropertyMapGetter,
+  PropertyPath,
+  PropertySelector
+} from './';
 
 
 const propertySelector: PropertySelector<any> = new Proxy({}, {

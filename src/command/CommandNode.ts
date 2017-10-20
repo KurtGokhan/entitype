@@ -1,11 +1,9 @@
+import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrCommand } from '../command/command-types/OrCommand';
 import {
-  ObjectType,
-  IFilteredFilterable,
   DeepPropertyExpression,
-  PropertyMapExpression,
-  WhereExpression,
   IFiltered,
+  IFilteredFilterable,
   IGrouped,
   IIncludable,
   IListable,
@@ -14,6 +12,9 @@ import {
   IQueryable,
   ITakeable,
   IWhereable,
+  ObjectType,
+  PropertyMapExpression,
+  WhereExpression,
 } from '../fluent';
 import { resolveDeepPropertyExpression, resolvePropertyMapExpression } from '../fluent/property-selector';
 import { createWhereExpressionQueryBase } from '../fluent/where-helpers';
@@ -26,7 +27,6 @@ import { SelectCommand } from './command-types/SelectCommand';
 import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
-import { IncludeCommand } from '../command/command-types/IncludeCommand';
 
 export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
   get or(): IWhereable<EntityType> {
@@ -50,16 +50,16 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
 
 
   private finalizerCommand(commandCreator: typeof Command) {
-    let self = this;
+    let self: CommandNode<any> = this;
     let ret = () => {
-      let nextCommand = self.createNextCommand(new commandCreator());
+      let nextCommand: CommandNode<any> = self.createNextCommand(new commandCreator());
       return nextCommand.runCommandChain();
     };
 
     Object.defineProperty(ret, 'query', {
       get() {
         let nextCommand = self.createNextCommand(new commandCreator());
-        let queryCommand = nextCommand.createNextCommand(new QueryCommand());
+        let queryCommand: CommandNode<any> = nextCommand.createNextCommand(new QueryCommand());
         return queryCommand.runCommandChain();
       }
     });
@@ -155,7 +155,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   }
 
   private createNextCommand(command: Command, entityTypeOrObject?: ObjectType<any>) {
-    return <any>new CommandNode(this, this.callback, entityTypeOrObject || this.entityType, command);
+    return new CommandNode(this, this.callback, entityTypeOrObject || this.entityType, command) as any;
   }
 
 }

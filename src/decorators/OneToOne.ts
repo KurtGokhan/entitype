@@ -1,9 +1,9 @@
-import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
 import 'reflect-metadata';
-import { ObjectType, PropertyExpression } from '../fluent';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
+import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
+import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 export function OneToOne<EntityType, SelectType>(

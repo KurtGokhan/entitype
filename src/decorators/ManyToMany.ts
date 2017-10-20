@@ -1,5 +1,5 @@
-import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
-import { ObjectType, PropertyExpression } from '../fluent';
+import { resolveType, TypeResolver } from '../common/forwardRef';
+import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { NavigationPropertyDecorator } from './';

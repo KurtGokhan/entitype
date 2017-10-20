@@ -1,8 +1,7 @@
-import { DbCollectionDecorator } from './';
-import { ObjectType } from '../fluent';
 import 'reflect-metadata';
-import { ColumnDecorator, ColumnOptions } from './';
+import { ObjectType } from '../fluent';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { DbCollectionDecorator } from './';
 
 
 export function DbCollection(type: ObjectType<any>): DbCollectionDecorator {

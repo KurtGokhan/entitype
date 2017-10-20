@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { ColumnDecorator, ColumnOptions } from './';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { ColumnDecorator, ColumnOptions } from './';
 
 
 export function Column(options?: ColumnOptions): ColumnDecorator {
