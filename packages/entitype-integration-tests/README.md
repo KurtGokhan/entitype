@@ -1,6 +1,10 @@
-# Running Tests
+# Entitype Integration tests
 
-A config file `test/config.json` must be created like following:
+[![Build Status](https://travis-ci.org/KurtGokhan/entitype-integration-tests.svg?branch=master)](https://travis-ci.org/KurtGokhan/entitype-integration-tests)
+
+## Running Tests
+
+A config file `test/config.json` can be created like following.
 
 ``` json
 
@@ -15,3 +19,12 @@ A config file `test/config.json` must be created like following:
 }
 
 ```
+
+Alternatively, following environment variables must be defined. Environment variables overrides the config file.
+
+- DB_ADAPTER
+- DB_NAME
+- DB_USER
+- DB_PASSWORD
+- DB_HOST
+- DB_PORT
