@@ -2,6 +2,46 @@
 
 [![Build Status](https://travis-ci.org/KurtGokhan/entitype-integration-tests.svg?branch=master)](https://travis-ci.org/KurtGokhan/entitype-integration-tests)
 
+## Database Model
+
+Some example contexts are defined for better understanding and keeping the relationships consistent.
+
+### University Example
+
+Tables:
+
+- Student
+- Course
+- Instructor
+- Profile
+- StudentCourseMap
+
+Relationships:
+
+- Student    +----+ Course
+- Student    1----1 Profile
+- Instructor 1----+ Course
+- ınstructor 1----1 Profile
+
+### Social Media Example
+
+Tables:
+
+- Person
+- Photo
+- Album
+- PersonFriendsMap
+- PersonPhotoLikeMap
+- PhotoAlbumMap
+
+Relationships:
+
+- Person +----+ Person (As friends)
+- Person 1----+ Photo  (Photos posted by a person)
+- Person 1----+ Album  (Albums created by a person)
+- Photo  +----+ Album  (Photos in an album)
+- Person +----+ Photo  (A person can like photos)
+
 ## Running Tests
 
 A config file `test/config.json` can be created like following.
