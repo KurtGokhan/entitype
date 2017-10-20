@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'entitype';
 import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
-@Driver('mysql2')
+@Driver('mysql')
 export class Mysql2Driver implements DriverAdapter {
   async runQuery(query: string, options: string | ConnectionOptions): Promise<[RowData[], ColumnData[]]> {
     const connection = await createConnection(<any>options);

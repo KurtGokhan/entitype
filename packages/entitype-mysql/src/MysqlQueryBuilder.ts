@@ -1,7 +1,7 @@
 import { ConditionType, JoinTreeNode, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/dist/plugins';
 import { valueAsDbString } from './util';
 
-@QueryBuilder('mysql2')
+@QueryBuilder('mysql')
 export class MysqlQueryBuilder implements QueryBuilderAdapter {
   buildQuery(context: QueryContext): string {
     let ctx = context;
