@@ -6,7 +6,7 @@ export class ForwardRef<T> {
   private readonly reference: () => ObjectType<T>;
 
   constructor(reference: () => ObjectType<T>) {
-    this.reference = reference;
+    this.reference = reference || (() => null);
   }
 
   get type(): ObjectType<T> {

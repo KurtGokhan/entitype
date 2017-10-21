@@ -11,7 +11,7 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
   let options: ColumnOptions;
 
   if (typeof optionsOrName === 'string')
-    options = { columnName: optionsOrName } as ColumnOptions;
+    options = { columnName: optionsOrName };
   else
     options = optionsOrName || {};
 
@@ -27,7 +27,6 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
   retType['columnName'] = columnName => Column(Object.assign({}, options, { columnName }));
   retType['nullable'] = nullable => Column(Object.assign({}, options, { nullable: nullable !== false }));
   retType['unique'] = unique => Column(Object.assign({}, options, { unique: unique !== false }));
-  retType['varCharLength'] = varCharLength => Column(Object.assign({}, options, { varCharLength }));
   retType['primaryKey'] = generated => Column(Object.assign({}, options, { primaryKey: true, generated: !!generated }));
   retType['index'] = index => Column(Object.assign({}, options, { index: index !== false }));
   retType['default'] = defValue => Column(Object.assign({}, options, { default: defValue }));

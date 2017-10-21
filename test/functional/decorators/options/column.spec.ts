@@ -1,6 +1,5 @@
-import { ColumnOptions } from 'src/decorators';
-
 import { expect } from 'chai';
+import { ColumnOptions } from 'src/decorators';
 import { DecoratorStorage } from 'src/storage/DecoratorStorage';
 
 import { Model } from './entity/Model';

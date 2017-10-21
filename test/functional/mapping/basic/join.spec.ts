@@ -1,17 +1,12 @@
 import { expect } from 'chai';
-import { ConnectionOptions, useConfiguration } from 'src/configuration';
 import { container } from 'src/ioc';
-import { mockDriverToReturnData } from 'test/mock/driver-mock';
+import { mockDriverToReturnData } from 'test/mock';
 
 import { Context } from './entity/Context';
 
 describe('mapping > join', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
-
-  let mockConfig: ConnectionOptions = {
-    adapter: 'mock'
-  };
 
   it('should be able to map explicitly joined tables from the owning side', async () => {
     let specName = 'my-name';
@@ -22,7 +17,7 @@ describe('mapping > join', async () => {
 
     let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: 52, a6: childName }];
 
-    useConfiguration(mockConfig);
+
     mockDriverToReturnData(dataResult);
 
     let ctx = new Context();
@@ -53,7 +48,7 @@ describe('mapping > join', async () => {
 
     let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: 52, a6: childName }];
 
-    useConfiguration(mockConfig);
+
     mockDriverToReturnData(dataResult);
 
     let ctx = new Context();
@@ -80,7 +75,7 @@ describe('mapping > join', async () => {
       a5: 'parent-name'
     };
 
-    useConfiguration(mockConfig);
+
     mockDriverToReturnData([dataResult]);
 
     let ctx = new Context();
@@ -108,7 +103,7 @@ describe('mapping > join', async () => {
       a5: 'parent-name'
     };
 
-    useConfiguration(mockConfig);
+
     mockDriverToReturnData([dataResult]);
 
     let ctx = new Context();
@@ -134,7 +129,7 @@ describe('mapping > join', async () => {
 
     let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: childId, a6: childName }];
 
-    useConfiguration(mockConfig);
+
     mockDriverToReturnData(dataResult);
 
     let ctx = new Context();

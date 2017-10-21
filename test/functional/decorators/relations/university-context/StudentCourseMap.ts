@@ -1,6 +1,7 @@
-import { Column } from 'src';
+import { Column, Entity } from 'src';
 
-export class StudentsCourses {
+@Entity()
+export class StudentCourseMap {
   @Column().primaryKey()
   student_id: number;
 

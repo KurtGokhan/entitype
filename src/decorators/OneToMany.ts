@@ -17,9 +17,7 @@ export function OneToMany<EntityType, SelectType>(
       column: resolvePropertyExpression(foreignKey)
     };
 
-    let type = Reflect.getMetadata('design:type', target, propertyKey);
-
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => type, {});
+    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, null, {});
     column.isNavigationProperty = true;
     column.isArray = true;
     column.foreignKey = fk;
