@@ -38,4 +38,6 @@ export async function dropAndCreateDatabase(seed?: string) {
   if (seed) {
     result = await connection.query(seed);
   }
+
+  await connection.end();
 }
