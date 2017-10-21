@@ -8,6 +8,7 @@ export class Mysql2Driver implements DriverAdapter {
     const connection = await createConnection(<any>options);
 
     let [rows, columns] = await connection.query(query);
+    await connection.end();
     let rowsData = rows as RowData[];
     return [rowsData, columns];
   }
