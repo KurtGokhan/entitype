@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
-import { ObjectType, PropertyExpression } from '../fluent';
+import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
 

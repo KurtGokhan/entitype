@@ -1,8 +1,7 @@
-
 import { expect } from 'chai';
 import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import * as university from 'test/config/university-context';
 
-import * as university from './university-context';
 
 describe('decorators > relations', async () => {
   it('should create and store many-to-many columns', () => {

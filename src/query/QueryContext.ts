@@ -101,8 +101,14 @@ export class QueryContext {
   }
 
   private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
+    let column = node.column;
     let path = node.path;
-    this.selectStructure.push({ isObject: true, mapPath: baseMappedPath, isArray: false, value: null, dependsOn: node.dependsOn });
+    this.selectStructure.push({
+      isObject: column ? column.isNavigationProperty && !column.isArray : true,
+      mapPath: baseMappedPath,
+      isArray: column && column.isArray,
+      value: null, dependsOn: node.dependsOn
+    });
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {
       this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
     });
