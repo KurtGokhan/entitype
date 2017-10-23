@@ -8,7 +8,7 @@ export class Course {
   @Column().primaryKey()
   id: number;
 
-  @ManyToOne(Course, x => x.instructor_id)
+  @ManyToOne(() => Course, x => x.instructor_id)
   instructor: Instructor;
 
   @Column()

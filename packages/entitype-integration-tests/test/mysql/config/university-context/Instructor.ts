@@ -13,6 +13,6 @@ export class Instructor {
   @Column()
   profile_id: number;
 
-  @OneToMany(Course, x => x.instructor_id)
+  @OneToMany(() => Course, x => x.instructor_id)
   courses: Course[];
 }
