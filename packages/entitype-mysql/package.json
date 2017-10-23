@@ -49,7 +49,7 @@
     "test": "mocha",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
     "cover": "nyc mocha",
-    "cover:show": "start ./tmp/lcov-report/index.html",
+    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "npm run lint:src & npm run lint:test",
     "lint:src": "tslint --project tsconfig.json -c tslint.json",
     "lint:test": "tslint --project test/tsconfig.json -c tslint.json",
