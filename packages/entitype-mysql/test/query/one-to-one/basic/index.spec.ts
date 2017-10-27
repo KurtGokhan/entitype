@@ -23,23 +23,22 @@ describe('query > one-to-one > basic', async () => {
     let ctx = new Context();
     let loadModelQuery = ctx.models.select(x => x.child).toList.query;
     expect(loadModelQuery).to
-      .equal(`SELECT t1.id as a2, t1.name as a3`
-      + ` FROM Model as t0 LEFT JOIN ChildModel as t1 ON t0.child_id = t1.id`);
+      .equal(`SELECT t0.id as a1, t2.id as a3, t2.name as a4`
+      + ` FROM Model as t0 LEFT JOIN ChildModel as t2 ON t0.child_id = t2.id`);
   });
 
   it('should be able to implicitly include child partially', async () => {
     let ctx = new Context();
     let loadModelQuery = ctx.models.select(x => x.child.name).toList.query;
     expect(loadModelQuery).to
-      .equal(`SELECT t1.name as a2`
-      + ` FROM Model as t0 LEFT JOIN ChildModel as t1 ON t0.child_id = t1.id`);
+      .equal(`SELECT t1.id as a2, t1.name as a3 FROM Model as t0 LEFT JOIN ChildModel as t1 ON t0.child_id = t1.id`);
   });
 
   it('should be able to implicitly include child and parent partially', async () => {
     let ctx = new Context();
     let loadModelQuery = ctx.models.select(x => [x.child.name, x.name]).toList.query;
     expect(loadModelQuery).to
-      .equal(`SELECT t1.name as a2, t0.name as a3`
+      .equal(`SELECT t1.id as a2, t1.name as a3, t0.id as a4, t0.name as a5`
       + ` FROM Model as t0 LEFT JOIN ChildModel as t1 ON t0.child_id = t1.id`);
   });
 });

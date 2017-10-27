@@ -15,6 +15,6 @@ describe('query > one-to-one > two-sided', async () => {
     let ctx = new Context();
     let loadModelQuery = ctx.childmodels.include(x => x.parent).select(x => x.name).toList.query;
     expect(loadModelQuery).to
-      .match(/SELECT t.* FROM childmodel as t0 LEFT JOIN model as t\d+ ON t2.child_id = t\d+.id/i);
+      .match(/SELECT t.* FROM childmodel as t0 LEFT JOIN model as t\d+ ON t\d+.child_id = t\d+.id/i);
   });
 });
