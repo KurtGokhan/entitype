@@ -1,4 +1,6 @@
-import { RowData } from '../ioc/index';
+import { ColumnData, RowData } from '../ioc/index';
+import { setObjectPath } from '../util';
+import { getObjectPath } from '../util/index';
 import { QueryContext } from './QueryContext';
 
 export class ResultMapper {
@@ -10,77 +12,55 @@ export class ResultMapper {
       return +dataResult[0].count;
     }
 
-    let columns = this.context.selectedColumns;
-    let resultArray = this.getStructure(dataResult);
+    let resultArray = this.convertRowDataToObjects(dataResult, null);
 
-    for (let index = 0; index < columns.length; index++) {
-      let column = columns[index];
-      let alias = this.context.getAliasForColumn(column.path);
+    if (this.context.select)
+      resultArray = resultArray.map(this.context.select.expression);
 
-      for (let rowIndex = 0; rowIndex < dataResult.length; rowIndex++) {
-        let row = dataResult[rowIndex];
-        let data = row[alias];
-        let target = resultArray[rowIndex];
+    this.removeNonexistentChildren(resultArray);
 
-        for (let mapIndex = 0; mapIndex < column.mapPath.length - 1; mapIndex++) {
-          let mapPart = column.mapPath[mapIndex];
-          target = target[mapPart];
-        }
-        let lastPart = column.mapPath[column.mapPath.length - 1];
-        if (lastPart) {
-          // If target is null, it means the column depends on a foreign key to exist
-          if (target) target[lastPart] = data;
-        }
-        else resultArray[rowIndex] = data;
-      }
-    }
-
-    if (this.context.first) {
-      return resultArray[0];
-    }
+    if (this.context.first) return resultArray[0];
     return resultArray;
   }
 
-  getStructure(data: RowData[]) {
-    let count = data.length;
-    let structure = this.context.selectStructure;
+  convertRowDataToObjects(data: RowData[], colData: ColumnData[]) {
     let resultArray = [];
-
+    let count = data.length;
     for (let index = 0; index < count; index++) {
-      let result;
+      let result = resultArray[index];
       let row = data[index];
 
-      for (let stIndex = 0; stIndex < structure.length; stIndex++) {
-        let st = structure[stIndex];
-        let value;
-        if (st.isArray) value = [];
-        else if (st.isObject) value = {};
-        else value = st.value;
+      // TODO: use column data to get aliases
+      let aliases = Object.keys(row)
+        .map(x => ({ alias: x, path: this.context.getPathForAlias(parseInt(x.replace('a', ''))) }));
 
-        if (st.dependsOn) {
-          let dependAlias = this.context.getAliasForColumn(st.dependsOn);
-          if (row[dependAlias] == null) value = null;
-        }
-
-
-        let target = result;
-
-        for (let mapIndex = 0; mapIndex < st.mapPath.length - 1; mapIndex++) {
-          let mapPart = st.mapPath[mapIndex];
-          let childTarget = target[mapPart];
-          target = childTarget;
-        }
-
-        let lastPart = st.mapPath[st.mapPath.length - 1];
-        if (lastPart) target[lastPart] = value;
-        else target = value;
-
-        if (!result) result = target;
+      for (let aliasIndex = 0; aliasIndex < aliases.length; aliasIndex++) {
+        let aliasPath = aliases[aliasIndex];
+        if (aliasPath.path)
+          result = setObjectPath(result, aliasPath.path, row[aliasPath.alias]);
       }
-
-      resultArray.push(result);
+      resultArray[index] = result;
     }
 
     return resultArray;
+  }
+
+  removeNonexistentChildren(resultArray: any[]) {
+    let fullTableMaps = this.context.fullTableMaps.map(x => ({
+      entity: this.context.getColumnInfoForPropertyPath(x.path).parent,
+      map: x
+    }));
+
+    for (let index = 0; index < resultArray.length; index++) {
+      let result = resultArray[index];
+
+      for (let entIndex = 0; entIndex < fullTableMaps.length; entIndex++) {
+        let map = fullTableMaps[entIndex];
+        let pks = map.entity.primaryKeys;
+
+        let pkExists = pks.every(pk => getObjectPath(result, map.map.mapPath.concat(pk.name)));
+        if (!pkExists) setObjectPath(result, map.map.mapPath, null);
+      }
+    }
   }
 }

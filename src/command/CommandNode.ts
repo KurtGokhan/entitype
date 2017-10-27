@@ -101,6 +101,7 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     let resolved = resolvePropertyMapExpression(expression, this.entityType);
     select.columns = resolved[0];
     select.structure = resolved[1];
+    select.expression = expression;
 
     return this.createNextCommand(select);
   }

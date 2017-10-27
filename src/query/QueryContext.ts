@@ -32,11 +32,13 @@ export class QueryContext {
 
   public joinTreeRoot: JoinTreeNode;
 
+  public fullTableMaps: SelectMapping[] = [];
   public selectedColumns: SelectMapping[];
   public selectStructure: SelectMappingStructure[];
 
 
   private aliasContainer: AliasTree = new AliasTree();
+  private aliasMap: Map<number, PropertyPath>;
 
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
@@ -85,6 +87,16 @@ export class QueryContext {
 
       this.select.columns.forEach(selectedCol => {
         let colInfo = this.getColumnInfoForPropertyPath(selectedCol.path);
+
+        // Add all primary keys to select list
+        let primaryKeys = colInfo.parent.primaryKeys;
+        for (let index = 0; index < primaryKeys.length; index++) {
+          let primaryKey = primaryKeys[index];
+          let path = selectedCol.path.slice(0, -1);
+          path.push(primaryKey.name);
+          this.selectedColumns.push({ path: path, mapPath: null });
+        }
+
         if (colInfo.isColumn)
           this.selectedColumns.push(selectedCol);
         else {
@@ -103,11 +115,17 @@ export class QueryContext {
   private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
     let column = node.column;
     let path = node.path;
+
+    this.fullTableMaps.push({
+      mapPath: baseMappedPath,
+      path
+    });
+
     this.selectStructure.push({
       isObject: column ? column.isNavigationProperty && !column.isArray : true,
       mapPath: baseMappedPath,
       isArray: column && column.isArray,
-      value: null, dependsOn: node.dependsOn
+      value: null
     });
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {
       this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
@@ -136,7 +154,7 @@ export class QueryContext {
 
     this.joinTreeRoot = {
       entity: this.entity, path: [], pathPart: '', parent: null,
-      column: null, childs: [], childDic: {}, alias: null, include: true, dependsOn: null
+      column: null, childs: [], childDic: {}, alias: null, include: true
     };
     includedPaths.forEach(path => this.createBranchesForPath(path, true));
     paths.forEach(path => this.createBranchesForPath(path, false));
@@ -152,20 +170,13 @@ export class QueryContext {
         let parentPath = currentPathNode.path;
         let currentPath = parentPath.concat(node);
         let col = currentPathNode.entity.columns.find(x => x.name === node);
-        let fk = col.foreignKey;
-        let dependsOn = null;
         let colEntity = DecoratorStorage.getEntity(col.type);
 
-        if (fk && col.isNavigationProperty) {
-          let pk = colEntity.columns.find(x => x.options.primaryKey);
-          dependsOn = currentPath.concat(pk.name);
-        }
         pathNode = currentPathNode.childDic[node] = {
           path: currentPath,
           pathPart: node,
           entity: colEntity,
           column: col,
-          dependsOn,
           parent: currentPathNode,
           childs: [],
           childDic: {},
@@ -179,9 +190,17 @@ export class QueryContext {
   }
 
   private resolveAliases() {
-    this.selectedColumns.map(x => ({ alias: this.getAliasForColumn(x.path), col: x }));
+    let map = this.selectedColumns.map(x => ({ alias: this.getAlias(x.path), col: x }));
+    this.aliasMap = new Map();
+    map.forEach(x => this.aliasMap.set(x.alias.name, x.col.path));
+
+    // Only take unique paths
+    this.selectedColumns = Array.from(this.aliasMap.entries()).map((entry) => ({ path: entry[1], mapPath: null }));
   }
 
+  getPathForAlias(alias: number): PropertyPath {
+    return this.aliasMap.get(alias);
+  }
 
   getJoinTreeNodeForPath(path: PropertyPath): JoinTreeNode {
     let currentPathNode = this.joinTreeRoot;
@@ -202,7 +221,9 @@ export class QueryContext {
       if (!entity) throw new UnknownPropertyError(prop);
 
       col = entity.columns.find(x => x.name === prop);
-      entity = DecoratorStorage.getEntity(col.type);
+
+      if (col) entity = DecoratorStorage.getEntity(col.type);
+      else entity = null;
     }
     return col;
   }

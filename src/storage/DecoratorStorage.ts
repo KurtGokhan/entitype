@@ -11,6 +11,10 @@ export namespace DecoratorStorage {
     columns: Column[] = [];
     options: EntityOptions;
 
+    get primaryKeys(): Column[] {
+      return this.columns.filter(x => x.options.primaryKey);
+    }
+
     constructor(init?: Partial<Entity>) {
       Object.assign(this, init);
     }

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { container } from 'src/ioc';
-import { mockDriverToReturnData } from 'test/mock';
+import { mockDriverToReturnDataWithoutAlias } from 'test/mock';
 
 import { Context } from './entity/Context';
 
@@ -15,10 +15,10 @@ describe('mapping > join', async () => {
     let childId = 52;
     let childName = 'childName';
 
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: 52, a6: childName }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId, child: { id: 52, name: childName } }];
 
 
-    mockDriverToReturnData(dataResult);
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({
@@ -46,10 +46,10 @@ describe('mapping > join', async () => {
     let childId = 52;
     let childName = 'childName';
 
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: 52, a6: childName }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId, child: { id: 52, name: childName } }];
 
 
-    mockDriverToReturnData(dataResult);
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({
@@ -69,14 +69,16 @@ describe('mapping > join', async () => {
 
   it('should be able to map explicitly joined tables from the owned side', async () => {
     let dataResult = {
-      a1: 'other-name',
-      a2: 51,
-      a4: 52,
-      a5: 'parent-name'
+      name: 'other-name',
+      id: 51,
+      parent: {
+        id: 52,
+        name: 'parent-name'
+      }
     };
 
 
-    mockDriverToReturnData([dataResult]);
+    mockDriverToReturnDataWithoutAlias([dataResult]);
 
     let ctx = new Context();
     let result = await ctx.othermodels.select(x => ({
@@ -88,23 +90,25 @@ describe('mapping > join', async () => {
       }
     })).first();
 
-    expect(result.mappedName).to.be.equal(dataResult.a1);
-    expect(result.mappedId).to.be.equal(dataResult.a2);
-    expect(result.parent.id).to.be.equal(dataResult.a4);
-    expect(result.parent.name).to.be.equal(dataResult.a5);
+    expect(result.mappedName).to.be.equal(dataResult.name);
+    expect(result.mappedId).to.be.equal(dataResult.id);
+    expect(result.parent.id).to.be.equal(dataResult.parent.id);
+    expect(result.parent.name).to.be.equal(dataResult.parent.name);
   });
 
 
   it('should be able to map implicitly joined tables from the owned side', async () => {
     let dataResult = {
-      a1: 'other-name',
-      a2: 51,
-      a4: 52,
-      a5: 'parent-name'
+      name: 'other-name',
+      id: 51,
+      parent: {
+        id: 52,
+        name: 'parent-name'
+      }
     };
 
 
-    mockDriverToReturnData([dataResult]);
+    mockDriverToReturnDataWithoutAlias([dataResult]);
 
     let ctx = new Context();
     let result = await ctx.othermodels.select(x => ({
@@ -113,10 +117,10 @@ describe('mapping > join', async () => {
       parent: x.parent
     })).first();
 
-    expect(result.mappedName).to.be.equal(dataResult.a1);
-    expect(result.mappedId).to.be.equal(dataResult.a2);
-    expect(result.parent.id).to.be.equal(dataResult.a4);
-    expect(result.parent.name).to.be.equal(dataResult.a5);
+    expect(result.mappedName).to.be.equal(dataResult.name);
+    expect(result.mappedId).to.be.equal(dataResult.id);
+    expect(result.parent.id).to.be.equal(dataResult.parent.id);
+    expect(result.parent.name).to.be.equal(dataResult.parent.name);
   });
 
 
@@ -127,10 +131,10 @@ describe('mapping > join', async () => {
     let childId = specChildId;
     let childName = null;
 
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId, a5: childId, a6: childName }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId, child: { id: childId, name: childName } }];
 
 
-    mockDriverToReturnData(dataResult);
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({

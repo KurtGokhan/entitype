@@ -14,6 +14,5 @@ export class JoinTreeNode {
   childs: JoinTreeNode[];
   childDic: { [key: string]: JoinTreeNode };
 
-  dependsOn: PropertyPath;
   include: boolean;
 }

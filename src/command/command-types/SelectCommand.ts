@@ -5,6 +5,7 @@ import { CommandType } from '../CommandType';
 export class SelectCommand extends Command {
   columns: SelectMapping[];
   structure: SelectMappingStructure[];
+  expression: (expression: any) => any;
 
   constructor() {
     super(CommandType.Select);
@@ -20,6 +21,5 @@ export class SelectMappingStructure {
   isArray: boolean;
   isObject: boolean;
   value: any;
-  dependsOn: PropertyPath;
   mapPath: PropertyPath;
 }

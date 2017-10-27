@@ -2,6 +2,7 @@ import { ConnectionOptions, useConfiguration } from 'src';
 import { PropertyPath } from 'src/fluent';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from 'src/ioc';
 import { QueryContext, RowData } from 'src/plugins';
+import { setObjectPath } from 'src/util';
 
 export function mockDriverToReturnData(data: RowData[], builderCallback?: (ctx: QueryContext) => void) {
   let mockConfig: ConnectionOptions = { adapter: 'mock' };
@@ -47,7 +48,7 @@ export function mockDriverToReturnDataWithoutAlias(data: RowData[], builderCallb
 }
 
 function mapObjectToAlias(object, ctx: QueryContext, path: PropertyPath, newObj) {
-  let keys = Object.keys(object);
+  let keys = object ? Object.keys(object) : [];
 
   newObj = newObj || {};
 
@@ -56,10 +57,19 @@ function mapObjectToAlias(object, ctx: QueryContext, path: PropertyPath, newObj)
     let value = object[key];
 
     let newPath = path.concat([key]);
-    if (typeof value === 'object')
+    if (typeof value === 'object' && value)
       mapObjectToAlias(value, ctx, newPath, newObj);
-    else
-      newObj[ctx.getAliasForColumn(newPath)] = value;
+    else {
+      try {
+        let colInfo = ctx.getColumnInfoForPropertyPath(newPath);
+        // Skip properties without column info, like count
+        if (colInfo) newObj[ctx.getAliasForColumn(newPath)] = value;
+        else newObj = setObjectPath(newObj, newPath, value);
+      }
+      catch (err) {
+        newObj = setObjectPath(newObj, newPath, value);
+      }
+    }
   }
 
   return newObj;
