@@ -211,6 +211,23 @@ export class QueryContext {
     return currentPathNode;
   }
 
+  getEntityInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Entity {
+    let entity = this.entity;
+    let col = null;
+
+    for (let index = 0; index < path.length; index++) {
+      let prop = path[index];
+
+      if (!entity) throw new UnknownPropertyError(prop);
+
+      col = entity.columns.find(x => x.name === prop);
+
+      if (col) entity = DecoratorStorage.getEntity(col.type);
+      else entity = null;
+    }
+    return entity;
+  }
+
   getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {
     let entity = this.entity;
     let col = null;

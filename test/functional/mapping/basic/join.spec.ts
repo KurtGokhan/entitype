@@ -124,6 +124,28 @@ describe('mapping > join', async () => {
   });
 
 
+  it('should be able to map included tables from the owning side', async () => {
+    let specName = 'my-name';
+    let specId = 5;
+    let specChildId = 15;
+    let childId = 52;
+    let childName = 'childName';
+
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId, child: { id: 52, name: childName } }];
+
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.include(x => x.child).first();
+
+    expect(result.name).to.be.equal(specName);
+    expect(result.id).to.be.equal(specId);
+    expect(result.child_id).to.be.equal(specChildId);
+    expect(result.child.id).to.be.equal(childId);
+    expect(result.child.name).to.be.equal(childName);
+  });
+
   it('should return null child if child does not exist on join', async () => {
     let specName = 'my-name';
     let specId = 5;

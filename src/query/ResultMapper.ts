@@ -47,7 +47,7 @@ export class ResultMapper {
 
   removeNonexistentChildren(resultArray: any[]) {
     let fullTableMaps = this.context.fullTableMaps.map(x => ({
-      entity: this.context.getColumnInfoForPropertyPath(x.path).parent,
+      entity: this.context.getEntityInfoForPropertyPath(x.path),
       map: x
     }));
 
