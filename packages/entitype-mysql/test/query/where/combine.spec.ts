@@ -7,9 +7,9 @@ describe('query > where > combine', async () => {
   it('should be able to combine multiple conditions with and', async () => {
     let ctx = new Context();
     let listNode = ctx.models
-      .where(x => x.name().isNull())
-      .andWhere(x => x.id().between(5, 10))
-      .andWhere(x => x.id().not.equals(6))
+      .where(x => x.name).isNull()
+      .andWhere(x => x.id).between(5, 10)
+      .andWhere(x => x.id).not.equals(6)
       .toList;
     let query = listNode.query;
     expect(query).to.match(multilineRegExp([
@@ -21,9 +21,9 @@ describe('query > where > combine', async () => {
   it('should be able to combine multiple conditions with or', async () => {
     let ctx = new Context();
     let listNode = ctx.models
-      .where(x => x.name().isNull())
+      .where(x => x.name).isNull()
       .or
-      .where(x => x.id().between(5, 10))
+      .where(x => x.id).between(5, 10)
       .toList;
     let query = listNode.query;
     expect(query).to.match(multilineRegExp([
@@ -35,10 +35,10 @@ describe('query > where > combine', async () => {
   it('should be able to combine multiple conditions with and/or', async () => {
     let ctx = new Context();
     let listNode = ctx.models
-      .where(x => x.name().isNull())
+      .where(x => x.name).isNull()
       .or
-      .where(x => x.id().between(5, 10))
-      .andWhere(x => x.id().not.equals(6))
+      .where(x => x.id).between(5, 10)
+      .andWhere(x => x.id).not.equals(6)
       .toList;
     let query = listNode.query;
     expect(query).to.match(multilineRegExp([
