@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Tracker } from 'src/query/Tracker';
 import * as university from 'test/config/university-context';
 
-describe.only('util > tracker', async () => {
+describe('util > tracker', async () => {
   it('should be able to track deep objects', async () => {
     let tracker = new Tracker();
 

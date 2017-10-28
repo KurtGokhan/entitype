@@ -24,7 +24,7 @@ describe('mapping > basic', async () => {
 
   it('should be able to get single scalar data', async () => {
     let specName = 'my-name';
-    let dataResult = [{ name: specName }];
+    let dataResult = [{ id: 0, name: specName }];
 
     mockDriverToReturnDataWithoutAlias(dataResult);
 
@@ -36,7 +36,7 @@ describe('mapping > basic', async () => {
 
   it('should be able to get list of scalar data', async () => {
     let result = ['my-name', 'my-name-2', 'my-name-3'];
-    let dataResult = [{ name: result[0] }, { name: result[1] }, { name: result[2] }];
+    let dataResult = [{ id: 0, name: result[0] }, { id: 1, name: result[1] }, { id: 2, name: result[2] }];
 
 
     mockDriverToReturnDataWithoutAlias(dataResult);

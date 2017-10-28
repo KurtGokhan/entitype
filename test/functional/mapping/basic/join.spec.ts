@@ -171,4 +171,31 @@ describe('mapping > join', async () => {
     expect(result.mappedChild.mappedId).to.be.equal(specChildId);
     expect(result.child).to.be.equal(null);
   });
+
+
+  it('should return null child properties if child does not exist on explicit join', async () => {
+    let specName = 'my-name';
+    let specId = 5;
+    let specChildId = null;
+    let childId = specChildId;
+    let childName = null;
+
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId, child: { id: childId, name: childName } }];
+
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => ({
+      mappedName: x.name,
+      mappedId: x.id,
+      mappedChild: { mappedId: x.child_id },
+      childName: (x.child || {})['name']
+    })).first();
+
+    expect(result.mappedName).to.be.equal(specName);
+    expect(result.mappedId).to.be.equal(specId);
+    expect(result.mappedChild.mappedId).to.be.equal(specChildId);
+    expect(result.childName).to.not.exist;
+  });
 });

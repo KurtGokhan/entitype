@@ -13,7 +13,8 @@ import { CommandType } from '../command/CommandType';
 import { UnknownPropertyError } from '../errors/UnknownPropertyError';
 import { PropertyPath } from '../fluent';
 import { DecoratorStorage } from '../storage/DecoratorStorage';
-import { Alias, AliasContainer, AliasTree } from './Alias';
+import { Alias, AliasTree } from './Alias';
+import { Tracker } from './Tracker';
 
 export class QueryContext {
 
@@ -39,6 +40,8 @@ export class QueryContext {
 
   private aliasContainer: AliasTree = new AliasTree();
   private aliasMap: Map<number, PropertyPath>;
+
+  public tracker: Tracker = new Tracker();
 
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {

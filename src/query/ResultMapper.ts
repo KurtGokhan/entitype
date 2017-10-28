@@ -1,4 +1,5 @@
-import { getObjectPath, setObjectPath } from '../common/util';
+import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
+import { setObjectPath } from '../common/util';
 import { ColumnData, RowData } from '../ioc/index';
 import { QueryContext } from './QueryContext';
 
@@ -11,18 +12,18 @@ export class ResultMapper {
       return +dataResult[0].count;
     }
 
-    let resultArray = this.convertRowDataToObjects(dataResult, null);
+    let resultArray = this.convertRowsToFlatObjects(dataResult, null);
+
+    resultArray = this.conertFlatObjectsToEntities(resultArray);
 
     if (this.context.select)
       resultArray = resultArray.map(this.context.select.expression);
-
-    this.removeNonexistentChildren(resultArray);
 
     if (this.context.first) return resultArray[0];
     return resultArray;
   }
 
-  convertRowDataToObjects(data: RowData[], colData: ColumnData[]) {
+  convertRowsToFlatObjects(data: RowData[], colData: ColumnData[]) {
     let resultArray = [];
     let count = data.length;
     for (let index = 0; index < count; index++) {
@@ -44,22 +45,55 @@ export class ResultMapper {
     return resultArray;
   }
 
-  removeNonexistentChildren(resultArray: any[]) {
-    let fullTableMaps = this.context.fullTableMaps.map(x => ({
-      entity: this.context.getEntityInfoForPropertyPath(x.path),
-      map: x
-    }));
+  conertFlatObjectsToEntities(resultArray: any[]) {
+    let root = this.context.joinTreeRoot;
+
+    let trackedObjects = [];
 
     for (let index = 0; index < resultArray.length; index++) {
       let result = resultArray[index];
+      let trackedObject = this.conertFlatObjectsToEntitiesInner(root, result);
 
-      for (let entIndex = 0; entIndex < fullTableMaps.length; entIndex++) {
-        let map = fullTableMaps[entIndex];
-        let pks = map.entity.primaryKeys;
+      // TODO: don't push duplicate entities
+      if (trackedObject !== undefined) trackedObjects.push(trackedObject);
+    }
 
-        let pkExists = pks.every(pk => getObjectPath(result, map.map.mapPath.concat(pk.name)));
-        if (!pkExists) setObjectPath(result, map.map.mapPath, null);
+    return trackedObjects;
+  }
+
+  conertFlatObjectsToEntitiesInner(node: JoinTreeNode, objectValue: any) {
+    if (objectValue == null) return null;
+
+    let keys = node.entity.primaryKeys;
+
+    let keyValues = keys.map(x => objectValue[x.name]);
+    if (keyValues.every(x => x == null)) return null;
+
+    let trackedObject = this.context.tracker.getTrackedValue(node.entity.type as any, keyValues);
+    if (!trackedObject) {
+      this.context.tracker.setTrackedValue(node.entity.type as any, keyValues, objectValue);
+      trackedObject = objectValue;
+    }
+
+    for (let index = 0; index < node.childs.length; index++) {
+      let child = node.childs[index];
+      let childValue = objectValue[child.pathPart];
+      childValue = this.conertFlatObjectsToEntitiesInner(child, childValue);
+
+      if (child.column.isArray) {
+        if (!Array.isArray(trackedObject[child.pathPart])) {
+          trackedObject[child.pathPart] = [];
+        }
+
+        if (childValue === undefined) continue;
+        trackedObject[child.pathPart].push(childValue);
+      }
+      else {
+        if (childValue === undefined) continue;
+        trackedObject[child.pathPart] = childValue;
       }
     }
+
+    return trackedObject;
   }
 }
