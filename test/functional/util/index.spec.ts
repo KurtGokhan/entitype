@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getObjectPath, setObjectPath } from 'src/util';
+import { getObjectPath, setObjectPath } from 'src/common/util';
 
 describe('util > setObjectPath', async () => {
   it('should be able to set existing path', async () => {

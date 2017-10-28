@@ -1,6 +1,5 @@
+import { getObjectPath, setObjectPath } from '../common/util';
 import { ColumnData, RowData } from '../ioc/index';
-import { setObjectPath } from '../util';
-import { getObjectPath } from '../util/index';
 import { QueryContext } from './QueryContext';
 
 export class ResultMapper {
