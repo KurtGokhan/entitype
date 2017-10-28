@@ -45,17 +45,23 @@ describe('query-context', async () => {
 
   it('should correctly create context in order statements', async () => {
     mockDriverToReturnData(null, ctx => {
-      let [ascOrder, descOrder] = ctx.orders;
+      let [ascOrder, descOrder, ascOrder2] = ctx.orders;
 
       expect(ascOrder.descending).to.be.eql(false);
       expect(ascOrder.propertyPath).to.be.eql(['id']);
 
       expect(descOrder.descending).to.be.eql(true);
       expect(descOrder.propertyPath).to.be.eql(['child', 'id']);
+
+      expect(ascOrder2.descending).to.be.eql(false);
+      expect(ascOrder2.propertyPath).to.be.eql(['name']);
     });
 
     let ctx = new Context();
-    await ctx.models.orderByAscending(x => x.id).thenByDescending(x => x.child.id).first.query;
+    await ctx.models.orderByAscending(x => x.id)
+      .thenByDescending(x => x.child.id)
+      .thenByAscending(x => x.name)
+      .first.query;
   });
 
   it('should correctly create context in where statements', async () => {
@@ -118,19 +124,19 @@ describe('query-context', async () => {
 
     let ctx = new Context();
     await ctx.models
-      .where(x => x.id().gt(5)).andWhere(x => x.id().lte(10))
+      .where(x => x.id).gt(5).andWhere(x => x.id).lte(10)
       .or
-      .where(x => x.name().equals('Model 3')).andWhere(x => x.other.name().not.isNull())
+      .where(x => x.name).equals('Model 3').andWhere(x => x.other.name).not.isNull()
       .or
-      .where(x => x.id().gte(6)).andWhere(x => x.id().lt(7))
+      .where(x => x.id).gte(6).andWhere(x => x.id).lt(7)
       .or
-      .where(x => x.id().between(3, 8)).andWhere(x => x.id().like('hello')).andWhere(x => x.id().in([1, 2]))
+      .where(x => x.id).between(3, 8).andWhere(x => x.id).like('hello').andWhere(x => x.id).in([1, 2])
       .count.query;
   });
 
   it('should throw error when property is unknown in where statements', async () => {
     let ctx = new Context();
-    let query = () => ctx.models.where(x => x['asdf'].gt(5)).count.query;
+    let query = () => ctx.models.where(x => x['asdf']).gt(5).count.query;
 
     expect(query).to.throw();
   });

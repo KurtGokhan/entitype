@@ -1,9 +1,9 @@
+
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrCommand } from '../command/command-types/OrCommand';
 import {
   DeepPropertyExpression,
   IFiltered,
-  IFilteredFilterable,
   IGrouped,
   IIncludable,
   IListable,
@@ -14,10 +14,10 @@ import {
   IWhereable,
   ObjectType,
   PropertyMapExpression,
-  WhereExpression,
 } from '../fluent';
+import { IFilterCondition } from '../fluent/interfaces';
 import { resolveDeepPropertyExpression, resolvePropertyMapExpression } from '../fluent/property-selector';
-import { createWhereExpressionQueryBase } from '../fluent/where-helpers';
+import { WhereConditionPicker } from '../fluent/where-helpers';
 import { Command } from './Command';
 import { CountCommand } from './command-types/CountCommand';
 import { FirstCommand } from './command-types/FirstCommand';
@@ -28,7 +28,7 @@ import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
 
-export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
+export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltered<EntityType>, IOrdered<EntityType> {
   get or(): IWhereable<EntityType> {
     let nextCommand = this.createNextCommand(new OrCommand());
     return nextCommand;
@@ -132,14 +132,14 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   }
 
 
-  where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
-    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityType);
-    let whereCommand = expression(parameter);
+  where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType> {
+    let path = resolveDeepPropertyExpression(expression, this.entityType);
+    let onFinish = (whereCommand) => this.createNextCommand(whereCommand);
 
-    return this.createNextCommand(whereCommand);
+    return new WhereConditionPicker(path, onFinish);
   }
 
-  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType> {
+  andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType> {
     return this.where(expression);
   }
 
