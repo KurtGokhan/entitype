@@ -51,6 +51,96 @@ describe('mapping > one-to-many', async () => {
   });
 
 
+
+  it('should be able to map included child properties from the owning side', async () => {
+    let dataResult = [
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course1.weekDay, instructor_id: course1.instructor_id, duration: course1.duration, hourSlot: course1.hourSlot, id: course1.id, instructor: instructor }
+      },
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course2.weekDay, instructor_id: course2.instructor_id, duration: course2.duration, hourSlot: course2.hourSlot, id: course2.id, instructor: instructor }
+      }
+    ];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new uc.UniversityContext();
+    let result = await ctx.instructors.include(x => x.courses, x => x.instructor).first();
+
+    expect(result.id).to.be.eql(instructor.id);
+    expect(result.profile_id).to.be.eql(instructor.profile_id);
+    expect(result.courses[0].instructor).to.be.eql(result);
+    expect(result.courses[1].instructor).to.be.eql(result);
+  });
+
+
+  it('should return 0 childs if no childs are found', async () => {
+    let dataResult = [
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: null, instructor_id: null, duration: null, hourSlot: null, id: null }
+      }
+    ];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new uc.UniversityContext();
+    let result = await ctx.instructors.include(x => x.courses).toList();
+
+    expect(result.length).to.eql(1);
+
+    expect(result[0].id).to.eql(instructor.id);
+    expect(result[0].profile_id).to.eql(instructor.profile_id);
+    expect(result[0].courses.length).to.eql(0);
+  });
+
+
+  it.skip('should be able to map childs to another object', async () => {
+    let dataResult = [
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course1.weekDay, instructor_id: course1.instructor_id, duration: course1.duration, hourSlot: course1.hourSlot, id: course1.id }
+      },
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course2.weekDay, instructor_id: course2.instructor_id, duration: course2.duration, hourSlot: course2.hourSlot, id: course2.id }
+      }
+    ];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new uc.UniversityContext();
+    let result = await ctx.instructors.select(x => x.courses.map(x => ({ time: x.duration }))).toList();
+
+    expect(result.length).to.eql(1);
+    expect(result[0]).to.eql([{ time: course1.duration }, { time: course2.duration }]);
+  });
+
+
+  it.skip('should be able to map childs to scalar', async () => {
+    let dataResult = [
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course1.weekDay, instructor_id: course1.instructor_id, duration: course1.duration, hourSlot: course1.hourSlot, id: course1.id }
+      },
+      {
+        id: instructor.id, profile_id: instructor.profile_id,
+        courses: { weekDay: course2.weekDay, instructor_id: course2.instructor_id, duration: course2.duration, hourSlot: course2.hourSlot, id: course2.id }
+      }
+    ];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new uc.UniversityContext();
+    let result = await ctx.instructors.select(x => x.courses.map(x => 5)).toList();
+
+    expect(result.length).to.eql(1);
+    expect(result[0]).to.eql([5, 5]);
+  });
+
+
   it('should be able to map explicitly joined tables from the owned side', async () => {
     let dataResult = [
       {

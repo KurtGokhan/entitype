@@ -1,9 +1,8 @@
-import { DeepPropertySelector } from './';
 import { PropertyPathGetter } from './';
 
 
 export declare type AggregatePropertyExpression<Entity, SelectType>
-  = (expression: DeepPropertySelector<Entity>, globalFunctions: GlobalFunctions) => SelectType;
+  = (expression: Entity, globalFunctions: GlobalFunctions) => SelectType;
 
 
 export declare type AggregateFunction = (property?: PropertyPathGetter) => AggregatePropertyPath;

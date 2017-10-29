@@ -79,6 +79,15 @@ export interface IFilterable<EntityType> extends IGroupable<EntityType>, IWherea
 
 export interface IIncludable<EntityType> extends IFilterable<EntityType> {
   include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType>;
+
+  include<Level1Type, SelectType>(
+    expression1: DeepPropertyExpression<EntityType, Level1Type[]>,
+    expression2: DeepPropertyExpression<Level1Type, SelectType>): IIncludable<EntityType>;
+
+  include<Level1Type, Level2Type, SelectType>(
+    expression1: DeepPropertyExpression<EntityType, Level1Type[]>,
+    expression2: DeepPropertyExpression<Level1Type, Level2Type[]>,
+    expression3: DeepPropertyExpression<Level2Type, SelectType>): IIncludable<EntityType>;
 }
 
 

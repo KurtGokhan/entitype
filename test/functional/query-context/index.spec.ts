@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { container } from 'src/ioc';
 import { ConditionType } from 'src/plugins';
+import * as uc from 'test/config/university-context';
 import { mockDriverToReturnData } from 'test/mock';
 
 import { Context } from './entity/Context';
@@ -18,6 +19,17 @@ describe('query-context', async () => {
 
     let ctx = new Context();
     await ctx.models.include(x => x.child).toList.query;
+  });
+
+  it('should correctly create context in deep include statements', async () => {
+    mockDriverToReturnData(null, ctx => {
+      let [include] = ctx.includes;
+
+      expect(include.propertyPath).to.eql(['courses', 'instructor']);
+    });
+
+    let ctx = new uc.UniversityContext();
+    await ctx.instructors.include(x => x.courses, x => x.instructor).toList.query;
   });
 
 

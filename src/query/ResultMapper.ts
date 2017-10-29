@@ -85,11 +85,10 @@ export class ResultMapper {
           trackedObject[child.pathPart] = [];
         }
 
-        if (childValue === undefined) continue;
+        if (childValue == null) continue;
         trackedObject[child.pathPart].push(childValue);
       }
       else {
-        if (childValue === undefined) continue;
         trackedObject[child.pathPart] = childValue;
       }
     }
