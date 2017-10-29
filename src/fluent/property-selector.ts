@@ -1,5 +1,5 @@
 import { SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import {
   DeepPropertyExpression,
   DeepPropertySelector,

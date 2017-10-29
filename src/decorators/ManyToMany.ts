@@ -1,7 +1,7 @@
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { NavigationPropertyDecorator } from './';
 
 export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(

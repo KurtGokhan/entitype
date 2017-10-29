@@ -26,7 +26,7 @@ describe('mapping > one-to-many', async () => {
   instructor.profile_id = 42;
 
 
-  it('should be able to map explicitly joined tables from the owning side', async () => {
+  it.skip('should be able to map explicitly joined tables from the owning side', async () => {
     let dataResult = [
       {
         id: instructor.id, profile_id: instructor.profile_id,
@@ -41,11 +41,13 @@ describe('mapping > one-to-many', async () => {
     mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new uc.UniversityContext();
-    let result = await ctx.instructors.include(x => x.courses).first();
+    let result = await ctx.instructors.include(x => x.courses).toList();
 
-    expect(result.id).to.be.eql(instructor.id);
-    expect(result.profile_id).to.be.eql(instructor.profile_id);
-    expect(result.courses).to.be.eql([course1, course2]);
+    expect(result.length).to.eql(1);
+
+    expect(result[0].id).to.be.eql(instructor.id);
+    expect(result[0].profile_id).to.be.eql(instructor.profile_id);
+    expect(result[0].courses).to.be.eql([course1, course2]);
   });
 
 

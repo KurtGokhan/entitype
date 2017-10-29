@@ -1,4 +1,3 @@
-import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
 import { Command } from '../command/Command';
 import { CountCommand } from '../command/command-types/CountCommand';
 import { FirstCommand } from '../command/command-types/FirstCommand';
@@ -10,9 +9,10 @@ import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { CommandType } from '../command/CommandType';
-import { UnknownPropertyError } from '../errors/UnknownPropertyError';
+import { DecoratorStorage } from '../common/DecoratorStorage';
+import { JoinTreeNode } from '../common/JoinTreeNode';
+import { UnknownPropertyError } from '../common/UnknownPropertyError';
 import { PropertyPath } from '../fluent';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { Alias, AliasTree } from './Alias';
 import { Tracker } from './Tracker';
 

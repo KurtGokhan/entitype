@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from 'src/storage/DecoratorStorage';
+import { DecoratorStorage } from 'src/common/DecoratorStorage';
 import * as university from 'test/config/university-context';
 
 

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ColumnDecorator, ColumnOptions } from './';
 
 

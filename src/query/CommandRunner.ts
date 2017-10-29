@@ -1,9 +1,9 @@
 import { Command } from '../command/Command';
 import { QueryCommand } from '../command/command-types/QueryCommand';
 import { CommandType } from '../command/CommandType';
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ConnectionOptions } from '../configuration';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from '../ioc';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { QueryContext } from './QueryContext';
 import { ResultMapper } from './ResultMapper';
 

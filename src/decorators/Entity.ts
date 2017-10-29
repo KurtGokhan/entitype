@@ -1,4 +1,4 @@
-import { DecoratorStorage } from '../storage/DecoratorStorage';
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { EntityDecorator, EntityOptions } from './index';
 
 export function Entity(): EntityDecorator;

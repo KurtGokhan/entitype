@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
 import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 
 
 export function ManyToOne<EntityType, SelectType>(

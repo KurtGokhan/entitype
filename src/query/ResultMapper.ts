@@ -1,4 +1,4 @@
-import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
+import { JoinTreeNode } from '../common/JoinTreeNode';
 import { setObjectPath } from '../common/util';
 import { ColumnData, RowData } from '../ioc/index';
 import { QueryContext } from './QueryContext';

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ObjectType } from '../fluent';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { DbCollectionDecorator } from './';
 
 
