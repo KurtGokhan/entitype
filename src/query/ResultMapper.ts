@@ -55,37 +55,40 @@ export class ResultMapper {
       let trackedObject = this.conertFlatObjectsToEntitiesInner(root, result);
 
       // TODO: don't push duplicate entities
-      if (trackedObject !== undefined) trackedObjects.push(trackedObject);
+      if (!trackedObject.duplicate) trackedObjects.push(trackedObject.object);
     }
 
     return trackedObjects;
   }
 
-  conertFlatObjectsToEntitiesInner(node: JoinTreeNode, objectValue: any) {
-    if (objectValue == null) return null;
+  conertFlatObjectsToEntitiesInner(node: JoinTreeNode, objectValue: any): { object: any, duplicate: boolean } {
+    if (objectValue == null) return { object: null, duplicate: false };
 
     let keys = node.entity.primaryKeys;
 
     let keyValues = keys.map(x => objectValue[x.name]);
-    if (keyValues.every(x => x == null)) return null;
+    if (keyValues.every(x => x == null)) return { object: null, duplicate: false };
 
+    let duplicate = true;
     let trackedObject = this.context.tracker.getTrackedValue(node.entity.type as any, keyValues);
     if (!trackedObject) {
       this.context.tracker.setTrackedValue(node.entity.type as any, keyValues, objectValue);
       trackedObject = objectValue;
+      duplicate = false;
     }
+    let retVal = { object: trackedObject, duplicate };
 
     for (let index = 0; index < node.childs.length; index++) {
       let child = node.childs[index];
-      let childValue = objectValue[child.pathPart];
-      childValue = this.conertFlatObjectsToEntitiesInner(child, childValue);
+      let currentValue = objectValue[child.pathPart];
+      let { object: childValue, duplicate: duplicate } = this.conertFlatObjectsToEntitiesInner(child, currentValue);
 
       if (child.column.isArray) {
         if (!Array.isArray(trackedObject[child.pathPart])) {
           trackedObject[child.pathPart] = [];
         }
 
-        if (childValue == null) continue;
+        if (childValue == null && !duplicate) continue;
         trackedObject[child.pathPart].push(childValue);
       }
       else {
@@ -93,6 +96,6 @@ export class ResultMapper {
       }
     }
 
-    return trackedObject;
+    return retVal;
   }
 }

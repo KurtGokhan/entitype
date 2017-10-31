@@ -4,7 +4,7 @@ import { FirstCommand } from '../command/command-types/FirstCommand';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrderByCommand } from '../command/command-types/OrderByCommand';
 import { QueryCommand } from '../command/command-types/QueryCommand';
-import { SelectCommand, SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
+import { SelectCommand } from '../command/command-types/SelectCommand';
 import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
@@ -103,7 +103,6 @@ export class QueryContext {
   }
 
   private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
-    let column = node.column;
     let path = node.path;
 
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {

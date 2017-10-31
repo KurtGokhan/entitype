@@ -26,7 +26,7 @@ describe('mapping > one-to-many', async () => {
   instructor.profile_id = 42;
 
 
-  it.skip('should be able to map explicitly joined tables from the owning side', async () => {
+  it('should be able to map explicitly joined tables from the owning side', async () => {
     let dataResult = [
       {
         id: instructor.id, profile_id: instructor.profile_id,
@@ -97,7 +97,7 @@ describe('mapping > one-to-many', async () => {
   });
 
 
-  it.skip('should be able to map childs to another object', async () => {
+  it('should be able to map childs to another object', async () => {
     let dataResult = [
       {
         id: instructor.id, profile_id: instructor.profile_id,
