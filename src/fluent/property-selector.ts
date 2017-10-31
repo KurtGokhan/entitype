@@ -18,6 +18,11 @@ const propertySelector: any = new Proxy({}, {
 function getDeepPropertySelector(path: PropertyPath = []) {
   return new Proxy(() => path, {
     get: function (target, propertyName: string) {
+      if (propertyName === 'map') {
+        let mapFunction = expression => expression(getDeepPropertySelector(path));
+        return mapFunction;
+      }
+
       return getDeepPropertySelector(path.concat(propertyName));
     }
   });

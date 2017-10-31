@@ -90,4 +90,13 @@ describe('decorators > column options', async () => {
     checkPropertyOptionValue('typed_and_named_param', 'type', 'float');
     checkPropertyOptionValue('typed_and_named_param', 'columnName', 'customName_typed_param');
   });
+
+  it('should correctly set multiple primary keys', () => {
+    let pk = entity.primaryKeys;
+
+    expect(pk.length).to.be.eql(3);
+    expect(pk[0].name).to.be.eql('pk');
+    expect(pk[1].name).to.be.eql('pk_opts');
+    expect(pk[2].name).to.be.eql('pk_generated');
+  });
 });

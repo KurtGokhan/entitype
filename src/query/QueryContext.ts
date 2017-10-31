@@ -33,9 +33,7 @@ export class QueryContext {
 
   public joinTreeRoot: JoinTreeNode;
 
-  public fullTableMaps: SelectMapping[] = [];
-  public selectedColumns: SelectMapping[];
-  public selectStructure: SelectMappingStructure[];
+  public selectedColumns: { path: PropertyPath }[];
 
 
   private aliasContainer: AliasTree = new AliasTree();
@@ -45,6 +43,8 @@ export class QueryContext {
 
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
+    this.selectedColumns = [];
+
     this.resolveCommands();
     this.resolveJoins();
     this.resolveSelectedColumns();
@@ -85,20 +85,9 @@ export class QueryContext {
 
   private resolveSelectedColumns() {
     if (this.select) {
-      this.selectedColumns = [];
-      this.selectStructure = this.select.structure;
 
       this.select.columns.forEach(selectedCol => {
         let colInfo = this.getColumnInfoForPropertyPath(selectedCol.path);
-
-        // Add all primary keys to select list
-        let primaryKeys = colInfo.parent.primaryKeys;
-        for (let index = 0; index < primaryKeys.length; index++) {
-          let primaryKey = primaryKeys[index];
-          let path = selectedCol.path.slice(0, -1);
-          path.push(primaryKey.name);
-          this.selectedColumns.push({ path: path, mapPath: null });
-        }
 
         if (colInfo.isColumn)
           this.selectedColumns.push(selectedCol);
@@ -109,8 +98,6 @@ export class QueryContext {
       });
     }
     else {
-      this.selectStructure = [];
-      this.selectedColumns = [];
       this.addEntityToSelectedColumnsAndStructure([], this.joinTreeRoot);
     }
   }
@@ -119,19 +106,8 @@ export class QueryContext {
     let column = node.column;
     let path = node.path;
 
-    this.fullTableMaps.push({
-      mapPath: baseMappedPath,
-      path
-    });
-
-    this.selectStructure.push({
-      isObject: column ? column.isNavigationProperty && !column.isArray : true,
-      mapPath: baseMappedPath,
-      isArray: column && column.isArray,
-      value: null
-    });
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {
-      this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
+      this.selectedColumns.push({ path: path.concat(prop.name) });
     });
 
     node.childs.filter(x => x.include).forEach(childNode => {
@@ -159,6 +135,14 @@ export class QueryContext {
       entity: this.entity, path: [], pathPart: '', parent: null,
       column: null, childs: [], childDic: {}, alias: null, include: true
     };
+
+    let primaryKeys = this.entity.primaryKeys;
+    for (let index = 0; index < primaryKeys.length; index++) {
+      let primaryKey = primaryKeys[index];
+      let path = [primaryKey.name];
+      this.selectedColumns.push({ path: path });
+    }
+
     includedPaths.forEach(path => this.createBranchesForPath(path, true));
     paths.forEach(path => this.createBranchesForPath(path, false));
   }
@@ -174,6 +158,13 @@ export class QueryContext {
         let currentPath = parentPath.concat(node);
         let col = currentPathNode.entity.columns.find(x => x.name === node);
         let colEntity = DecoratorStorage.getEntity(col.type);
+
+        let primaryKeys = colEntity.primaryKeys;
+        for (let index = 0; index < primaryKeys.length; index++) {
+          let primaryKey = primaryKeys[index];
+          let path = currentPath.concat(primaryKey.name);
+          this.selectedColumns.push({ path: path });
+        }
 
         pathNode = currentPathNode.childDic[node] = {
           path: currentPath,
