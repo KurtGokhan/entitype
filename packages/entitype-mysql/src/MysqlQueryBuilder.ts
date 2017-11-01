@@ -15,8 +15,8 @@ export class MysqlQueryBuilder implements QueryBuilderAdapter {
     else if (selectedColumns.length) {
       columnsQuery = selectedColumns
         .map(col => {
-          let aliasedColumnName = ctx.getAliasedColumnForPath(col.path);
-          let alias = ctx.getAliasForColumn(col.path);
+          let aliasedColumnName = ctx.getAliasedColumnForPath(col);
+          let alias = ctx.getAliasForColumn(col);
           return `${aliasedColumnName} as ${alias}`;
         }).join(', ');
     }
