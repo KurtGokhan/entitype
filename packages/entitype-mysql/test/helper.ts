@@ -4,6 +4,7 @@ import 'src';
 import * as chai from 'chai';
 import { useConfiguration } from 'entitype';
 
+chai.use(require('chai-spies'));
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
 
