@@ -1,4 +1,3 @@
-import { SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
 import {
   DeepPropertyExpression,
   ObjectType,
@@ -15,50 +14,51 @@ const propertySelector: any = new Proxy({}, {
   }
 });
 
-function getDeepPropertySelector(path: PropertyPath = []) {
+function getDeepPropertySelector(path: PropertyPath = [], mentions: PropertyPath[] = []) {
   return new Proxy(() => path, {
     get: function (target, propertyName: string) {
       if (propertyName === 'map') {
-        let mapFunction = expression => expression(getDeepPropertySelector(path));
+        let mapFunction = expression => {
+          mentions.push(path);
+          return expression(getDeepPropertySelector(path, mentions));
+        };
         return mapFunction;
       }
 
-      return getDeepPropertySelector(path.concat(propertyName));
+      let newPath = path.concat(propertyName);
+      mentions.push(newPath);
+      return getDeepPropertySelector(newPath, mentions);
     }
   });
 }
 
-function getPropertyMappingInner(map: PropertyMapGetter, baseMapPath: string[]): [SelectMapping[], SelectMappingStructure[]] {
-  let columns: SelectMapping[] = [];
-  let structure: SelectMappingStructure[] = [];
+function getPropertyMappingInner(map: PropertyMapGetter): PropertyPath[] {
+  let columns: PropertyPath[] = [];
 
   if (typeof map === 'function') {
-    columns.push({ path: map(), mapPath: baseMapPath });
+    columns.push(map());
   }
   else {
     let isArray = Array.isArray(map);
     let isObject = map && typeof map === 'object';
-    let st: SelectMappingStructure = { isArray, isObject, mapPath: baseMapPath, value: map };
-    structure.push(st);
 
     if (isObject || isArray) {
       for (let key in map) {
         if (map.hasOwnProperty(key)) {
           let prop = map[key];
 
-          let childColumns = getPropertyMappingInner(prop, baseMapPath.concat(key));
-          columns.push(...childColumns[0]);
-          structure.push(...childColumns[1]);
+          let childColumns = getPropertyMappingInner(prop);
+          columns.push(...childColumns);
         }
       }
     }
   }
 
-  return [columns, structure];
+  return columns;
 }
 
-function getPropertyMapping(map: PropertyMapGetter): [SelectMapping[], SelectMappingStructure[]] {
-  return getPropertyMappingInner(map, []);
+function getPropertyMapping(map: PropertyMapGetter): PropertyPath[] {
+  return getPropertyMappingInner(map);
 }
 
 export function resolvePropertyExpression<EntityType, SelectType>(
@@ -84,10 +84,12 @@ export function resolveDeepPropertyExpressionArray(
 
 export function resolvePropertyMapExpression<EntityType, SelectType>(
   expression: PropertyMapExpression<EntityType, SelectType>,
-  entityType: ObjectType<EntityType>): [SelectMapping[], SelectMappingStructure[]] {
+  entityType: ObjectType<EntityType>): [PropertyPath[], PropertyPath[]] {
 
-  let parameter = getDeepPropertySelector();
+  let mentions = [];
+  let parameter = getDeepPropertySelector([], mentions);
   let selectObject = <any>expression(parameter);
 
-  return getPropertyMapping(selectObject);
+  let mapping = getPropertyMapping(selectObject);
+  return [mapping, mentions];
 }

@@ -97,9 +97,9 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
   }
   select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): CommandNode<SelectType> {
     let select = new SelectCommand();
-    let resolved = resolvePropertyMapExpression(expression, this.entityType);
-    select.columns = resolved[0];
-    select.structure = resolved[1];
+    let [columns, mentions] = resolvePropertyMapExpression(expression, this.entityType);
+    select.columns = columns;
+    select.mentions = mentions;
     select.expression = expression;
 
     return this.createNextCommand(select);

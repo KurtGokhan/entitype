@@ -112,14 +112,14 @@ describe('mapping > one-to-many', async () => {
     mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new uc.UniversityContext();
-    let result = await ctx.instructors.select(x => x.courses.map(x => ({ time: x.duration }))).toList();
+    let result = await ctx.instructors.select(x => x.courses.map(x => ({ time: x.duration, hour: x.hourSlot }))).toList();
 
     expect(result.length).to.eql(1);
-    expect(result[0]).to.eql([{ time: course1.duration }, { time: course2.duration }]);
+    expect(result[0]).to.eql([{ time: course1.duration, hour: course1.hourSlot }, { time: course2.duration, hour: course2.hourSlot }]);
   });
 
 
-  it.skip('should be able to map childs to scalar', async () => {
+  it('should be able to map childs to scalar', async () => {
     let dataResult = [
       {
         id: instructor.id, profile_id: instructor.profile_id,

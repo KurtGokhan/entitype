@@ -33,7 +33,7 @@ export class QueryContext {
 
   public joinTreeRoot: JoinTreeNode;
 
-  public selectedColumns: { path: PropertyPath }[];
+  public selectedColumns: PropertyPath[];
 
 
   private aliasContainer: AliasTree = new AliasTree();
@@ -87,30 +87,42 @@ export class QueryContext {
     if (this.select) {
 
       this.select.columns.forEach(selectedCol => {
-        let colInfo = this.getColumnInfoForPropertyPath(selectedCol.path);
+        let colInfo = this.getColumnInfoForPropertyPath(selectedCol);
 
         if (colInfo.isColumn)
           this.selectedColumns.push(selectedCol);
         else {
-          let node = this.getJoinTreeNodeForPath(selectedCol.path);
-          this.addEntityToSelectedColumnsAndStructure(selectedCol.mapPath, node);
+          let node = this.getJoinTreeNodeForPath(selectedCol);
+          this.addEntityToSelectedColumnsAndStructure(node);
+        }
+      });
+
+
+      this.select.mentions.forEach(selectedCol => {
+        let colInfo = this.getColumnInfoForPropertyPath(selectedCol);
+
+        if (colInfo.isColumn)
+          this.selectedColumns.push(selectedCol);
+        else {
+          let node = this.getJoinTreeNodeForPath(selectedCol);
+          this.addEntityPrimaryKeysToSelectedColumns(node.entity, node.path);
         }
       });
     }
     else {
-      this.addEntityToSelectedColumnsAndStructure([], this.joinTreeRoot);
+      this.addEntityToSelectedColumnsAndStructure(this.joinTreeRoot);
     }
   }
 
-  private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
+  private addEntityToSelectedColumnsAndStructure(node: JoinTreeNode) {
     let path = node.path;
 
     node.entity.columns.filter(x => x.isColumn).forEach(prop => {
-      this.selectedColumns.push({ path: path.concat(prop.name) });
+      this.selectedColumns.push(path.concat(prop.name));
     });
 
     node.childs.filter(x => x.include).forEach(childNode => {
-      this.addEntityToSelectedColumnsAndStructure(baseMappedPath.concat(childNode.pathPart), childNode);
+      this.addEntityToSelectedColumnsAndStructure(childNode);
     });
   }
 
@@ -126,8 +138,9 @@ export class QueryContext {
     let includedPaths: PropertyPath[] = [];
     includedPaths.push(...this.includes.map(x => x.propertyPath));
     if (this.select) {
-      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1).map(x => x.slice(0, -1)));
-      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
+      includedPaths.push(...this.select.columns.filter(x => x.length > 1).map(x => x.slice(0, -1)));
+      includedPaths.push(...this.select.columns.filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
+      paths.push(...this.select.mentions.filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
     }
 
     this.joinTreeRoot = {
@@ -135,12 +148,7 @@ export class QueryContext {
       column: null, childs: [], childDic: {}, alias: null, include: true
     };
 
-    let primaryKeys = this.entity.primaryKeys;
-    for (let index = 0; index < primaryKeys.length; index++) {
-      let primaryKey = primaryKeys[index];
-      let path = [primaryKey.name];
-      this.selectedColumns.push({ path: path });
-    }
+    this.addEntityPrimaryKeysToSelectedColumns(this.entity, []);
 
     includedPaths.forEach(path => this.createBranchesForPath(path, true));
     paths.forEach(path => this.createBranchesForPath(path, false));
@@ -158,12 +166,7 @@ export class QueryContext {
         let col = currentPathNode.entity.columns.find(x => x.name === node);
         let colEntity = DecoratorStorage.getEntity(col.type);
 
-        let primaryKeys = colEntity.primaryKeys;
-        for (let index = 0; index < primaryKeys.length; index++) {
-          let primaryKey = primaryKeys[index];
-          let path = currentPath.concat(primaryKey.name);
-          this.selectedColumns.push({ path: path });
-        }
+        this.addEntityPrimaryKeysToSelectedColumns(colEntity, currentPath);
 
         pathNode = currentPathNode.childDic[node] = {
           path: currentPath,
@@ -182,13 +185,22 @@ export class QueryContext {
     });
   }
 
+  private addEntityPrimaryKeysToSelectedColumns(entity: DecoratorStorage.Entity, currentPath: PropertyPath) {
+    let primaryKeys = entity.primaryKeys;
+    for (let index = 0; index < primaryKeys.length; index++) {
+      let primaryKey = primaryKeys[index];
+      let path = currentPath.concat(primaryKey.name);
+      this.selectedColumns.push(path);
+    }
+  }
+
   private resolveAliases() {
-    let map = this.selectedColumns.map(x => ({ alias: this.getAlias(x.path), col: x }));
+    let map = this.selectedColumns.map(x => ({ alias: this.getAlias(x), col: x }));
     this.aliasMap = new Map();
-    map.forEach(x => this.aliasMap.set(x.alias.name, x.col.path));
+    map.forEach(x => this.aliasMap.set(x.alias.name, x.col));
 
     // Only take unique paths
-    this.selectedColumns = Array.from(this.aliasMap.entries()).map((entry) => ({ path: entry[1], mapPath: null }));
+    this.selectedColumns = Array.from(this.aliasMap.entries()).map((entry) => (entry[1]));
   }
 
   getPathForAlias(alias: number): PropertyPath {
