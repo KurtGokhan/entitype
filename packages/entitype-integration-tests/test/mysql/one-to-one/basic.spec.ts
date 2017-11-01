@@ -25,10 +25,28 @@ describe('query > one-to-one > basic', async () => {
 
   it('should be able to select owned side property from owning side included implicitly', async () => {
     let ctx = new Context();
-    let childNames = await ctx.models.select(x => x.child.name).toList();
+    let childNames = await ctx.models.select(x => (x.child || {} as any).name).toList();
 
     expect(childNames).not.to.be.equal(null);
     expect(childNames.length).to.be.equal(3);
+    expect(childNames[0]).to.be.equal('Child Model 1');
+  });
+
+  it.skip('should be able to filter based on whether the child is null', async () => {
+    let ctx = new Context();
+    let childNames = await ctx.models.where(x => x.child).not.isNull().select(x => x.child.name).toList();
+
+    expect(childNames).not.to.be.equal(null);
+    expect(childNames.length).to.be.equal(2);
+    expect(childNames[0]).to.be.equal('Child Model 1');
+  });
+
+  it('should be able to filter based on whether the child property is null', async () => {
+    let ctx = new Context();
+    let childNames = await ctx.models.where(x => x.child.id).not.isNull().select(x => x.child.name).toList();
+
+    expect(childNames).not.to.be.equal(null);
+    expect(childNames.length).to.be.equal(2);
     expect(childNames[0]).to.be.equal('Child Model 1');
   });
 
@@ -46,7 +64,7 @@ describe('query > one-to-one > basic', async () => {
 
   it('should return null for owned side if not found', async () => {
     let ctx = new Context();
-    let model = await ctx.models.include(x => x.child).where(x => x.id().equals(2)).first();
+    let model = await ctx.models.include(x => x.child).where(x => x.id).equals(2).first();
 
     expect(model).not.to.be.equal(null);
     expect(model.child).to.be.equal(null);
