@@ -1,7 +1,8 @@
 {
-  "name": "entitype",
-  "version": "0.0.3-0",
-  "description": "An orm framework for typescript that lets you fluently query the database",
+  "name": "entitype-cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "CLI for entitype, which lets you do migrations and provides other utility functions",
   "license": "MIT",
   "readmeFilename": "README.md",
   "author": {
@@ -10,13 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KurtGokhan/entitype"
+    "url": "https://github.com/KurtGokhan/entitype-cli"
   },
   "tags": [
     "orm",
     "typescript",
     "typescript-orm",
     "entity",
+    "entitype",
     "linq",
     "fluent"
   ],
@@ -48,7 +50,7 @@
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.6.1"
   },
   "scripts": {
     "test": "mocha",
