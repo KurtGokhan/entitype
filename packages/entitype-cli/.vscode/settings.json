@@ -1,0 +1,16 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.vscode": true,
+    "dist": true,
+    "temp": true,
+    "tmp": true
+  },
+  "typescriptHero.resolver.ignorePatterns": [
+    "build",
+    "out",
+    "dist",
+    "tmp"
+  ],
+  "editor.formatOnSave": true
+}
