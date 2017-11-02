@@ -1,5 +1,6 @@
 import { Container } from 'inversify';
 
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ConnectionOptions } from '../configuration/ConnectionOptions';
 import { QueryContext } from '../query/QueryContext';
 
@@ -18,6 +19,7 @@ export type ColumnData = any;
 
 export interface DriverAdapter {
   runQuery(query: string, options: string | ConnectionOptions): Promise<[RowData[], ColumnData[]]>;
+  getEntities(options: string | ConnectionOptions): Promise<DecoratorStorage.Entity[]>;
 }
 
 export interface LoggerAdapter {

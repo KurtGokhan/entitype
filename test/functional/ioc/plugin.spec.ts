@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { ConnectionOptions } from 'src';
+import { DecoratorStorage } from 'src/common/DecoratorStorage';
 import { container, DI_TYPES, Driver, DriverAdapter, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'src/plugins';
 
 describe('ioc > plugin', async () => {
@@ -11,6 +12,9 @@ describe('ioc > plugin', async () => {
 
     @Driver(driverName)
     class TestDriver implements DriverAdapter {
+      getEntities(options: string | ConnectionOptions): Promise<DecoratorStorage.Entity[]> {
+        throw new Error('Method not implemented.');
+      }
       runQuery(query: string, options: string | ConnectionOptions): Promise<any> {
         throw new Error('Method not implemented.');
       }

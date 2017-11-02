@@ -197,13 +197,7 @@ export namespace DecoratorStorage {
   export function updateColumnReferences(column: Column) {
     if (column.foreignKey) {
       let entity = getEntity(column.foreignKey.owner.type);
-      if (!entity) {
-        console.warn(
-          `Foreign key owner could not be resolved for column '${column.name}' on entity '${column.parent.name}' due to cyclic references.`,
-          `Use forwardRef for better support.`
-        );
-        return;
-      }
+      if (!entity) return;
       let col = entity.columns.find(x => x.name === column.foreignKey.column);
       if (col)
         col.isForeignKey = true;
@@ -217,9 +211,9 @@ export namespace DecoratorStorage {
 
   export function updateAllReferences() {
     targetStorage.forEach(entity => {
-      entity.columns.forEach(col => {
-        if (!col.foreignKey) return;
-        if (!col.type) {
+      entity.columns
+        .filter(x => x.foreignKey && !x.type)
+        .forEach(col => {
           // HACK: Due to the reflect-metadata bug in issue 12, in circular references
           // Type cannot be retrieved. Find the type by searching the counter part of this FK
 
@@ -229,8 +223,7 @@ export namespace DecoratorStorage {
             col.type = fkCounterPart.parent.type;
             col.foreignKey = fkCounterPart.foreignKey;
           }
-        }
-      });
+        });
     });
   }
 
