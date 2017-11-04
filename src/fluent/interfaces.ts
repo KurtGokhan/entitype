@@ -51,7 +51,7 @@ export interface IGroupable<EntityType> extends ISelectable<EntityType> {
 }
 
 
-export interface IFiltered<EntityType> extends IGroupable<EntityType> {
+export interface IFiltered<EntityType> extends ISelectable<EntityType> {
   readonly or: IWhereable<EntityType>;
   andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
 }
@@ -74,7 +74,7 @@ export interface IWhereable<EntityType> {
   where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
 }
 
-export interface IFilterable<EntityType> extends IGroupable<EntityType>, IWhereable<EntityType> { }
+export interface IFilterable<EntityType> extends ISelectable<EntityType>, IWhereable<EntityType> { }
 
 
 export interface IIncludable<EntityType> extends IFilterable<EntityType> {

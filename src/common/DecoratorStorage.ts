@@ -127,7 +127,7 @@ export namespace DecoratorStorage {
 
 
   export function addDbCollection(parentContext: Function, propertyName: string, entityType: ObjectType<any>): DbCollection {
-    let context = getContext(parentContext) || addContext(parentContext);
+    let context = getContext(parentContext);
     let entity = getEntity(entityType);
 
     if (!entity) {
@@ -173,16 +173,8 @@ export namespace DecoratorStorage {
     return ctx;
   }
 
-  export function getContext(type: Function | Context): Context {
-    if (typeof type === 'object' && type instanceof Context)
-      return type;
-
-    for (let index = 0; index < contextStorage.length; index++) {
-      let context = contextStorage[index];
-      if (context.type === type)
-        return context;
-    }
-    return null;
+  export function getContext(type: Function): Context {
+    return contextStorage.find(x => x.type === type) || addContext(type);
   }
 
 

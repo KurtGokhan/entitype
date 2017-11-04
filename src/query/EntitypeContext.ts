@@ -3,7 +3,6 @@ import { CommandNode } from '../command/CommandNode';
 import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ConnectionOptions } from '../configuration/ConnectionOptions';
 import { ObjectType } from '../fluent';
-import { container, DI_TYPES } from '../ioc';
 import { CommandRunner } from '../query/CommandRunner';
 
 export abstract class EntitypeContext {
@@ -18,21 +17,14 @@ export abstract class EntitypeContext {
     return this.createProxy();
   }
 
-  private resolveConfiguration() {
+  private resolveConfiguration(): ConnectionOptions {
     try {
-      let config;
-      if (!this.configOrName) {
-        config = container.get(DI_TYPES.configuration);
-      }
-      else if (typeof this.configOrName === 'string') {
-        config = container.getNamed(DI_TYPES.configuration, this.configOrName);
-      }
-      else {
-        config = this.configOrName;
-      }
-      return config;
+      if (!this.configOrName || typeof this.configOrName === 'string')
+        return ConnectionOptions.getConfiguration(this.configOrName as string);
+      else return this.configOrName as ConnectionOptions;
     }
     catch (err) {
+      return null;
     }
   }
 

@@ -3,7 +3,6 @@ import { OrCommand } from '../command/command-types/OrCommand';
 import {
   DeepPropertyExpression,
   IFiltered,
-  IGrouped,
   IOrdered,
   IQueryable,
   ObjectType,
@@ -92,9 +91,6 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.createNextCommand(include);
   }
 
-  groupBy(): IGrouped<EntityType> {
-    throw new Error('Method not implemented.');
-  }
   select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): CommandNode<SelectType> {
     let select = new SelectCommand();
     let [columns, mentions] = resolvePropertyMapExpression(expression, this.entityType);
