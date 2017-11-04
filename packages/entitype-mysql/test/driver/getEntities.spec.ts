@@ -61,6 +61,8 @@ describe('driver > runQuery', async () => {
 
     expect(aEntity.properties[4].isNavigationProperty).to.be.true;
     expect(aEntity.properties[4].foreignKey).to.exist;
+    expect(aEntity.properties[4].foreignKey.owner.type).to.eql(bEntity.type);
+    expect(aEntity.properties[4].type).to.exist.and.eql(bEntity.type);
 
 
     expect(bEntity).to.exist;
@@ -78,5 +80,7 @@ describe('driver > runQuery', async () => {
     expect(bEntity.properties[2].isNavigationProperty).to.be.true;
     expect(bEntity.properties[2].foreignKey).to.exist;
     expect(bEntity.properties[2].foreignKey.column).to.eql(bColumns[1].Field);
+    expect(bEntity.properties[2].foreignKey.owner.type).to.eql(bEntity.type);
+    expect(bEntity.properties[2].type).to.exist.and.eql(aEntity.type);
   });
 });

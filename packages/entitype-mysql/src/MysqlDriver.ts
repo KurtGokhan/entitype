@@ -1,5 +1,6 @@
 import { ConnectionOptions, DefaultColumnOptions } from 'entitype';
 import { DecoratorStorage } from 'entitype/dist/common/DecoratorStorage';
+import { ForwardRef } from 'entitype/dist/common/forwardRef';
 import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
@@ -40,6 +41,7 @@ export class MysqlDriver implements DriverAdapter {
     let entities = tables.map(table => new DecoratorStorage.Entity({
       dbName: table,
       name: table,
+      type: function () { },
       options: { tableName: table }
     }));
 
@@ -59,8 +61,10 @@ export class MysqlDriver implements DriverAdapter {
         if (!col) return;
         col.isForeignKey = true;
 
+        let counterEntity = entities.find(x => x.dbName === fk.REFERENCED_TABLE_NAME);
+
         let foreignKey = {
-          owner: entity.dbName as any,
+          owner: new ForwardRef(() => entity.type as any),
           column: fk.COLUMN_NAME
         };
 
@@ -71,12 +75,12 @@ export class MysqlDriver implements DriverAdapter {
           foreignKey,
           name: fk.COLUMN_NAME + '_np',
           parent: entity,
-          options: Object.assign({}, DefaultColumnOptions)
+          options: Object.assign({}, DefaultColumnOptions),
+          type: counterEntity.type
         });
         entity.properties.push(navigationProperty);
 
 
-        let counterEntity = entities.find(x => x.dbName === fk.REFERENCED_TABLE_NAME);
 
         let counterNavigationProperty = new DecoratorStorage.Property({
           isColumn: false,
@@ -85,7 +89,8 @@ export class MysqlDriver implements DriverAdapter {
           foreignKey,
           name: fk.TABLE_NAME + '_np',
           parent: counterEntity,
-          options: Object.assign({}, DefaultColumnOptions)
+          options: Object.assign({}, DefaultColumnOptions),
+          type: entity.type
         });
         counterEntity.properties.push(counterNavigationProperty);
       });
