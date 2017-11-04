@@ -17,6 +17,7 @@
     "mysql"
   ],
   "dependencies": {
+    "mysql2": "^1.4.1",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -46,8 +47,7 @@
     "typescript-json-schema": "^0.17.0"
   },
   "peerDependencies": {
-    "entitype": "*",
-    "mysql2": "^1.4.1"
+    "entitype": "*"
   },
   "scripts": {
     "test": "mocha",

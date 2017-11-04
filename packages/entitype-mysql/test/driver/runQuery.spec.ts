@@ -12,9 +12,8 @@ describe('driver > runQuery', async () => {
     let connection = { query: async () => [], end };
     let endSpy = spy.on(connection, 'end');
 
-
-    mock = sinon.mock(require('mysql2/promise'));
-    mock.expects('createConnection').returns(Promise.resolve(connection));
+    mock = sinon.stub(require('mysql2/promise'), 'createConnection')
+      .returns(Promise.resolve(connection));
 
     await new MysqlDriver().runQuery(null, null);
     expect(endSpy).to.be.called.once;
@@ -22,14 +21,15 @@ describe('driver > runQuery', async () => {
 
   it('should end connection on failed execution', async () => {
     let end = async () => { };
-    let connection = { query: async () => { throw new Error('Mock Error'); }, end };
+    let connection = { query: async () => { }, end };
     let endSpy = spy.on(connection, 'end');
 
-    mock = sinon.mock(require('mysql2/promise'));
-    mock.expects('createConnection').returns(Promise.resolve(connection));
+    sinon.stub(connection, 'query').throws(new Error('Any Error'));
 
-    await expect(new MysqlDriver().runQuery(null, null)).to.eventually.throw()
-      .then(() => { }, () => { });
+    mock = sinon.stub(require('mysql2/promise'), 'createConnection')
+      .returns(Promise.resolve(connection));
+
+    await expect(new MysqlDriver().runQuery(null, null)).to.eventually.be.rejectedWith('Any Error');
     expect(endSpy).to.be.called.once;
   });
 });
