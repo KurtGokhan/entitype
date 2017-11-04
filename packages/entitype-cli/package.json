@@ -24,8 +24,8 @@
   ],
   "dependencies": {
     "chalk": "^2.2.0",
-    "dotenv": "^4.0.0",
     "fs-extra": "^4.0.2",
+    "inquirer": "^3.3.0",
     "inversify": "^4.3.0",
     "minimatch": "^3.0.4",
     "reflect-metadata": "^0.1.10",
@@ -36,6 +36,7 @@
     "@types/chai": "^4.0.4",
     "@types/chai-string": "^1.1.31",
     "@types/fs-extra": "^4.0.2",
+    "@types/inquirer": "0.0.35",
     "@types/mocha": "^2.2.43",
     "@types/node": "^8.0.46",
     "chai": "^4.1.2",
@@ -55,6 +56,8 @@
   "scripts": {
     "test": "mocha",
     "test:debug": "mocha --inspect=25650 --inspect-brk",
+    "start": "ts-node src/index.ts",
+    "start:debug": "ts-node --inspect=25650 --inspect-brk src/index.ts",
     "cover": "nyc mocha",
     "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "npm run lint:src & npm run lint:test",

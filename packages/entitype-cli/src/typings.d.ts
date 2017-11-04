@@ -1,5 +1,3 @@
-
-
 declare module 'vorpal' {
   function vorpal(): VorpalInstance;
   module vorpal { }
@@ -23,6 +21,10 @@ declare interface VorpalFactory {
 declare interface VorpalInstance {
 
   ui: UiInstance;
+
+  activeCommand: VorpalInstance;
+
+  prompt(questions: any): Promise<any>;
 
   /**
    * Parses the process's `process.argv` arguments and executes the matching command.

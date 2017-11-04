@@ -1,33 +1,30 @@
 import 'reflect-metadata';
 import * as Rx from 'rxjs/Rx';
 
-import * as dotenv from 'dotenv';
-import * as vorpal from 'vorpal';
+import * as vorpalBuilder from 'vorpal';
+import { pull, PullOptions } from './pull';
 
-dotenv.config();
+export const vorpal = vorpalBuilder();
 
-export const vorpalBuilder = vorpal();
-
-vorpalBuilder
-  .command('pull')
+vorpal
+  .command('pull <output>')
   .option('-i, --interactive', 'Program acts interactively and if cannot decide about something, asks the user.')
+  .option('-c, --config <path>', 'Path to the config file. Looks for ".entitype-cli.json" by default.')
   .description('Reads the database structure and creates entities on the selected output directory.')
-  .action(function (args, callback) {
-    this.log('Started judgings');
-    callback();
+  .action(async args => {
+    await pull(args as PullOptions);
   });
 
 
-vorpalBuilder
+vorpal
   .command('push')
   .description('Creates a database structure based on the entities in the selected context.')
-  .action(function (args, callback) {
-    this.log('Stopped judgings');
-    callback();
+  .action(async args => {
+    // await push();
   });
 
 
-export const vorpalInstance = vorpalBuilder
+vorpal
   .delimiter('Entitype$')
   .show()
   .parse(process.argv);

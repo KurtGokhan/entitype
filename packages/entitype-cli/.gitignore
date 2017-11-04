@@ -8,3 +8,4 @@ dist/
 build/
 
 package-lock.json
+config
