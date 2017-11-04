@@ -17,7 +17,7 @@
     "mysql"
   ],
   "dependencies": {
-    "mysql2": "^1.4.1",
+    "mysql2": "^1.4.2",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
@@ -37,7 +37,6 @@
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
-    "mysql2": "^1.4.2",
     "nyc": "^11.2.1",
     "sinon": "^4.0.2",
     "ts-node": "^3.3.0",

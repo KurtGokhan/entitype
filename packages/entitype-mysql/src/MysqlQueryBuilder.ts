@@ -110,11 +110,11 @@ export class MysqlQueryBuilder implements QueryBuilderAdapter {
         let leftEntity = branch.parent.entity;
         let rightEntity = branch.entity;
 
-        let leftPK = leftEntity.columns.find(x => x.options.primaryKey);
-        let rightPK = rightEntity.columns.find(x => x.options.primaryKey);
+        let leftPK = leftEntity.properties.find(x => x.options.primaryKey);
+        let rightPK = rightEntity.properties.find(x => x.options.primaryKey);
 
-        let leftFK = owner.columns.find(x => x.name === mmp.leftKey);
-        let rightFK = owner.columns.find(x => x.name === mmp.rightKey);
+        let leftFK = owner.properties.find(x => x.name === mmp.leftKey);
+        let rightFK = owner.properties.find(x => x.name === mmp.rightKey);
 
         let leftAlias = ctx.getAliasForTable(branch.parent.path);
         let rightAlias = ctx.getAliasForTable(branch.path);
@@ -146,8 +146,8 @@ export class MysqlQueryBuilder implements QueryBuilderAdapter {
           owned = branch.parent;
         }
 
-        let foreignKeyColumn = owner.entity.columns.find(x => x.name === fk.column);
-        let fkTargetPK = owned.entity.columns.find(x => x.options.primaryKey);
+        let foreignKeyColumn = owner.entity.properties.find(x => x.name === fk.column);
+        let fkTargetPK = owned.entity.properties.find(x => x.options.primaryKey);
 
         let ownerAlias = ctx.getAliasForTable(owner.path);
         let ownedAlias = ctx.getAliasForTable(owned.path);

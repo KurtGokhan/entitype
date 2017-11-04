@@ -45,8 +45,8 @@ export class MysqlDriver implements DriverAdapter {
 
     for (let index = 0; index < entities.length; index++) {
       let entity = entities[index];
-      entity.columns = await this.getTableColumns(entity.dbName, options);
-      entity.columns.forEach(col => col.parent = entity);
+      entity.properties = await this.getTableColumns(entity.dbName, options);
+      entity.properties.forEach(col => col.parent = entity);
     }
 
 
@@ -55,7 +55,7 @@ export class MysqlDriver implements DriverAdapter {
       let fks = await this.getTableForeignKeys(entity.dbName, options);
 
       fks.forEach(fk => {
-        let col = entity.columns.find(x => x.dbName === fk.COLUMN_NAME);
+        let col = entity.properties.find(x => x.dbName === fk.COLUMN_NAME);
         if (!col) return;
         col.isForeignKey = true;
 
@@ -64,7 +64,7 @@ export class MysqlDriver implements DriverAdapter {
           column: fk.COLUMN_NAME
         };
 
-        let navigationProperty = new DecoratorStorage.Column({
+        let navigationProperty = new DecoratorStorage.Property({
           isColumn: false,
           isForeignKey: false,
           isNavigationProperty: true,
@@ -73,12 +73,12 @@ export class MysqlDriver implements DriverAdapter {
           parent: entity,
           options: Object.assign({}, DefaultColumnOptions)
         });
-        entity.columns.push(navigationProperty);
+        entity.properties.push(navigationProperty);
 
 
         let counterEntity = entities.find(x => x.dbName === fk.REFERENCED_TABLE_NAME);
 
-        let counterNavigationProperty = new DecoratorStorage.Column({
+        let counterNavigationProperty = new DecoratorStorage.Property({
           isColumn: false,
           isForeignKey: false,
           isNavigationProperty: true,
@@ -87,7 +87,7 @@ export class MysqlDriver implements DriverAdapter {
           parent: counterEntity,
           options: Object.assign({}, DefaultColumnOptions)
         });
-        counterEntity.columns.push(counterNavigationProperty);
+        counterEntity.properties.push(counterNavigationProperty);
       });
     }
 
@@ -103,12 +103,12 @@ export class MysqlDriver implements DriverAdapter {
     return rows.map(x => x[key]);
   }
 
-  private async getTableColumns(tableName: string, options: string | ConnectionOptions): Promise<DecoratorStorage.Column[]> {
+  private async getTableColumns(tableName: string, options: string | ConnectionOptions): Promise<DecoratorStorage.Property[]> {
     let query = 'DESCRIBE `' + tableName + '`';
     let rows: ColumnMetadata[] = (await this.runQuery(query, options))[0] as any;
 
     let columns = rows.map(row => {
-      return new DecoratorStorage.Column({
+      return new DecoratorStorage.Property({
         name: row.Field,
         dbName: row.Field,
         isColumn: true,
