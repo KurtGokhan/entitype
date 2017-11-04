@@ -6,7 +6,7 @@ export class JoinTreeNode {
   path: PropertyPath;
   pathPart: string;
   entity: DecoratorStorage.Entity;
-  column: DecoratorStorage.Column;
+  column: DecoratorStorage.Property;
 
   alias: Alias;
 

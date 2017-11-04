@@ -117,7 +117,7 @@ export class QueryContext {
   private addEntityToSelectedColumnsAndStructure(node: JoinTreeNode) {
     let path = node.path;
 
-    node.entity.columns.filter(x => x.isColumn).forEach(prop => {
+    node.entity.properties.filter(x => x.isColumn).forEach(prop => {
       this.selectedColumns.push(path.concat(prop.name));
     });
 
@@ -163,7 +163,7 @@ export class QueryContext {
       if (!pathNode) {
         let parentPath = currentPathNode.path;
         let currentPath = parentPath.concat(node);
-        let col = currentPathNode.entity.columns.find(x => x.name === node);
+        let col = currentPathNode.entity.properties.find(x => x.name === node);
         let colEntity = DecoratorStorage.getEntity(col.type);
 
         this.addEntityPrimaryKeysToSelectedColumns(colEntity, currentPath);
@@ -216,7 +216,7 @@ export class QueryContext {
     return currentPathNode;
   }
 
-  getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {
+  getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Property {
     let entity = this.entity;
     let col = null;
 
@@ -225,7 +225,7 @@ export class QueryContext {
 
       if (!entity) throw new UnknownPropertyError(prop);
 
-      col = entity.columns.find(x => x.name === prop);
+      col = entity.properties.find(x => x.name === prop);
 
       if (col) entity = DecoratorStorage.getEntity(col.type);
       else entity = null;

@@ -9,8 +9,8 @@ describe('decorators > relations', async () => {
     let course = DecoratorStorage.getEntity(university.Course);
     let map = DecoratorStorage.getEntity(university.StudentCourseMap);
 
-    let studentCourses = student.columns.find(x => x.name === 'courses');
-    let courseStudents = course.columns.find(x => x.name === 'students');
+    let studentCourses = student.properties.find(x => x.name === 'courses');
+    let courseStudents = course.properties.find(x => x.name === 'students');
 
     // TODO: Assert that the foreign key is created on the map side
 
@@ -36,8 +36,8 @@ describe('decorators > relations', async () => {
     let instructor = DecoratorStorage.getEntity(university.Instructor);
     let course = DecoratorStorage.getEntity(university.Course);
 
-    let instructorCourses = instructor.columns.find(x => x.name === 'courses');
-    let courseInstructor = course.columns.find(x => x.name === 'instructor');
+    let instructorCourses = instructor.properties.find(x => x.name === 'courses');
+    let courseInstructor = course.properties.find(x => x.name === 'instructor');
 
 
     expect(instructorCourses.isArray).to.be.true;

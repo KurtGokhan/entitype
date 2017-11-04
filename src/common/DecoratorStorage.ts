@@ -8,11 +8,11 @@ export namespace DecoratorStorage {
     name: string;
     dbName: string;
 
-    columns: Column[] = [];
+    properties: Property[] = [];
     options: EntityOptions;
 
-    get primaryKeys(): Column[] {
-      return this.columns.filter(x => x.options.primaryKey);
+    get primaryKeys(): Property[] {
+      return this.properties.filter(x => x.options.primaryKey);
     }
 
     constructor(init?: Partial<Entity>) {
@@ -20,7 +20,7 @@ export namespace DecoratorStorage {
     }
   }
 
-  export class Column {
+  export class Property {
     parent: Entity;
     type: Function;
     name: string;
@@ -36,7 +36,7 @@ export namespace DecoratorStorage {
 
     options: ColumnOptions;
 
-    constructor(init?: Partial<Column>) {
+    constructor(init?: Partial<Property>) {
       Object.assign(this, init);
     }
   }
@@ -92,7 +92,7 @@ export namespace DecoratorStorage {
   }
 
 
-  export function addColumn(parent: Function, columnName: string, metadataType: TypeResolver<any>, options: ColumnOptions): Column {
+  export function addColumn(parent: Function, columnName: string, metadataType: TypeResolver<any>, options: ColumnOptions): Property {
     let type = resolveType(metadataType);
 
     options = Object.assign({}, DefaultColumnOptions, options);
@@ -100,7 +100,7 @@ export namespace DecoratorStorage {
 
     let entity = getEntity(parent) || addEntity(parent, {});
 
-    let column = new Column({
+    let column = new Property({
       dbName: options.columnName,
       name: columnName,
       parent: entity,
@@ -118,8 +118,8 @@ export namespace DecoratorStorage {
       }
     });
 
-    if (!entity.columns.find(x => x.name === column.name))
-      entity.columns.push(column);
+    if (!entity.properties.find(x => x.name === column.name))
+      entity.properties.push(column);
 
     updateEntityReferences(column.parent);
     return column;
@@ -182,28 +182,25 @@ export namespace DecoratorStorage {
   /**
    * Update the owning and referencing entities to this column if there is any
    * Should be called after a navigation property is registered
-   *
-   * @export
-   * @param {Column} column
    */
-  export function updateColumnReferences(column: Column) {
+  export function updateColumnReferences(column: Property) {
     if (column.foreignKey) {
       let entity = getEntity(column.foreignKey.owner.type);
       if (!entity) return;
-      let col = entity.columns.find(x => x.name === column.foreignKey.column);
+      let col = entity.properties.find(x => x.name === column.foreignKey.column);
       if (col)
         col.isForeignKey = true;
     }
   }
 
   export function updateEntityReferences(entity: Entity) {
-    entity.columns.forEach(updateColumnReferences);
+    entity.properties.forEach(updateColumnReferences);
     updateAllReferences();
   }
 
   export function updateAllReferences() {
     targetStorage.forEach(entity => {
-      entity.columns
+      entity.properties
         .filter(x => x.foreignKey && !x.type)
         .forEach(col => {
           // HACK: Due to the reflect-metadata bug in issue 12, in circular references
@@ -219,7 +216,7 @@ export namespace DecoratorStorage {
     });
   }
 
-  export function getForeignKeyCounterPart(baseColumn: Column): Column {
+  export function getForeignKeyCounterPart(baseColumn: Property): Property {
     let fk = baseColumn.foreignKey;
     let baseEntity = getEntity(fk.owner.type);
 
@@ -227,8 +224,8 @@ export namespace DecoratorStorage {
     for (let index = 0; index < targetStorage.length; index++) {
       let entity = targetStorage[index];
 
-      for (let colIndex = 0; colIndex < entity.columns.length; colIndex++) {
-        let col = entity.columns[colIndex];
+      for (let colIndex = 0; colIndex < entity.properties.length; colIndex++) {
+        let col = entity.properties[colIndex];
         if (baseColumn === col || !col.foreignKey) continue;
 
         let fkEntity = getEntity(col.foreignKey.owner.type);
@@ -242,8 +239,8 @@ export namespace DecoratorStorage {
     for (let index = 0; index < targetStorage.length; index++) {
       let entity = targetStorage[index];
 
-      for (let colIndex = 0; colIndex < entity.columns.length; colIndex++) {
-        let col = entity.columns[colIndex];
+      for (let colIndex = 0; colIndex < entity.properties.length; colIndex++) {
+        let col = entity.properties[colIndex];
 
         if (col.isNavigationProperty && col.foreignKey) {
           if (col.type === baseColumn.parent.type && col.foreignKey.column === fk.column) {

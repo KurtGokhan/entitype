@@ -7,7 +7,7 @@ import { Model } from './entity/Model';
 
 let entity = DecoratorStorage.getEntity(Model);
 function checkPropertyOptionValue(propName: (keyof Model), optionName: (keyof ColumnOptions), expectedValue: any) {
-  let prop = entity.columns.find(x => x.name === propName);
+  let prop = entity.properties.find(x => x.name === propName);
 
   let actualValue = prop.options[optionName];
 
