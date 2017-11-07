@@ -75,7 +75,7 @@ describe('decorators > column options', async () => {
 
   it('should correctly set type options', () => {
     checkPropertyOptionValue('typed', 'type', { name: 'float', arguments: [] });
-    checkPropertyOptionValue('typed_opts', 'type', { name: 'float', arguments: [] });
+    // checkPropertyOptionValue('typed_opts', 'type', { name: 'float', arguments: [] });
     checkPropertyOptionValue('empty', 'type', undefined);
   });
 

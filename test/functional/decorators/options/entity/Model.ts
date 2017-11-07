@@ -79,8 +79,8 @@ export class Model {
   @Column().type.float()
   typed: number;
 
-  @Column({ type: 'float' })
-  typed_opts: number;
+  // @Column({ type: 'float' })
+  // typed_opts: number;
 
 
 

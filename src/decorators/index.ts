@@ -46,7 +46,7 @@ export const DefaultColumnOptions: ColumnOptions = {
   generated: false
 };
 
-export type StandardTypeInfo = string | {
+export type StandardTypeInfo = {
   name: string;
   arguments: any[];
 };
