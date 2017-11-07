@@ -1,3 +1,4 @@
+import { DbTypeSelector } from './Types';
 export * from './Column';
 export * from './DbCollection';
 export * from './Entity';
@@ -14,7 +15,7 @@ export type NavigationPropertyDecorator = PropertyDecorator;
 
 export type ColumnDecorator = PropertyDecorator & ColumnDecoratorBuilder;
 export type ColumnDecoratorBuilder = {
-  type(value: string): ColumnDecorator;
+  type: DbTypeSelector;
   columnName(value: string): ColumnDecorator;
   default(value: (() => any) | any): ColumnDecorator;
   nullable(value?: boolean): ColumnDecorator;
@@ -24,7 +25,7 @@ export type ColumnDecoratorBuilder = {
 };
 
 export type ColumnOptions = {
-  type?: string;
+  type?: StandardTypeInfo;
   columnName?: string;
   default?: (() => any) | any;
   unique?: boolean;
@@ -45,7 +46,10 @@ export const DefaultColumnOptions: ColumnOptions = {
   generated: false
 };
 
-
+export type StandardTypeInfo = string | {
+  name: string;
+  arguments: any[];
+};
 
 export type EntityDecorator = ClassDecorator & EntityDecoratorBuilder;
 export type EntityDecoratorBuilder = {

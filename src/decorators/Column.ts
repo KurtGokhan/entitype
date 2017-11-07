@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DecoratorStorage } from '../common/DecoratorStorage';
-import { ColumnDecorator, ColumnOptions } from './';
+import { ColumnDecorator, ColumnOptions, StandardTypeInfo } from './';
 
 
 export function Column(): ColumnDecorator;
@@ -23,7 +23,17 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
     DecoratorStorage.updateEntityReferences(column.parent);
   };
 
-  retType['type'] = type => Column(Object.assign({}, options, { type }));
+  retType['type'] = new Proxy({}, {
+    get(target, propertyName: string) {
+      return function (...args) {
+        let type: StandardTypeInfo = {
+          name: propertyName,
+          arguments: args
+        };
+        return Column(Object.assign({}, options, { type }));
+      };
+    }
+  });
   retType['columnName'] = columnName => Column(Object.assign({}, options, { columnName }));
   retType['nullable'] = nullable => Column(Object.assign({}, options, { nullable: nullable !== false }));
   retType['unique'] = unique => Column(Object.assign({}, options, { unique: unique !== false }));

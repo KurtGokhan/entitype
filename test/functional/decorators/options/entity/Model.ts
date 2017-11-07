@@ -76,7 +76,7 @@ export class Model {
 
 
 
-  @Column().type('float')
+  @Column().type.float()
   typed: number;
 
   @Column({ type: 'float' })
@@ -84,12 +84,12 @@ export class Model {
 
 
 
-  @Column().columnName('customName_typed').type('float')
+  @Column().columnName('customName_typed').type.float()
   typed_and_named: number;
 
-  @Column('customName_typed_param').type('float')
+  @Column('customName_typed_param').type.float()
   typed_and_named_param: number;
 
-  @Column({ columnName: 'customName_typed_opts' }).type('float')
+  @Column({ columnName: 'customName_typed_opts' }).type.float()
   typed_and_named_opts: number;
 }

@@ -1,5 +1,6 @@
 import { decorate, injectable } from 'inversify';
 
+import { StandardTypeInfo } from '../decorators';
 import { DI_TYPES } from './';
 import { container } from './';
 
@@ -11,6 +12,6 @@ export function TypeResolver(name: string): ClassDecorator {
 }
 
 export interface TypeResolverAdapter {
-  dbTypeToStandartType(dbType: string): [string, any[]];
-  standartTypeToDbType(standartType, ...parameters: any[]): string;
+  dbTypeToStandardType(dbType: string): StandardTypeInfo;
+  standardTypeToDbType(type: StandardTypeInfo): string;
 }

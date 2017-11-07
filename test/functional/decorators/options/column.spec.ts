@@ -11,7 +11,7 @@ function checkPropertyOptionValue(propName: (keyof Model), optionName: (keyof Co
 
   let actualValue = prop.options[optionName];
 
-  expect(actualValue).to.be.equal(expectedValue);
+  expect(actualValue).to.eql(expectedValue);
 }
 
 
@@ -74,20 +74,20 @@ describe('decorators > column options', async () => {
 
 
   it('should correctly set type options', () => {
-    checkPropertyOptionValue('typed', 'type', 'float');
-    checkPropertyOptionValue('typed_opts', 'type', 'float');
+    checkPropertyOptionValue('typed', 'type', { name: 'float', arguments: [] });
+    checkPropertyOptionValue('typed_opts', 'type', { name: 'float', arguments: [] });
     checkPropertyOptionValue('empty', 'type', undefined);
   });
 
 
   it('should correctly set composite options', () => {
-    checkPropertyOptionValue('typed_and_named', 'type', 'float');
+    checkPropertyOptionValue('typed_and_named', 'type', { name: 'float', arguments: [] });
     checkPropertyOptionValue('typed_and_named', 'columnName', 'customName_typed');
 
-    checkPropertyOptionValue('typed_and_named_opts', 'type', 'float');
+    checkPropertyOptionValue('typed_and_named_opts', 'type', { name: 'float', arguments: [] });
     checkPropertyOptionValue('typed_and_named_opts', 'columnName', 'customName_typed_opts');
 
-    checkPropertyOptionValue('typed_and_named_param', 'type', 'float');
+    checkPropertyOptionValue('typed_and_named_param', 'type', { name: 'float', arguments: [] });
     checkPropertyOptionValue('typed_and_named_param', 'columnName', 'customName_typed_param');
   });
 
