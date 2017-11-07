@@ -4,6 +4,8 @@ import { ForwardRef } from 'entitype/dist/common/forwardRef';
 import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
+import { MysqlTypeResolver } from './MysqlTypeResolver';
+
 export type ColumnMetadata = {
   Field: string,
   Type: string,
@@ -128,7 +130,7 @@ export class MysqlDriver implements DriverAdapter {
           primaryKey: row.Key === 'PRI',
           unique: row.Key === 'UNI',
           nullable: row.Null === 'YES',
-          type: row.Type
+          type: new MysqlTypeResolver().dbTypeToStandardType(row.Type)
         }
       });
     });

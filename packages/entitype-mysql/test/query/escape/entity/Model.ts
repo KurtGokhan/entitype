@@ -1,7 +1,7 @@
 import { Column } from 'entitype';
 
 export class Model {
-  @Column().type('int')
+  @Column().type.int()
   id: number;
 
   @Column()

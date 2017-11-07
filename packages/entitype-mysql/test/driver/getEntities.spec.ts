@@ -47,7 +47,7 @@ describe('driver > runQuery', async () => {
     expect(aEntity.properties[0].dbName).to.eql(aColumns[0].Field);
     expect(aEntity.properties[0].options.generated).to.be.true;
     expect(aEntity.properties[0].options.primaryKey).to.be.true;
-    expect(aEntity.properties[0].options.type).to.eql('int(11)');
+    expect(aEntity.properties[0].options.type).to.eql({ name: 'int', arguments: [11] });
 
     expect(aEntity.properties[1].dbName).to.eql(aColumns[1].Field);
     expect(aEntity.properties[1].options.index).to.be.true;
@@ -56,7 +56,7 @@ describe('driver > runQuery', async () => {
     expect(aEntity.properties[2].options.unique).to.be.true;
 
     expect(aEntity.properties[3].dbName).to.eql(aColumns[3].Field);
-    expect(aEntity.properties[3].options.type).to.eql('float');
+    expect(aEntity.properties[3].options.type).to.eql({ name: 'float', arguments: [] });
     expect(aEntity.properties[3].options.default).to.eql(5);
 
     expect(aEntity.properties[4].isNavigationProperty).to.be.true;
@@ -72,7 +72,7 @@ describe('driver > runQuery', async () => {
     expect(bEntity.properties[0].dbName).to.eql(bColumns[0].Field);
     expect(bEntity.properties[0].options.generated).to.be.true;
     expect(bEntity.properties[0].options.primaryKey).to.be.true;
-    expect(bEntity.properties[0].options.type).to.eql('int(11)');
+    expect(bEntity.properties[0].options.type).to.eql({ name: 'int', arguments: [11] });
 
     expect(bEntity.properties[1].dbName).to.eql(bColumns[1].Field);
     expect(bEntity.properties[1].isForeignKey).to.be.true;
