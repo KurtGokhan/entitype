@@ -1,4 +1,4 @@
-import { expect, spy } from 'chai';
+import { expect } from 'chai';
 import { MysqlTypeResolver } from 'src';
 
 describe('driver > typeResolver', async () => {
