@@ -1,5 +1,4 @@
 import { DecoratorStorage } from 'entitype/dist/common/DecoratorStorage';
-import { DefaultColumnOptions } from 'entitype/dist/decorators';
 import * as fs from 'fs-extra';
 import { Question, Questions } from 'inquirer';
 import * as os from 'os';

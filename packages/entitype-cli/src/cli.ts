@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import * as Rx from 'rxjs/Rx';
 
 import * as vorpalBuilder from 'vorpal';
+
 import { pull, PullOptions } from './pull';
 
 export const vorpal = vorpalBuilder();
