@@ -27,20 +27,20 @@
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
     "mysql2": "^1.4.2",
-    "nyc": "^11.2.1",
+    "nyc": "^11.3.0",
     "reflect-metadata": "^0.1.10",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.6.1"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/chai-as-promised": "^7.1.0",
     "@types/chai-string": "^1.1.31",
-    "@types/mocha": "^2.2.43",
+    "@types/mocha": "^2.2.44",
     "@types/mysql2": "github:types/mysql2",
-    "@types/node": "^8.0.46"
+    "@types/node": "^8.0.50"
   },
   "scripts": {
     "test": "mocha",
