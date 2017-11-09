@@ -1,13 +1,6 @@
 import { ColumnDecorator } from './';
 
 // Reference: https://dev.mysql.com/doc/refman/5.7/en/data-types.html
-// TODO:
-
-let buildType = function (type, ...args: any[]) {
-  if (args && args.length)
-    return `${type}(${args.filter(x => x != null).join(',')})`;
-  return type;
-};
 
 export type DbTypeSelector = {
   boolean: () => ColumnDecorator;
