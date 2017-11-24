@@ -1,3 +1,4 @@
+import { DefaultColumnOptions } from 'entitype';
 import { DecoratorStorage } from 'entitype/dist/common/DecoratorStorage';
 import * as fs from 'fs-extra';
 import { Question, Questions } from 'inquirer';
@@ -6,6 +7,7 @@ import * as path from 'path';
 
 import { vorpal } from './cli';
 import { getConfiguration, getDriverAdapter } from './configuration';
+import { getTypeName } from './types';
 
 export type PullOptions = {
   interactive?: boolean;
@@ -96,7 +98,6 @@ async function resolveManyToMany(entities: DecoratorStorage.Entity[]) {
 
   let manyToManyAnswers = await vorpal.activeCommand.prompt(mtmQuestions);
 
-  let manyToMany = [];
   for (let index = 0; index < mtmQuestions.length; index++) {
     const answer = manyToManyAnswers[index];
     if (!answer) continue;
@@ -116,6 +117,7 @@ async function resolveManyToMany(entities: DecoratorStorage.Entity[]) {
       owner: mtmMapping.mappingTable
     };
     leftFK.foreignKey = null;
+    leftFK.type = mtmMapping.rightTable.type;
 
 
     let rightFK = mtmMapping.rightTable.properties.find(x =>
@@ -125,21 +127,16 @@ async function resolveManyToMany(entities: DecoratorStorage.Entity[]) {
     );
     rightFK.isArray = true;
     rightFK.manyToManyMapping = {
-      leftKey: mtmMapping.rightKey.dbName,
-      rightKey: mtmMapping.leftKey.dbName,
+      leftKey: mtmMapping.rightKey.foreignKey.column,
+      rightKey: mtmMapping.leftKey.foreignKey.column,
       owner: mtmMapping.mappingTable
     };
     rightFK.foreignKey = null;
+    rightFK.type = mtmMapping.leftTable.type;
   }
 }
 
 async function createEntityFiles(options: PullOptions, entities: DecoratorStorage.Entity[]) {
-  type EntitySpec = {
-    entity: DecoratorStorage.Entity;
-    fileName: string;
-    className: string;
-  };
-
   let entityMap = new Map<Function, DecoratorStorage.Entity>(entities.map(x => [x.type, x]) as any);
 
   let directory = path.resolve(options.output);
@@ -160,9 +157,31 @@ async function createEntityFiles(options: PullOptions, entities: DecoratorStorag
       if (prop.isColumn) {
         entitypeImports.add('Column');
 
-        // TODO: fix options and type
-        propertyLines.push(`@Column('${prop.dbName}')`);
-        propertyLines.push(`${prop.name}: ${prop.type};`);
+        let options = [`type: \`${prop.options.type}\``];
+
+        if (prop.options.nullable !== DefaultColumnOptions.nullable)
+          options.push(`nullable: ${prop.options.nullable}`);
+
+        if (prop.options.unique !== DefaultColumnOptions.unique)
+          options.push(`unique: ${prop.options.nullable}`);
+
+        if (prop.options.generated !== DefaultColumnOptions.generated)
+          options.push(`generated: ${prop.options.generated}`);
+
+        if (prop.options.primaryKey !== DefaultColumnOptions.primaryKey)
+          options.push(`primaryKey: ${prop.options.primaryKey}`);
+
+        if (prop.options.default !== DefaultColumnOptions.default)
+          options.push(`default: ${prop.options.default}`);
+
+        if (prop.options.index !== DefaultColumnOptions.index)
+          options.push(`index: ${prop.options.index}`);
+
+        let optionsString = `{ ${options.join(', ')} }`;
+        let nullableSign = prop.options.nullable ? '?' : '';
+
+        propertyLines.push(`@Column(${optionsString})`);
+        propertyLines.push(`${prop.name}${nullableSign}: ${getTypeName(prop.type)};`);
       }
       else if (prop.isNavigationProperty) {
         let targetEntity = entityMap.get(prop.type);
@@ -173,7 +192,10 @@ async function createEntityFiles(options: PullOptions, entities: DecoratorStorag
           ctxImports.add(mappingEntity.name);
 
           entitypeImports.add('ManyToMany');
-          propertyLines.push(`@ManyToMany(type => ${mappingEntity.dbName}, x => x.${prop.manyToManyMapping.leftKey}, x => x.${prop.manyToManyMapping.rightKey})`);
+          propertyLines.push(
+            `@ManyToMany(type => ${targetEntity.name}, joinType => ${mappingEntity.dbName}, ` +
+            `x => x.${prop.manyToManyMapping.leftKey}, x => x.${prop.manyToManyMapping.rightKey})`
+          );
           propertyLines.push(`${prop.name}: ${targetEntity.name}[];`);
         }
         else if (prop.isArray) {
