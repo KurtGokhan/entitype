@@ -25,7 +25,7 @@ export type ColumnDecoratorBuilder = {
 };
 
 export type ColumnOptions = {
-  type?: StandardTypeInfo;
+  type?: string;
   columnName?: string;
   default?: (() => any) | any;
   unique?: boolean;
@@ -44,11 +44,6 @@ export const DefaultColumnOptions: ColumnOptions = {
   primaryKey: false,
   index: false,
   generated: false
-};
-
-export type StandardTypeInfo = {
-  name: string;
-  arguments: any[];
 };
 
 export type EntityDecorator = ClassDecorator & EntityDecoratorBuilder;

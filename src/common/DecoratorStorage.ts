@@ -98,8 +98,6 @@ export namespace DecoratorStorage {
     options = Object.assign({}, DefaultColumnOptions, options);
     options.columnName = options.columnName || columnName;
 
-    if (typeof options.type === 'string') options.type = { name: options.type, arguments: [] };
-
     let entity = getEntity(parent) || addEntity(parent, {});
 
     let column = new Property({

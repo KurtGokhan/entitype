@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { DecoratorStorage } from '../common/DecoratorStorage';
-import { ColumnDecorator, ColumnOptions, StandardTypeInfo } from './';
-
+import { ColumnDecorator, ColumnOptions } from './';
 
 export function Column(): ColumnDecorator;
 export function Column(columnName: string): ColumnDecorator;
@@ -26,10 +25,16 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
   retType['type'] = new Proxy({}, {
     get(target, propertyName: string) {
       return function (...args) {
-        let type: StandardTypeInfo = {
-          name: propertyName,
-          arguments: args
-        };
+        let baseName: string;
+        let typeArgs: any[];
+        if (propertyName === 'custom') {
+          [baseName, ...typeArgs] = args;
+        }
+        else {
+          baseName = propertyName;
+          typeArgs = args;
+        }
+        let type = baseName + (typeArgs.length ? '(' + typeArgs.join(',') + ')' : '');
         return Column(Object.assign({}, options, { type }));
       };
     }

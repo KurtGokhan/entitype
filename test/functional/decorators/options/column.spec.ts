@@ -74,20 +74,21 @@ describe('decorators > column options', async () => {
 
 
   it('should correctly set type options', () => {
-    checkPropertyOptionValue('typed', 'type', { name: 'float', arguments: [] });
-    // checkPropertyOptionValue('typed_opts', 'type', { name: 'float', arguments: [] });
+    checkPropertyOptionValue('typed', 'type', 'float');
+    checkPropertyOptionValue('typed_opts', 'type', 'float');
+    checkPropertyOptionValue('typed_custom', 'type', 'hello(5,3)');
     checkPropertyOptionValue('empty', 'type', undefined);
   });
 
 
   it('should correctly set composite options', () => {
-    checkPropertyOptionValue('typed_and_named', 'type', { name: 'float', arguments: [] });
+    checkPropertyOptionValue('typed_and_named', 'type', 'float');
     checkPropertyOptionValue('typed_and_named', 'columnName', 'customName_typed');
 
-    checkPropertyOptionValue('typed_and_named_opts', 'type', { name: 'float', arguments: [] });
+    checkPropertyOptionValue('typed_and_named_opts', 'type', 'float');
     checkPropertyOptionValue('typed_and_named_opts', 'columnName', 'customName_typed_opts');
 
-    checkPropertyOptionValue('typed_and_named_param', 'type', { name: 'float', arguments: [] });
+    checkPropertyOptionValue('typed_and_named_param', 'type', 'float');
     checkPropertyOptionValue('typed_and_named_param', 'columnName', 'customName_typed_param');
   });
 
