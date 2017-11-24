@@ -4,6 +4,8 @@ import { ForwardRef } from 'entitype/dist/common/forwardRef';
 import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
+import { getConstructorForDatabaseType } from './types';
+
 export type ColumnMetadata = {
   Field: string,
   Type: string,
@@ -120,6 +122,7 @@ export class MysqlDriver implements DriverAdapter {
         isArray: false,
         isNavigationProperty: false,
         isForeignKey: false,
+        type: getConstructorForDatabaseType(row.Type),
         options: {
           columnName: row.Field,
           default: row.Default,
