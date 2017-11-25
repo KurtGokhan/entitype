@@ -9,11 +9,11 @@ export class NoopNamingStrategy implements NamingStrategy {
     return tableName;
   }
 
-  tableNameToEntityFileName(entityName: string): string {
-    return entityName;
+  tableNameToEntityFileName(tableName: string): string {
+    return tableName;
   }
 
-  public tableNameToContextPropertyName(tableName: string): string {
+  tableNameToContextPropertyName(tableName: string): string {
     return tableName;
   }
 
@@ -41,7 +41,7 @@ export class NoopNamingStrategy implements NamingStrategy {
     return dbName + 'Context';
   }
 
-  databaseNameToContextFileName(contextName: string): string {
-    return contextName + 'Context';
+  databaseNameToContextFileName(dbName: string): string {
+    return dbName + 'Context';
   }
 }

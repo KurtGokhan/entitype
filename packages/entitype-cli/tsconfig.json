@@ -25,7 +25,6 @@
     "temp",
     "build",
     "dist",
-    "output",
     "node_modules",
     "**/*.spec.ts"
   ]

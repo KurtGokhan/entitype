@@ -4,11 +4,11 @@ import * as fs from 'fs-extra';
 import { Question, Questions } from 'inquirer';
 import * as os from 'os';
 import * as path from 'path';
-import { NamingStrategy } from 'src/naming/NamingStrategy';
 
 import { vorpal } from './cli';
 import { getConfiguration, getDriverAdapter } from './configuration';
-import { NoopNamingStrategy } from './naming/NoopNamingStrategy';
+import { DefaultNamingStrategy } from './naming/DefaultNamingStrategy';
+import { NamingStrategy } from './naming/NamingStrategy';
 import { getTypeName } from './types';
 
 export type PullOptions = {
@@ -31,6 +31,13 @@ type EntityDefinition = ClassDefinition & {
   contextPropertyName: string;
   isMappingEntity: boolean;
   entity: DecoratorStorage.Entity;
+  propertyDefinitions: PropertyDefinition[];
+};
+
+type PropertyDefinition = {
+  propertyName: string;
+  columnName: string;
+  decoratorType: 'Column' | 'OneToOne' | 'OneToMany' | 'ManyToOne' | 'ManyToMany';
 };
 
 type Context = { entitypeContext?: ContextDefinition, entities?: EntityDefinition[] };
@@ -47,7 +54,7 @@ function compareByFileName(a: EntityDefinition, b: EntityDefinition) {
 
 class Pull {
   config: any;
-  namingStrategy: NamingStrategy = new NoopNamingStrategy();
+  namingStrategy: NamingStrategy = new DefaultNamingStrategy();
 
   constructor(private options: PullOptions) {
   }
@@ -177,6 +184,7 @@ class Pull {
   }
 
   private async createContextDefinitions(entities: DecoratorStorage.Entity[]) {
+    let entityMap = new Map<Function, DecoratorStorage.Entity>(entities.map(x => [x.type, x]) as any);
     let context: Context = { entities: [] };
 
     for (let index = 0; index < entities.length; index++) {
@@ -185,6 +193,55 @@ class Pull {
       let isMappingEntity = entities.some(x =>
         x.properties.some(prop => prop.manyToManyMapping && prop.manyToManyMapping.owner === entity));
 
+
+      let propertyDefinitions: PropertyDefinition[] = entity.properties.map(prop => {
+        if (prop.isColumn) {
+          let propertyName = this.namingStrategy.columnNameToPropertyName(prop.name);
+          return <PropertyDefinition>{
+            columnName: prop.dbName,
+            propertyName,
+            decoratorType: 'Column'
+          };
+        }
+        else if (prop.isNavigationProperty) {
+          let targetEntity = entityMap.get(prop.type);
+
+          if (prop.manyToManyMapping) {
+            let propertyName = this.namingStrategy.manyToManyNavigationPropertyName(prop.name);
+            return <PropertyDefinition>{
+              columnName: prop.dbName,
+              propertyName,
+              decoratorType: 'ManyToMany'
+            };
+          }
+          else if (prop.isArray) {
+            let propertyName = this.namingStrategy.oneToManyNavigationPropertyName(prop.name);
+            return <PropertyDefinition>{
+              columnName: prop.foreignKey.column,
+              propertyName,
+              decoratorType: 'OneToMany'
+            };
+          }
+          else {
+            let counterProperty = targetEntity.properties
+              .find(x => x.foreignKey && x.foreignKey.owner === prop.foreignKey.owner && x.foreignKey.column === prop.foreignKey.column);
+            let decorator = counterProperty.isArray ? 'ManyToOne' : 'OneToOne';
+
+            let propertyName = counterProperty.isArray ?
+              this.namingStrategy.manyToOneNavigationPropertyName(prop.name) :
+              this.namingStrategy.oneToOneNavigationPropertyName(prop.name);
+
+            return <PropertyDefinition>{
+              columnName: prop.foreignKey.column,
+              propertyName,
+              decoratorType: decorator
+            };
+          }
+        }
+
+        return null;
+      });
+
       context.entities.push({
         className: isMappingEntity ?
           this.namingStrategy.mappingTableNameToEntityName(entity.dbName) :
@@ -192,6 +249,7 @@ class Pull {
         fileName: this.namingStrategy.tableNameToEntityFileName(entity.dbName),
         contextPropertyName: this.namingStrategy.tableNameToContextPropertyName(entity.dbName),
         tableName: entity.dbName,
+        propertyDefinitions,
         isMappingEntity,
         entity
       });
@@ -216,6 +274,7 @@ class Pull {
     fs.mkdirpSync(directory);
 
     for (let index = 0; index < context.entities.length; index++) {
+      const entityDef = context.entities[index];
       const entity = context.entities[index].entity;
 
       let entitypeImports = new Set<string>(['Entity']);
@@ -232,7 +291,10 @@ class Pull {
 
           entitypeImports.add('Column');
 
-          let options = [`type: \`${prop.options.type}\``];
+          let options = [
+            `columnName: \`${prop.dbName}\``,
+            `type: \`${prop.options.type}\``
+          ];
 
           if (prop.options.nullable !== DefaultColumnOptions.nullable)
             options.push(`nullable: ${prop.options.nullable}`);
@@ -268,10 +330,14 @@ class Pull {
             let mappingEntity = entityMap.get(prop.manyToManyMapping.owner.type);
             ctxImports.add(mappingEntity);
 
+            let leftKeyDef = mappingEntity.propertyDefinitions.find(x => x.columnName === prop.manyToManyMapping.leftKey);
+            let rightKeyDef = mappingEntity.propertyDefinitions.find(x => x.columnName === prop.manyToManyMapping.rightKey);
+
+
             entitypeImports.add('ManyToMany');
             propertyLines.push(
               `@ManyToMany(type => ${targetEntity.className}, joinType => ${mappingEntity.className}, ` +
-              `x => x.${prop.manyToManyMapping.leftKey}, x => x.${prop.manyToManyMapping.rightKey})`
+              `x => x.${leftKeyDef.propertyName}, x => x.${rightKeyDef.propertyName})`
             );
             propertyLines.push(`${propName}: ${targetEntity.className}[];`);
           }
@@ -281,14 +347,18 @@ class Pull {
             entitypeImports.add('OneToMany');
 
             let fkOwner = entityMap.get(prop.foreignKey.owner.type);
-            propertyLines.push(`@OneToMany(type => ${fkOwner.className}, x => x.${prop.foreignKey.column})`);
+            let fkDef = fkOwner.propertyDefinitions.find(x => x.columnName === prop.foreignKey.column);
+
+            propertyLines.push(`@OneToMany(type => ${fkOwner.className}, x => x.${fkDef.propertyName})`);
             propertyLines.push(`${propName}: ${targetEntity.className}[];`);
           }
           else {
             let counterProperty = targetEntity.entity.properties
               .find(x => x.foreignKey && x.foreignKey.owner === prop.foreignKey.owner && x.foreignKey.column === prop.foreignKey.column);
-            let fkOwner = entityMap.get(prop.foreignKey.owner.type);
             let decorator = counterProperty.isArray ? 'ManyToOne' : 'OneToOne';
+
+            let fkOwner = entityMap.get(prop.foreignKey.owner.type);
+            let fkDef = fkOwner.propertyDefinitions.find(x => x.columnName === prop.foreignKey.column);
 
             let propName = counterProperty.isArray ?
               this.namingStrategy.manyToOneNavigationPropertyName(prop.name) :
@@ -296,7 +366,7 @@ class Pull {
 
             entitypeImports.add(decorator);
 
-            propertyLines.push(`@${decorator}(type => ${fkOwner.className}, x => x.${prop.foreignKey.column})`);
+            propertyLines.push(`@${decorator}(type => ${fkOwner.className}, x => x.${fkDef.propertyName})`);
             propertyLines.push(`${propName}: ${targetEntity.className};`);
           }
         }
@@ -313,8 +383,8 @@ class Pull {
         .map(x => `import { ${x.className} } from './${x.fileName}';`);
       lines.push(...ctxImportSeq, '');
 
-      lines.push(`@Entity('${entity.dbName}')`);
-      lines.push(`export class ${entity.dbName} {`);
+      lines.push(`@Entity('${entityDef.tableName}')`);
+      lines.push(`export class ${entityDef.className} {`);
 
       lines.push(...propertyLines.map(x => '  ' + x));
 
@@ -324,7 +394,7 @@ class Pull {
 
       let fileContent = lines.join(os.EOL);
 
-      let filePath = path.join(directory, entity.name + '.ts');
+      let filePath = path.join(directory, entityDef.fileName + '.ts');
       fs.writeFileSync(filePath, fileContent, 'utf8');
     }
   }
@@ -352,7 +422,8 @@ class Pull {
     let entitypeImport = `import { ${entitypeImportSeq} } from 'entitype';`;
     lines.push(entitypeImport, '');
 
-    let ctxImportSeq = Array.from(ctxImports).sort().map(x => `import { ${x.className} } from './${x.fileName}';`);
+    let ctxImportSeq = Array.from(ctxImports).sort(compareByFileName)
+      .map(x => `import { ${x.className} } from './${x.fileName}';`);
     lines.push(...ctxImportSeq, '');
 
     lines.push(`export class ${context.entitypeContext.className} extends EntitypeContext {`);
