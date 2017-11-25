@@ -22,7 +22,7 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
     DecoratorStorage.updateEntityReferences(column.parent);
   };
 
-  retType['type'] = new Proxy({}, {
+  retType['type'] = new Proxy(function () { }, {
     get(target, propertyName: string) {
       return function (...args) {
         let baseName: string;
@@ -34,9 +34,15 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
           baseName = propertyName;
           typeArgs = args;
         }
-        let type = baseName + (typeArgs.length ? '(' + typeArgs.join(',') + ')' : '');
+        let type = constructType(baseName, typeArgs);
         return Column(Object.assign({}, options, { type }));
       };
+    },
+
+    apply(target, thisArg, argumentsList) {
+      let [baseName, ...typeArgs] = argumentsList;
+      let type = constructType(baseName, typeArgs);
+      return Column(Object.assign({}, options, { type }));
     }
   });
   retType['columnName'] = columnName => Column(Object.assign({}, options, { columnName }));
@@ -47,4 +53,8 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
   retType['default'] = defValue => Column(Object.assign({}, options, { default: defValue }));
 
   return retType as ColumnDecorator;
+}
+
+function constructType(baseName: string, typeArgs: any[]) {
+  return baseName + (typeArgs.length ? '(' + typeArgs.join(',') + ')' : '');
 }

@@ -33,4 +33,6 @@ export type DbTypeSelector = {
 
   json: () => ColumnDecorator;
   custom: (name: string, ...args: any[]) => ColumnDecorator;
+
+  (name: string, ...args: any[]): ColumnDecorator;
 };

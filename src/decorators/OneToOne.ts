@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import { DecoratorStorage } from '../common/DecoratorStorage';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
@@ -11,11 +12,9 @@ export function OneToOne<EntityType, SelectType>(
   foreignKey: PropertyExpression<EntityType, SelectType>)
   : NavigationPropertyDecorator {
 
-  let fkType = resolveType(foreignKeyEntity);
-
   let propertyDecorator = (target, propertyKey) => {
     let fk = {
-      owner: fkType,
+      owner: resolveType(foreignKeyEntity),
       column: resolvePropertyExpression(foreignKey)
     };
 

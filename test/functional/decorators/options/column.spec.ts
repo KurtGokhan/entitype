@@ -77,6 +77,7 @@ describe('decorators > column options', async () => {
     checkPropertyOptionValue('typed', 'type', 'float');
     checkPropertyOptionValue('typed_opts', 'type', 'float');
     checkPropertyOptionValue('typed_custom', 'type', 'hello(5,3)');
+    checkPropertyOptionValue('typed_custom_implicit', 'type', 'helloagain(7,9)');
     checkPropertyOptionValue('empty', 'type', undefined);
   });
 
