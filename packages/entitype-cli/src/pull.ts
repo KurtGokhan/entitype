@@ -14,6 +14,7 @@ export type PullOptions = {
   options: {
     interactive?: boolean;
     config?: string;
+    index?: boolean;
   };
   output: string;
 };
@@ -52,7 +53,7 @@ export async function pull(options: PullOptions, interaction?: InteractionCallba
   await new Pull(options, interaction).execute();
 }
 
-function compareByFileName(a: EntityDefinition, b: EntityDefinition) {
+function compareByFileName(a: { fileName: string }, b: { fileName: string }) {
   if (a.fileName < b.fileName) return -1;
   if (a.fileName > b.fileName) return 1;
   return 0;
@@ -78,6 +79,7 @@ class Pull {
 
     await this.createEntityFiles(this.options, definitions);
     await this.createContextFile(this.options, definitions);
+    if (this.options.options.index) this.createIndexFile(this.options, definitions);
   }
 
 
@@ -455,5 +457,24 @@ class Pull {
     fs.writeFileSync(filePath, fileContent, 'utf8');
   }
 
+  private async createIndexFile(options: PullOptions, context: Context) {
+    let directory = path.resolve(options.output);
+    fs.mkdirpSync(directory);
+    let ctxImports = new Set<EntityDefinition>();
+
+    let fileNames = context.entities.filter(x => !x.isMappingEntity).map(x => ({ fileName: x.fileName }));
+    fileNames.push({ fileName: context.entitypeContext.fileName });
+
+    let lines = [];
+
+    let ctxImportSeq = fileNames.sort(compareByFileName)
+      .map(x => `export * from './${x.fileName}';`);
+    lines.push(...ctxImportSeq, '');
+
+    let fileContent = lines.join(os.EOL);
+
+    let filePath = path.join(directory, 'index.ts');
+    fs.writeFileSync(filePath, fileContent, 'utf8');
+  }
 }
 
