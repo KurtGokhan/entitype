@@ -60,8 +60,8 @@
   "scripts": {
     "test": "mocha",
     "test:debug": "mocha --inspect=25650 --inspect-brk",
-    "start": "ts-node src/index.ts",
-    "start:debug": "ts-node --inspect=25650 --inspect-brk src/index.ts",
+    "start": "ts-node src/cli.ts",
+    "start:debug": "ts-node --inspect=25650 --inspect-brk src/cli.ts",
     "cover": "nyc mocha",
     "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "tslint --project tsconfig.json -c tslint.json",

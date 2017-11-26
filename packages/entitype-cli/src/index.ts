@@ -1,1 +1,1 @@
-import './cli';
+export * from './pull';

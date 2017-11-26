@@ -5,16 +5,17 @@ import { Question, Questions } from 'inquirer';
 import * as os from 'os';
 import * as path from 'path';
 
-import { vorpal } from './cli';
 import { getConfiguration, getDriverAdapter } from './configuration';
 import { DefaultNamingStrategy } from './naming/DefaultNamingStrategy';
 import { NamingStrategy } from './naming/NamingStrategy';
 import { getTypeName } from './types';
 
 export type PullOptions = {
-  interactive?: boolean;
-  config?: string;
-  output?: string;
+  options: {
+    interactive?: boolean;
+    config?: string;
+  };
+  output: string;
 };
 
 type ClassDefinition = {
@@ -42,8 +43,13 @@ type PropertyDefinition = {
 
 type Context = { entitypeContext?: ContextDefinition, entities?: EntityDefinition[] };
 
-export async function pull(options: PullOptions) {
-  await new Pull(options).execute();
+export type InteractionCallback = (x: any) => (boolean[] | string[]);
+
+export async function pull(options: PullOptions, interaction?: InteractionCallback) {
+  if (options.options.interactive && !interaction)
+    throw new Error('An interaction callback must be defined in order for pull method to act interactively.');
+
+  await new Pull(options, interaction).execute();
 }
 
 function compareByFileName(a: EntityDefinition, b: EntityDefinition) {
@@ -56,11 +62,11 @@ class Pull {
   config: any;
   namingStrategy: NamingStrategy = new DefaultNamingStrategy();
 
-  constructor(private options: PullOptions) {
+  constructor(private options: PullOptions, private interaction?: InteractionCallback) {
   }
 
   async execute() {
-    this.config = await getConfiguration(this.options.config);
+    this.config = await getConfiguration(this.options.options.config);
 
     let adapterName = this.config.adapter;
     let adapter = await getDriverAdapter(adapterName);
@@ -98,14 +104,21 @@ class Pull {
       };
     }).filter(x => x.leftColumn && x.rightColumn);
 
-    let questions: Questions = fkMappings.map((x, i) => ({
-      type: 'list',
-      name: i.toString(),
-      message: `What is the relationship between the table '${x.leftColumn.parent.dbName}' and '${x.rightColumn.parent.dbName}'?`,
-      choices
-    }));
+    let answers: any[] = fkMappings.map(x => {
+      if (x.prop.options.unique || x.prop.options.primaryKey) return choices[0];
+      else return choices[1];
+    });
 
-    let answers = await vorpal.activeCommand.prompt(questions);
+    if (this.options.options.interactive) {
+      let questions: Questions = fkMappings.map((x, i) => ({
+        type: 'list',
+        name: i.toString(),
+        message: `What is the relationship between the tables, '${x.leftColumn.parent.dbName}' and '${x.rightColumn.parent.dbName}'?`,
+        choices
+      }));
+
+      answers = await this.interaction(questions);
+    }
 
     for (let index = 0; index < fkMappings.length; index++) {
       const fkMap = fkMappings[index];
@@ -136,20 +149,22 @@ class Pull {
         rightTable: entities.find(en => en.type === x.properties.filter(x => x.foreignKey)[1].type)
       }));
 
-    let mtmQuestions: Questions = mtmMappings
-      .map((x, i) => ({
-        type: 'confirm',
-        name: i.toString(),
-        message: `Is '${x.mappingTable.dbName}' a many-to-many mapping table that connects '${x.leftTable.name}' and '${x.rightTable.name}'?`
-      }) as Question);
+    let manyToManyAnswers: any[] = mtmMappings.map(x => true);
+    if (this.options.options.interactive) {
+      let mtmQuestions: Questions = mtmMappings
+        .map((x, i) => ({
+          type: 'confirm',
+          name: i.toString(),
+          message: `Is '${x.mappingTable.dbName}' a many-to-many mapping table that connects '${x.leftTable.name}' and '${x.rightTable.name}'?`
+        }) as Question);
+      manyToManyAnswers = await this.interaction(mtmQuestions);
+    }
 
-    let manyToManyAnswers = await vorpal.activeCommand.prompt(mtmQuestions);
-
-    for (let index = 0; index < mtmQuestions.length; index++) {
+    for (let index = 0; index < mtmMappings.length; index++) {
+      let mtmMapping = mtmMappings[index];
       const answer = manyToManyAnswers[index];
       if (!answer) continue;
 
-      let mtmMapping = mtmMappings[index];
       mtmMapping.mappingTable.properties = mtmMapping.mappingTable.properties.filter(x => x.isColumn);
 
       let leftFK = mtmMapping.leftTable.properties.find(x =>

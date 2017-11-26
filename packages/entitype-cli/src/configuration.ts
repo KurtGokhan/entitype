@@ -2,8 +2,6 @@ import { container, DI_TYPES, DriverAdapter } from 'entitype/dist/plugins';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { vorpal } from './cli';
-
 export const defaultConfigLookupFolders = ['.', './config'];
 export const defaultConfigFileName = '.entitype-cli.json';
 
@@ -19,13 +17,7 @@ export async function findConfigurationFile() {
 
 export async function getDriverAdapter(name: string): Promise<DriverAdapter> {
   if (!container.isBoundNamed(DI_TYPES.driver, name)) {
-    try {
-      require('entitype-' + name);
-    }
-    catch (err) {
-      vorpal.activeCommand.log(err);
-      throw err;
-    }
+    require('entitype-' + name);
   }
 
   return container.getNamed(DI_TYPES.driver, name) as DriverAdapter;
