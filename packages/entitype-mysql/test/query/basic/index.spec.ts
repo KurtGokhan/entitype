@@ -9,6 +9,12 @@ describe('query > basic', async () => {
     expect(query).to.match(/SELECT (.* as a\d+)(, .* as a\d+)* FROM model as t0/i);
   });
 
+  it('should be able to select with custom table name', async () => {
+    let ctx = new Context();
+    let query = ctx.othermodels.toList.query;
+    expect(query).to.match(/SELECT (.* as a\d+)(, .* as a\d+)* FROM other as t0/i);
+  });
+
   it('should be able to select single column as scalar', async () => {
     let ctx = new Context();
     let query = ctx.models
