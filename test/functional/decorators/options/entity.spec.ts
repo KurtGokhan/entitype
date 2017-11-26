@@ -14,6 +14,14 @@ function checkEntityOptionValue<EntityType>(entityType: ObjectType<EntityType>, 
   expect(actualValue).to.be.equal(expectedValue);
 }
 
+function checkEntityPropertyValue<EntityType>(entityType: ObjectType<EntityType>, propName: (keyof DecoratorStorage.Entity), expectedValue: any) {
+  let entity = DecoratorStorage.getEntity(entityType);
+
+  let actualValue = entity[propName];
+
+  expect(actualValue).to.be.equal(expectedValue);
+}
+
 
 describe('decorators > entity options', async () => {
   it('should correctly set name options', () => {
@@ -21,6 +29,11 @@ describe('decorators > entity options', async () => {
     checkEntityOptionValue(NamedModel, 'tableName', 'TableName');
     checkEntityOptionValue(NamedModelOpts, 'tableName', 'ModelNamedWithOpts');
     checkEntityOptionValue(NamedModelParams, 'tableName', 'ModelNamedWithParams');
+
+    checkEntityPropertyValue(ImplicitlyNamedModel, 'dbName', 'ImplicitlyNamedModel');
+    checkEntityPropertyValue(NamedModel, 'dbName', 'TableName');
+    checkEntityPropertyValue(NamedModelOpts, 'dbName', 'ModelNamedWithOpts');
+    checkEntityPropertyValue(NamedModelParams, 'dbName', 'ModelNamedWithParams');
 
   });
 });

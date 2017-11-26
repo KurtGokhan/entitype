@@ -78,7 +78,7 @@ export namespace DecoratorStorage {
   let contextStorage: Context[] = [];
 
   export function addEntity(entityType: Function, options: EntityOptions): Entity {
-    options = Object.assign({}, DefaultColumnOptions, options);
+    options = Object.assign({}, options);
     options.tableName = options.tableName || entityType.name;
 
     let entity = new Entity({
