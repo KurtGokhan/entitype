@@ -81,14 +81,22 @@ export namespace DecoratorStorage {
     options = Object.assign({}, options);
     options.tableName = options.tableName || entityType.name;
 
-    let entity = new Entity({
-      name: entityType.name,
-      type: entityType,
-      dbName: options.tableName,
-      options
-    });
-    targetStorage.push(entity);
-    return entity;
+    let existingEntity = getEntity(entityType);
+    if (existingEntity) {
+      existingEntity.dbName = options.tableName;
+      existingEntity.options = options;
+      return existingEntity;
+    }
+    else {
+      let entity = new Entity({
+        name: entityType.name,
+        type: entityType,
+        dbName: options.tableName,
+        options
+      });
+      targetStorage.push(entity);
+      return entity;
+    }
   }
 
 
