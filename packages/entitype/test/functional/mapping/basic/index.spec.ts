@@ -1,23 +1,32 @@
-import { useConfiguration, ConnectionOptions } from 'src/configuration';
-import { mockDriverToReturnData } from 'test/mock/driver-mock';
-import { container } from 'src/ioc';
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { container } from 'src/ioc';
+import { mockDriverToReturnDataWithoutAlias } from 'test/mock';
+
+import { Context } from './entity/Context';
 
 describe('mapping > basic', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 
-  let mockConfig: ConnectionOptions = {
-    adapter: 'mock'
-  };
+
+  it('should be able to get count', async () => {
+    let count = 42;
+    let dataResult = [{ count: count }];
+
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let realCount = await ctx.models.count();
+
+    expect(realCount).to.be.equal(count);
+  });
 
   it('should be able to get single scalar data', async () => {
     let specName = 'my-name';
-    let dataResult = [{ a1: specName }];
+    let dataResult = [{ id: 0, name: specName }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let name = await ctx.models.select(x => x.name).first();
@@ -27,10 +36,10 @@ describe('mapping > basic', async () => {
 
   it('should be able to get list of scalar data', async () => {
     let result = ['my-name', 'my-name-2', 'my-name-3'];
-    let dataResult = [{ a1: result[0] }, { a1: result[1] }, { a1: result[2] }];
+    let dataResult = [{ id: 0, name: result[0] }, { id: 1, name: result[1] }, { id: 2, name: result[2] }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let name = await ctx.models.select(x => x.name).toList();
@@ -42,10 +51,10 @@ describe('mapping > basic', async () => {
   it('should be able to get single flat mapped data', async () => {
     let specName = 'my-name';
     let specId = 5;
-    let dataResult = [{ a1: specName, a2: specId }];
+    let dataResult = [{ name: specName, id: specId }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({ mappedName: x.name, mappedId: x.id })).first();
@@ -56,10 +65,10 @@ describe('mapping > basic', async () => {
 
   it('should be able to get list of flat mapped data', async () => {
     let result = [{ mappedName: 'my-name-1', mappedId: 5 }, { mappedName: 'my-name-2', mappedId: 1 }];
-    let dataResult = [{ a1: result[0].mappedId, a2: result[0].mappedName }, { a1: result[1].mappedId, a2: result[1].mappedName }];
+    let dataResult = [{ id: result[0].mappedId, name: result[0].mappedName }, { id: result[1].mappedId, name: result[1].mappedName }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let results = await ctx.models.select(x => ({ mappedId: x.id, mappedName: x.name })).toList();
@@ -71,10 +80,10 @@ describe('mapping > basic', async () => {
     let specName = 'my-name';
     let specId = 5;
     let specChildId = 15;
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({
@@ -93,10 +102,10 @@ describe('mapping > basic', async () => {
     let specName = 'my-name';
     let specId = 5;
     let specChildId = 15;
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => [x.name, x.id, x.child_id]).first();
@@ -112,10 +121,10 @@ describe('mapping > basic', async () => {
     let specName = 'my-name';
     let specId = 5;
     let specChildId = 15;
-    let dataResult = [{ a1: specName, a2: specId, a3: specChildId }];
+    let dataResult = [{ name: specName, id: specId, child_id: specChildId }];
 
-    useConfiguration(mockConfig);
-    mockDriverToReturnData(dataResult);
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
 
     let ctx = new Context();
     let result = await ctx.models.select(x => ({

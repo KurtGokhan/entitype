@@ -9,6 +9,10 @@ export function useConfiguration(configuration: ConnectionOptions, name?: string
     else
       container.bind(DI_TYPES.configuration).toConstantValue(configuration).whenTargetIsDefault();
   }
-  else
-    container.bind(DI_TYPES.configuration).toConstantValue(configuration).whenTargetNamed(name);
+  else {
+    if (container.isBoundNamed(DI_TYPES.configuration, name))
+      container.rebind(DI_TYPES.configuration).toConstantValue(configuration).whenTargetNamed(name);
+    else
+      container.bind(DI_TYPES.configuration).toConstantValue(configuration).whenTargetNamed(name);
+  }
 }

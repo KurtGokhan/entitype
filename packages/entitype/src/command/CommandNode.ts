@@ -3,21 +3,18 @@ import { OrCommand } from '../command/command-types/OrCommand';
 import {
   DeepPropertyExpression,
   IFiltered,
-  IFilteredFilterable,
-  IGrouped,
-  IIncludable,
-  IListable,
-  IOrderable,
   IOrdered,
   IQueryable,
-  ITakeable,
-  IWhereable,
   ObjectType,
   PropertyMapExpression,
-  WhereExpression,
 } from '../fluent';
-import { resolveDeepPropertyExpression, resolvePropertyMapExpression } from '../fluent/property-selector';
-import { createWhereExpressionQueryBase } from '../fluent/where-helpers';
+import { IFilterCondition } from '../fluent/interfaces';
+import {
+  resolveDeepPropertyExpression,
+  resolveDeepPropertyExpressionArray,
+  resolvePropertyMapExpression,
+} from '../fluent/property-selector';
+import { WhereConditionPicker } from '../fluent/where-helpers';
 import { Command } from './Command';
 import { CountCommand } from './command-types/CountCommand';
 import { FirstCommand } from './command-types/FirstCommand';
@@ -28,8 +25,9 @@ import { SkipCommand } from './command-types/SkipCommand';
 import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
 
-export class CommandNode<EntityType> implements IQueryable<EntityType>, IFilteredFilterable<EntityType>, IOrdered<EntityType> {
-  get or(): IWhereable<EntityType> {
+
+export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltered<EntityType>, IOrdered<EntityType> {
+  get or(): CommandNode<EntityType> {
     let nextCommand = this.createNextCommand(new OrCommand());
     return nextCommand;
   }
@@ -86,75 +84,73 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.callback(commands.map(x => x.command).reverse());
   }
 
-  include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType> {
+  include(...expressions: DeepPropertyExpression<any, any>[]): CommandNode<EntityType> {
     let include = new IncludeCommand();
-    include.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
+    include.propertyPath = resolveDeepPropertyExpressionArray(expressions);
 
     return this.createNextCommand(include);
   }
 
-  groupBy(): IGrouped<EntityType> {
-    throw new Error('Method not implemented.');
-  }
-  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType> {
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): CommandNode<SelectType> {
     let select = new SelectCommand();
-    let resolved = resolvePropertyMapExpression(expression, this.entityType);
-    select.columns = resolved[0];
-    select.structure = resolved[1];
+    let [columns, mentions] = resolvePropertyMapExpression(expression, this.entityType);
+    select.columns = columns;
+    select.mentions = mentions;
+    select.expression = expression;
 
     return this.createNextCommand(select);
   }
 
-  orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): CommandNode<EntityType> {
     return this.evaluateOrderExpression(expression, false);
   }
 
-  orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): CommandNode<EntityType> {
     return this.evaluateOrderExpression(expression, true);
   }
 
 
-  thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): CommandNode<EntityType> {
     return this.orderByAscending(expression);
   }
 
-  thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType> {
+  thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): CommandNode<EntityType> {
     return this.orderByDescending(expression);
   }
 
-  private evaluateOrderExpression<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>, descending: boolean) {
+  private evaluateOrderExpression<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>, descending: boolean): CommandNode<EntityType> {
     let cmd = new OrderByCommand();
-    cmd.propertyPath = resolveDeepPropertyExpression(expression, this.entityType);
+    cmd.propertyPath = resolveDeepPropertyExpression(expression);
     cmd.descending = descending;
 
     return this.createNextCommand(cmd);
   }
 
 
-  where(expression: WhereExpression<EntityType>): IFiltered<EntityType> {
-    let parameter = createWhereExpressionQueryBase<EntityType>(this.entityType);
-    let whereCommand = expression(parameter);
+  where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType> {
+    let path = resolveDeepPropertyExpression(expression);
+    let onFinish = (whereCommand) => this.createNextCommand(whereCommand);
 
-    return this.createNextCommand(whereCommand);
+    return new WhereConditionPicker(path, onFinish);
   }
 
-  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType> {
+  andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType> {
     return this.where(expression);
   }
 
-  skip(amount: number): ITakeable<EntityType> {
+  skip(amount: number): CommandNode<EntityType> {
     let skip = new SkipCommand();
     skip.amount = amount;
     return this.createNextCommand(skip);
   }
 
-  take(amount: number): IListable<EntityType> {
+  take(amount: number): CommandNode<EntityType> {
     let take = new TakeCommand();
     take.amount = amount;
     return this.createNextCommand(take);
   }
 
-  private createNextCommand(command: Command, entityTypeOrObject?: ObjectType<any>) {
+  private createNextCommand(command: Command, entityTypeOrObject?: ObjectType<any>): CommandNode<any> {
     return new CommandNode(this, this.callback, entityTypeOrObject || this.entityType, command) as any;
   }
 

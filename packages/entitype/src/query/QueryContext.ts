@@ -1,19 +1,20 @@
-import { JoinTreeNode } from '../algorithms/data-structures/JoinTreeNode';
 import { Command } from '../command/Command';
 import { CountCommand } from '../command/command-types/CountCommand';
 import { FirstCommand } from '../command/command-types/FirstCommand';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrderByCommand } from '../command/command-types/OrderByCommand';
 import { QueryCommand } from '../command/command-types/QueryCommand';
-import { SelectCommand, SelectMapping, SelectMappingStructure } from '../command/command-types/SelectCommand';
+import { SelectCommand } from '../command/command-types/SelectCommand';
 import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { CommandType } from '../command/CommandType';
-import { UnknownPropertyError } from '../errors/UnknownPropertyError';
+import { DecoratorStorage } from '../common/DecoratorStorage';
+import { JoinTreeNode } from '../common/JoinTreeNode';
+import { UnknownPropertyError } from '../common/UnknownPropertyError';
 import { PropertyPath } from '../fluent';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
-import { Alias, AliasContainer, AliasTree } from './Alias';
+import { Alias, AliasTree } from './Alias';
+import { Tracker } from './Tracker';
 
 export class QueryContext {
 
@@ -32,14 +33,18 @@ export class QueryContext {
 
   public joinTreeRoot: JoinTreeNode;
 
-  public selectedColumns: SelectMapping[];
-  public selectStructure: SelectMappingStructure[];
+  public selectedColumns: PropertyPath[];
 
 
   private aliasContainer: AliasTree = new AliasTree();
+  private aliasMap: Map<number, PropertyPath>;
+
+  public tracker: Tracker = new Tracker();
 
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
+    this.selectedColumns = [];
+
     this.resolveCommands();
     this.resolveJoins();
     this.resolveSelectedColumns();
@@ -80,35 +85,44 @@ export class QueryContext {
 
   private resolveSelectedColumns() {
     if (this.select) {
-      this.selectedColumns = [];
-      this.selectStructure = this.select.structure;
 
       this.select.columns.forEach(selectedCol => {
-        let colInfo = this.getColumnInfoForPropertyPath(selectedCol.path);
+        let colInfo = this.getColumnInfoForPropertyPath(selectedCol);
+
         if (colInfo.isColumn)
           this.selectedColumns.push(selectedCol);
         else {
-          let node = this.getJoinTreeNodeForPath(selectedCol.path);
-          this.addEntityToSelectedColumnsAndStructure(selectedCol.mapPath, node);
+          let node = this.getJoinTreeNodeForPath(selectedCol);
+          this.addEntityToSelectedColumnsAndStructure(node);
+        }
+      });
+
+
+      this.select.mentions.forEach(selectedCol => {
+        let colInfo = this.getColumnInfoForPropertyPath(selectedCol);
+
+        if (colInfo.isColumn)
+          this.selectedColumns.push(selectedCol);
+        else {
+          let node = this.getJoinTreeNodeForPath(selectedCol);
+          this.addEntityPrimaryKeysToSelectedColumns(node.entity, node.path);
         }
       });
     }
     else {
-      this.selectStructure = [];
-      this.selectedColumns = [];
-      this.addEntityToSelectedColumnsAndStructure([], this.joinTreeRoot);
+      this.addEntityToSelectedColumnsAndStructure(this.joinTreeRoot);
     }
   }
 
-  private addEntityToSelectedColumnsAndStructure(baseMappedPath: PropertyPath, node: JoinTreeNode) {
+  private addEntityToSelectedColumnsAndStructure(node: JoinTreeNode) {
     let path = node.path;
-    this.selectStructure.push({ isObject: true, mapPath: baseMappedPath, isArray: false, value: null, dependsOn: node.dependsOn });
-    node.entity.columns.filter(x => x.isColumn).forEach(prop => {
-      this.selectedColumns.push({ mapPath: baseMappedPath.concat(prop.name), path: path.concat(prop.name) });
+
+    node.entity.properties.filter(x => x.isColumn).forEach(prop => {
+      this.selectedColumns.push(path.concat(prop.name));
     });
 
     node.childs.filter(x => x.include).forEach(childNode => {
-      this.addEntityToSelectedColumnsAndStructure(baseMappedPath.concat(childNode.pathPart), childNode);
+      this.addEntityToSelectedColumnsAndStructure(childNode);
     });
   }
 
@@ -124,14 +138,18 @@ export class QueryContext {
     let includedPaths: PropertyPath[] = [];
     includedPaths.push(...this.includes.map(x => x.propertyPath));
     if (this.select) {
-      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => x.length > 1).map(x => x.slice(0, -1)));
-      includedPaths.push(...this.select.columns.map(x => x.path).filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
+      includedPaths.push(...this.select.columns.filter(x => x.length > 1).map(x => x.slice(0, -1)));
+      includedPaths.push(...this.select.columns.filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
+      paths.push(...this.select.mentions.filter(x => this.getColumnInfoForPropertyPath(x).isNavigationProperty));
     }
 
     this.joinTreeRoot = {
       entity: this.entity, path: [], pathPart: '', parent: null,
-      column: null, childs: [], childDic: {}, alias: null, include: true, dependsOn: null
+      column: null, childs: [], childDic: {}, alias: null, include: true
     };
+
+    this.addEntityPrimaryKeysToSelectedColumns(this.entity, []);
+
     includedPaths.forEach(path => this.createBranchesForPath(path, true));
     paths.forEach(path => this.createBranchesForPath(path, false));
   }
@@ -145,21 +163,16 @@ export class QueryContext {
       if (!pathNode) {
         let parentPath = currentPathNode.path;
         let currentPath = parentPath.concat(node);
-        let col = currentPathNode.entity.columns.find(x => x.name === node);
-        let fk = col.foreignKey;
-        let dependsOn = null;
+        let col = currentPathNode.entity.properties.find(x => x.name === node);
         let colEntity = DecoratorStorage.getEntity(col.type);
 
-        if (fk && col.isNavigationProperty) {
-          let pk = colEntity.columns.find(x => x.options.primaryKey);
-          dependsOn = currentPath.concat(pk.name);
-        }
+        this.addEntityPrimaryKeysToSelectedColumns(colEntity, currentPath);
+
         pathNode = currentPathNode.childDic[node] = {
           path: currentPath,
           pathPart: node,
           entity: colEntity,
           column: col,
-          dependsOn,
           parent: currentPathNode,
           childs: [],
           childDic: {},
@@ -172,10 +185,27 @@ export class QueryContext {
     });
   }
 
-  private resolveAliases() {
-    this.selectedColumns.map(x => ({ alias: this.getAliasForColumn(x.path), col: x }));
+  private addEntityPrimaryKeysToSelectedColumns(entity: DecoratorStorage.Entity, currentPath: PropertyPath) {
+    let primaryKeys = entity.primaryKeys;
+    for (let index = 0; index < primaryKeys.length; index++) {
+      let primaryKey = primaryKeys[index];
+      let path = currentPath.concat(primaryKey.name);
+      this.selectedColumns.push(path);
+    }
   }
 
+  private resolveAliases() {
+    let map = this.selectedColumns.map(x => ({ alias: this.getAlias(x), col: x }));
+    this.aliasMap = new Map();
+    map.forEach(x => this.aliasMap.set(x.alias.name, x.col));
+
+    // Only take unique paths
+    this.selectedColumns = Array.from(this.aliasMap.entries()).map((entry) => (entry[1]));
+  }
+
+  getPathForAlias(alias: number): PropertyPath {
+    return this.aliasMap.get(alias);
+  }
 
   getJoinTreeNodeForPath(path: PropertyPath): JoinTreeNode {
     let currentPathNode = this.joinTreeRoot;
@@ -186,7 +216,7 @@ export class QueryContext {
     return currentPathNode;
   }
 
-  getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Column {
+  getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Property {
     let entity = this.entity;
     let col = null;
 
@@ -195,8 +225,10 @@ export class QueryContext {
 
       if (!entity) throw new UnknownPropertyError(prop);
 
-      col = entity.columns.find(x => x.name === prop);
-      entity = DecoratorStorage.getEntity(col.type);
+      col = entity.properties.find(x => x.name === prop);
+
+      if (col) entity = DecoratorStorage.getEntity(col.type);
+      else entity = null;
     }
     return col;
   }

@@ -1,8 +1,23 @@
+import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntityDecorator, EntityOptions } from './index';
 
-export function Entity(): ClassDecorator {
+export function Entity(): EntityDecorator;
+export function Entity(columnName: string): EntityDecorator;
+export function Entity(options: EntityOptions): EntityDecorator;
+
+export function Entity(optionsOrName?: EntityOptions | string): EntityDecorator {
+  let options: EntityOptions;
+
+  if (typeof optionsOrName === 'string')
+    options = { tableName: optionsOrName as string };
+  else
+    options = optionsOrName || {};
+
   let retType = (target) => {
-    // TODO:
-    console.log(target);
+    DecoratorStorage.addEntity(target, options);
   };
-  return retType;
+
+  retType['tableName'] = tableName => Entity(Object.assign({}, options, { tableName }));
+
+  return retType as EntityDecorator;
 }

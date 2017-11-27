@@ -1,21 +1,15 @@
-import { useConfiguration, ConnectionOptions } from 'src/configuration';
-import { mockDriverToReturnData } from 'test/mock/driver-mock';
-import { container } from 'src/ioc';
-import { Context } from './entity/Context';
 import { expect } from 'chai';
+import { container } from 'src/ioc';
+import { mockDriverToReturnData } from 'test/mock';
+import { Context } from './entity/Context';
 
 describe('mapping > complex', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 
-  let mockConfig: ConnectionOptions = {
-    adapter: 'mock'
-  };
-
   it('should be able to get constant valued mappings', async () => {
     let dataResult = [{ a1: 5 }, { a2: 5 }];
 
-    useConfiguration(mockConfig);
     mockDriverToReturnData(dataResult);
 
     let ctx = new Context();
@@ -36,7 +30,6 @@ describe('mapping > complex', async () => {
       deepArray: [5, '2']
     };
 
-    useConfiguration(mockConfig);
     mockDriverToReturnData(dataResult);
 
     let ctx = new Context();

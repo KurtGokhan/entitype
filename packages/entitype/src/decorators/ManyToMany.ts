@@ -1,7 +1,7 @@
+import { DecoratorStorage } from '../common/DecoratorStorage';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
-import { DecoratorStorage } from '../storage/DecoratorStorage';
 import { NavigationPropertyDecorator } from './';
 
 export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
@@ -18,12 +18,8 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
       get owner() {
         return DecoratorStorage.getEntity(joinTypeResolved.type);
       },
-      get leftKey() {
-        return resolvePropertyExpression(leftKey, joinTypeResolved.type);
-      },
-      get rightKey() {
-        return resolvePropertyExpression(rightKey, joinTypeResolved.type);
-      }
+      leftKey: resolvePropertyExpression(leftKey),
+      rightKey: resolvePropertyExpression(rightKey)
     };
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, arrayType, {});

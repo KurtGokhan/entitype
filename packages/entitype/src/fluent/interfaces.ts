@@ -1,5 +1,4 @@
-import { PropertyMapExpression, WhereExpression } from './';
-import { DeepPropertyExpression } from './expressions';
+import { DeepPropertyExpression, PropertyMapExpression } from './expressions';
 
 
 export interface IListable<EntityType> {
@@ -52,22 +51,43 @@ export interface IGroupable<EntityType> extends ISelectable<EntityType> {
 }
 
 
-export interface IFilteredFilterable<EntityType> extends IGroupable<EntityType> {
+export interface IFiltered<EntityType> extends ISelectable<EntityType> {
   readonly or: IWhereable<EntityType>;
-  andWhere(expression: WhereExpression<EntityType>): IFilteredFilterable<EntityType>;
+  andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
 }
 
-export interface IFiltered<EntityType> extends IFilteredFilterable<EntityType>, IGroupable<EntityType> { }
+export interface IFilterCondition<EntityType, PropertyType> {
+  readonly not: IFilterCondition<EntityType, PropertyType>;
+
+  equals(value: PropertyType): IFiltered<EntityType>;
+  gt(value: PropertyType): IFiltered<EntityType>;
+  gte(value: PropertyType): IFiltered<EntityType>;
+  lt(value: PropertyType): IFiltered<EntityType>;
+  lte(value: PropertyType): IFiltered<EntityType>;
+  between(minValue: PropertyType, maxValue: PropertyType): IFiltered<EntityType>;
+  like(value: string): IFiltered<EntityType>;
+  isNull(): IFiltered<EntityType>;
+  in(array: PropertyType[]): IFiltered<EntityType>;
+}
 
 export interface IWhereable<EntityType> {
-  where(expression: WhereExpression<EntityType>): IFiltered<EntityType>;
+  where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
 }
 
-export interface IFilterable<EntityType> extends IGroupable<EntityType>, IWhereable<EntityType> { }
+export interface IFilterable<EntityType> extends ISelectable<EntityType>, IWhereable<EntityType> { }
 
 
 export interface IIncludable<EntityType> extends IFilterable<EntityType> {
   include<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IIncludable<EntityType>;
+
+  include<Level1Type, SelectType>(
+    expression1: DeepPropertyExpression<EntityType, Level1Type[]>,
+    expression2: DeepPropertyExpression<Level1Type, SelectType>): IIncludable<EntityType>;
+
+  include<Level1Type, Level2Type, SelectType>(
+    expression1: DeepPropertyExpression<EntityType, Level1Type[]>,
+    expression2: DeepPropertyExpression<Level1Type, Level2Type[]>,
+    expression3: DeepPropertyExpression<Level2Type, SelectType>): IIncludable<EntityType>;
 }
 
 
