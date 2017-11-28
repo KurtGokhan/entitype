@@ -4,36 +4,47 @@ export let typeMapping = new Map<string, Function>([
   ['int', Number],
   ['integer', Number],
   ['smallint', Number],
-  ['tinyint', Number],
   ['mediumint', Number],
   ['bigint', Number],
-  ['decimal', Number],
-  ['dec', Number],
+  ['tinyint', Number],
+
+  ['decimal', String],
+  ['dec', String],
+
   ['fixed', Number],
   ['numberic', Number],
   ['float', Number],
   ['real', Number],
   ['double', Number],
   ['double precision', Number],
-  ['bit', Number],
 
   ['date', Date],
   ['datetime', Date],
-  ['time', Date],
-  ['year', Date],
+  ['time', String],
+  ['year', Number],
   ['timestamp', Date],
 
   ['char', String],
   ['varchar', String],
-  ['binary', String],
-  ['varbinary', String],
-  ['blob', String],
-  ['text', String],
+  ['tinytext', Buffer],
+  ['mediumtext', Buffer],
+  ['text', Buffer],
+  ['longtext', Buffer],
+
+  ['bit', Buffer],
+  ['binary', Buffer],
+  ['varbinary', Buffer],
+  ['tinyblob', Buffer],
+  ['mediumblob', Buffer],
+  ['blob', Buffer],
+  ['longblob', Buffer],
 
   ['enum', String],
   ['set', String],
 
-  ['json', Object]
+  ['json', Object],
+
+  ['boolean', Boolean]
 ]);
 
 function parseType(type: string) {
