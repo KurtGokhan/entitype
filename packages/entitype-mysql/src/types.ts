@@ -12,7 +12,7 @@ export let typeMapping = new Map<string, Function>([
   ['dec', String],
 
   ['fixed', Number],
-  ['numberic', Number],
+  ['numeric', Number],
   ['float', Number],
   ['real', Number],
   ['double', Number],
@@ -26,10 +26,12 @@ export let typeMapping = new Map<string, Function>([
 
   ['char', String],
   ['varchar', String],
-  ['tinytext', Buffer],
-  ['mediumtext', Buffer],
-  ['text', Buffer],
-  ['longtext', Buffer],
+  ['nchar', String],
+  ['nvarchar', String],
+  ['tinytext', String],
+  ['mediumtext', String],
+  ['text', String],
+  ['longtext', String],
 
   ['bit', Buffer],
   ['binary', Buffer],
