@@ -14,7 +14,7 @@ export class SalesReport {
   title?: string;
   
   @Column({ columnName: `filter_row_source`, type: `longtext`, default: null })
-  filterRowSource?: any;
+  filterRowSource?: string;
   
   @Column({ columnName: `default`, type: `tinyint(1)`, nullable: false, default: 0 })
   default: number;

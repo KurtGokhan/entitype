@@ -18,13 +18,13 @@ export class Invoice {
   dueDate?: Date;
   
   @Column({ columnName: `tax`, type: `decimal(19,4)`, default: 0.0000 })
-  tax?: number;
+  tax?: string;
   
   @Column({ columnName: `shipping`, type: `decimal(19,4)`, default: 0.0000 })
-  shipping?: number;
+  shipping?: string;
   
   @Column({ columnName: `amount_due`, type: `decimal(19,4)`, default: 0.0000 })
-  amountDue?: number;
+  amountDue?: string;
   
   @ManyToOne(type => Invoice, x => x.orderId)
   order: Order;

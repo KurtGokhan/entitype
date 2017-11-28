@@ -8,7 +8,7 @@ import { PurchaseOrderDetail } from './purchase-order-detail';
 export class Product {
   
   @Column({ columnName: `supplier_ids`, type: `longtext`, default: null })
-  supplierIds?: any;
+  supplierIds?: string;
   
   @Column({ columnName: `id`, type: `int(11)`, nullable: false, generated: true, primaryKey: true, default: null })
   id: number;
@@ -20,13 +20,13 @@ export class Product {
   productName?: string;
   
   @Column({ columnName: `description`, type: `longtext`, default: null })
-  description?: any;
+  description?: string;
   
   @Column({ columnName: `standard_cost`, type: `decimal(19,4)`, default: 0.0000 })
-  standardCost?: number;
+  standardCost?: string;
   
   @Column({ columnName: `list_price`, type: `decimal(19,4)`, nullable: false, default: 0.0000 })
-  listPrice: number;
+  listPrice: string;
   
   @Column({ columnName: `reorder_level`, type: `int(11)`, default: null })
   reorderLevel?: number;
@@ -47,7 +47,7 @@ export class Product {
   category?: string;
   
   @Column({ columnName: `attachments`, type: `longblob`, default: null })
-  attachments?: any;
+  attachments?: Buffer;
   
   @OneToMany(type => InventoryTransaction, x => x.productId)
   inventoryTransactions: InventoryTransaction[];

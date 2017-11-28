@@ -17,10 +17,10 @@ export class PurchaseOrderDetail {
   productId?: number;
   
   @Column({ columnName: `quantity`, type: `decimal(18,4)`, nullable: false, default: null })
-  quantity: number;
+  quantity: string;
   
   @Column({ columnName: `unit_cost`, type: `decimal(19,4)`, nullable: false, default: null })
-  unitCost: number;
+  unitCost: string;
   
   @Column({ columnName: `date_received`, type: `datetime`, default: null })
   dateReceived?: Date;

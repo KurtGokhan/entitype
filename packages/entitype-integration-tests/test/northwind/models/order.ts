@@ -34,7 +34,7 @@ export class Order {
   shipName?: string;
   
   @Column({ columnName: `ship_address`, type: `longtext`, default: null })
-  shipAddress?: any;
+  shipAddress?: string;
   
   @Column({ columnName: `ship_city`, type: `varchar(50)`, default: null })
   shipCity?: string;
@@ -49,10 +49,10 @@ export class Order {
   shipCountryRegion?: string;
   
   @Column({ columnName: `shipping_fee`, type: `decimal(19,4)`, default: 0.0000 })
-  shippingFee?: number;
+  shippingFee?: string;
   
   @Column({ columnName: `taxes`, type: `decimal(19,4)`, default: 0.0000 })
-  taxes?: number;
+  taxes?: string;
   
   @Column({ columnName: `payment_type`, type: `varchar(50)`, default: null })
   paymentType?: string;
@@ -61,7 +61,7 @@ export class Order {
   paidDate?: Date;
   
   @Column({ columnName: `notes`, type: `longtext`, default: null })
-  notes?: any;
+  notes?: string;
   
   @Column({ columnName: `tax_rate`, type: `double`, default: 0 })
   taxRate?: number;

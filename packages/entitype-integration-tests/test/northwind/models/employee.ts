@@ -39,7 +39,7 @@ export class Employee {
   faxNumber?: string;
   
   @Column({ columnName: `address`, type: `longtext`, default: null })
-  address?: any;
+  address?: string;
   
   @Column({ columnName: `city`, type: `varchar(50)`, default: null, index: true })
   city?: string;
@@ -54,13 +54,13 @@ export class Employee {
   countryRegion?: string;
   
   @Column({ columnName: `web_page`, type: `longtext`, default: null })
-  webPage?: any;
+  webPage?: string;
   
   @Column({ columnName: `notes`, type: `longtext`, default: null })
-  notes?: any;
+  notes?: string;
   
   @Column({ columnName: `attachments`, type: `longblob`, default: null })
-  attachments?: any;
+  attachments?: Buffer;
   
   @ManyToMany(type => Privilege, joinType => EmployeePrivilege, x => x.employeeId, x => x.privilegeId)
   employeePrivileges: Privilege[];

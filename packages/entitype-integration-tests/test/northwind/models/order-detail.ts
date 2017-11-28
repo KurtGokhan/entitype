@@ -17,10 +17,10 @@ export class OrderDetail {
   productId?: number;
   
   @Column({ columnName: `quantity`, type: `decimal(18,4)`, nullable: false, default: 0.0000 })
-  quantity: number;
+  quantity: string;
   
   @Column({ columnName: `unit_price`, type: `decimal(19,4)`, default: 0.0000 })
-  unitPrice?: number;
+  unitPrice?: string;
   
   @Column({ columnName: `discount`, type: `double`, nullable: false, default: 0 })
   discount: number;

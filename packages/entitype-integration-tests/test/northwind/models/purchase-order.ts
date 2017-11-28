@@ -31,22 +31,22 @@ export class PurchaseOrder {
   expectedDate?: Date;
   
   @Column({ columnName: `shipping_fee`, type: `decimal(19,4)`, nullable: false, default: 0.0000 })
-  shippingFee: number;
+  shippingFee: string;
   
   @Column({ columnName: `taxes`, type: `decimal(19,4)`, nullable: false, default: 0.0000 })
-  taxes: number;
+  taxes: string;
   
   @Column({ columnName: `payment_date`, type: `datetime`, default: null })
   paymentDate?: Date;
   
   @Column({ columnName: `payment_amount`, type: `decimal(19,4)`, default: 0.0000 })
-  paymentAmount?: number;
+  paymentAmount?: string;
   
   @Column({ columnName: `payment_method`, type: `varchar(50)`, default: null })
   paymentMethod?: string;
   
   @Column({ columnName: `notes`, type: `longtext`, default: null })
-  notes?: any;
+  notes?: string;
   
   @Column({ columnName: `approved_by`, type: `int(11)`, default: null })
   approvedBy?: number;
