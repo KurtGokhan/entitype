@@ -25,7 +25,6 @@
   ],
   "dependencies": {
     "chalk": "^2.2.0",
-    "entitype": "*",
     "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
     "inversify": "^4.5.1",
