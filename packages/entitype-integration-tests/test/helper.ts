@@ -32,11 +32,11 @@ export async function dropAndCreateDatabase(seed?: string) {
   tmpConfig.multipleStatements = true;
   let connection = await createConnection(tmpConfig);
 
-  let result = await connection.execute(`DROP DATABASE IF EXISTS \`${connectionOptions.database}\``);
-  result = await connection.execute(`CREATE DATABASE \`${connectionOptions.database}\``);
+  await connection.execute(`DROP DATABASE IF EXISTS \`${connectionOptions.database}\``);
+  await connection.execute(`CREATE DATABASE \`${connectionOptions.database}\``);
 
   if (seed) {
-    result = await connection.query(seed);
+    await connection.query(seed);
   }
 
   await connection.end();
