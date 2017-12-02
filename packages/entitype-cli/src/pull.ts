@@ -460,7 +460,6 @@ class Pull {
   private async createIndexFile(options: PullOptions, context: Context) {
     let directory = path.resolve(options.output);
     fs.mkdirpSync(directory);
-    let ctxImports = new Set<EntityDefinition>();
 
     let fileNames = context.entities.filter(x => !x.isMappingEntity).map(x => ({ fileName: x.fileName }));
     fileNames.push({ fileName: context.entitypeContext.fileName });
