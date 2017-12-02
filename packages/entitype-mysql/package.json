@@ -1,6 +1,6 @@
 {
   "name": "entitype-mysql",
-  "version": "0.0.3-1",
+  "version": "0.0.4-alpha.1",
   "description": "Entitype mysql adapter",
   "license": "MIT",
   "readmeFilename": "README.md",
