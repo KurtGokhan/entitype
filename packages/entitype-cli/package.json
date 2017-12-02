@@ -1,7 +1,6 @@
 {
   "name": "entitype-cli",
   "version": "0.0.0-alpha.1",
-  "private": true,
   "preferGlobal": true,
   "description": "CLI for entitype, which lets you do migrations and provides other utility functions",
   "license": "MIT",
