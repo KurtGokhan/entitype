@@ -68,5 +68,8 @@
     "prepare": "npm run build"
   },
   "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts"
+  "typings": "./dist/index.d.ts",
+  "bin": {
+    "entitype": "dist/cli.js"
+  }
 }
