@@ -1,6 +1,6 @@
 {
   "name": "entitype-cli",
-  "version": "0.0.0-alpha.1",
+  "version": "0.0.0-alpha.3",
   "preferGlobal": true,
   "description": "CLI for entitype, which lets you do migrations and provides other utility functions",
   "license": "MIT",
@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "chalk": "^2.2.0",
+    "entitype": "*",
     "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
     "inversify": "^4.5.1",
@@ -43,7 +44,6 @@
     "@types/pluralize": "0.0.28",
     "chai": "^4.1.2",
     "chai-string": "^1.4.0",
-    "entitype": "github:KurtGokhan/entitype#develop",
     "entitype-mysql": "github:KurtGokhan/entitype-mysql#develop",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
@@ -69,6 +69,6 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "bin": {
-    "entitype": "dist/cli.js"
+    "entitype": "./bin/entitype"
   }
 }

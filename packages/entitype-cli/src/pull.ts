@@ -63,8 +63,7 @@ class Pull {
   config: any;
   namingStrategy: NamingStrategy = new DefaultNamingStrategy();
 
-  constructor(private options: PullOptions, private interaction?: InteractionCallback) {
-  }
+  constructor(private options: PullOptions, private interaction?: InteractionCallback) { }
 
   async execute() {
     this.config = await getConfiguration(this.options.options.config);
