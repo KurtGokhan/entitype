@@ -17,7 +17,21 @@
     "noImplicitReturns": true,
     "stripInternal": true,
     "pretty": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "entitype": [
+        "../entitype"
+      ],
+      "entitype/*": [
+        "../entitype/*"
+      ],
+      "entitype-mysql": [
+        "../entitype-mysql"
+      ],
+      "entitype-mysql/*": [
+        "../entitype-mysql/*"
+      ]
+    }
   },
   "exclude": [
     "test",
