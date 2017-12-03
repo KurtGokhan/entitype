@@ -53,7 +53,8 @@
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "typescript-json-schema": "^0.20.0"
   },
   "scripts": {
     "test": "mocha",
@@ -64,7 +65,8 @@
     "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "tslint --project tsconfig.json -c tslint.json",
     "build": "tsc -p tsconfig.prod.json",
-    "prepare": "npm run build"
+    "scheme:generate": "typescript-json-schema tsconfig.json IConfiguration --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "prepare": "npm run scheme:generate && npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",

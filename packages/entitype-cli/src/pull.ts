@@ -5,19 +5,11 @@ import { Question, Questions } from 'inquirer';
 import * as os from 'os';
 import * as path from 'path';
 
-import { getConfiguration, getDriverAdapter } from './configuration';
+import { getDriverAdapter } from './configuration';
+import { IPullOptions } from './configuration';
 import { DefaultNamingStrategy } from './naming/DefaultNamingStrategy';
 import { NamingStrategy } from './naming/NamingStrategy';
 import { getTypeName } from './types';
-
-export type PullOptions = {
-  options: {
-    interactive?: boolean;
-    config?: string;
-    index?: boolean;
-  };
-  output: string;
-};
 
 type ClassDefinition = {
   className: string;
@@ -46,48 +38,53 @@ type Context = { entitypeContext?: ContextDefinition, entities?: EntityDefinitio
 
 export type InteractionCallback = (x: any) => (boolean[] | string[]);
 
-export async function pull(options: PullOptions, interaction?: InteractionCallback) {
-  if (options.options.interactive && !interaction)
-    throw new Error('An interaction callback must be defined in order for pull method to act interactively.');
-
-  await new Pull(options, interaction).execute();
-}
-
 function compareByFileName(a: { fileName: string }, b: { fileName: string }) {
   if (a.fileName < b.fileName) return -1;
   if (a.fileName > b.fileName) return 1;
   return 0;
 }
 
+export async function pull(options: IPullOptions, interaction?: InteractionCallback) {
+  if (options.interactive && !interaction)
+    throw new Error('An interaction callback must be defined in order for pull method to act interactively.');
+
+  await new Pull(options, interaction).execute();
+}
+
+
 class Pull {
-  config: any;
   namingStrategy: NamingStrategy = new DefaultNamingStrategy();
 
-  constructor(private options: PullOptions, private interaction?: InteractionCallback) { }
+  get contextName(): string {
+    return this.options.connection['database'] || 'context';
+  }
+
+  constructor(
+    private options: IPullOptions,
+    private interaction?: InteractionCallback
+  ) { }
 
   async execute() {
-    this.config = await getConfiguration(this.options.options.config);
-
-    let adapterName = this.config.adapter;
+    let adapterName = this.options.connection.adapter;
     let adapter = await getDriverAdapter(adapterName);
 
-    let entities = await adapter.getEntities(this.config);
-    await this.resolveEntityRelationships(entities);
+    let entities = await adapter.getEntities(this.options.connection);
+    await this.resolveEntityRelationships(this.options, entities);
 
     let definitions = await this.createContextDefinitions(entities);
 
     await this.createEntityFiles(this.options, definitions);
     await this.createContextFile(this.options, definitions);
-    if (this.options.options.index) this.createIndexFile(this.options, definitions);
+    if (this.options.index) this.createIndexFile(this.options, definitions);
   }
 
 
-  private async resolveEntityRelationships(entities: DecoratorStorage.Entity[]) {
-    await this.resolveManyToMany(entities);
-    await this.resolveOneToManyOrOneToOne(entities);
+  private async resolveEntityRelationships(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
+    await this.resolveManyToMany(options, entities);
+    await this.resolveOneToManyOrOneToOne(options, entities);
   }
 
-  private async resolveOneToManyOrOneToOne(entities: DecoratorStorage.Entity[]) {
+  private async resolveOneToManyOrOneToOne(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
     const choices = ['One To One', 'One To Many'];
 
     let allProperties = entities.map(x => x.properties).reduce((a, b) => a.concat(b));
@@ -110,7 +107,7 @@ class Pull {
       else return choices[1];
     });
 
-    if (this.options.options.interactive) {
+    if (options.interactive) {
       let questions: Questions = fkMappings.map((x, i) => ({
         type: 'list',
         name: i.toString(),
@@ -135,7 +132,7 @@ class Pull {
     }
   }
 
-  private async resolveManyToMany(entities: DecoratorStorage.Entity[]) {
+  private async resolveManyToMany(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
     let possibleManyToMany = entities.filter(
       x => x.properties.length === 4 &&
         x.properties.filter(c => c.isForeignKey).length === 2 &&
@@ -151,7 +148,7 @@ class Pull {
       }));
 
     let manyToManyAnswers: any[] = mtmMappings.map(x => true);
-    if (this.options.options.interactive) {
+    if (options.interactive) {
       let mtmQuestions: Questions = mtmMappings
         .map((x, i) => ({
           type: 'confirm',
@@ -271,19 +268,19 @@ class Pull {
       });
     }
 
-    let contextFileName = this.namingStrategy.databaseNameToContextFileName(this.config.database);
-    let contextClassName = this.namingStrategy.databaseNameToContextName(this.config.database);
+    let contextFileName = this.namingStrategy.databaseNameToContextFileName(this.contextName);
+    let contextClassName = this.namingStrategy.databaseNameToContextName(this.contextName);
 
     context.entitypeContext = {
       className: contextClassName,
       fileName: contextFileName,
-      databaseName: this.config.database
+      databaseName: this.contextName
     };
 
     return context;
   }
 
-  private async createEntityFiles(options: PullOptions, context: Context) {
+  private async createEntityFiles(options: IPullOptions, context: Context) {
     let entityMap = new Map<Function, EntityDefinition>(context.entities.map(x => [x.entity.type, x]) as any);
 
     let directory = path.resolve(options.output);
@@ -415,7 +412,7 @@ class Pull {
     }
   }
 
-  private async createContextFile(options: PullOptions, context: Context) {
+  private async createContextFile(options: IPullOptions, context: Context) {
     let directory = path.resolve(options.output);
     fs.mkdirpSync(directory);
     let entitypeImports = new Set<string>(['EntitypeContext', 'IQueryable', 'DbCollection']);
@@ -456,7 +453,7 @@ class Pull {
     fs.writeFileSync(filePath, fileContent, 'utf8');
   }
 
-  private async createIndexFile(options: PullOptions, context: Context) {
+  private async createIndexFile(options: IPullOptions, context: Context) {
     let directory = path.resolve(options.output);
     fs.mkdirpSync(directory);
 
