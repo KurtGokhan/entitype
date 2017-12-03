@@ -86,7 +86,7 @@ export class Order {
   @Column().type.int().primaryKey(true)
   id: number;
 
-  @Column(columnName: `customer_id`)
+  @Column(`customer_id`)
   customerId?: number;
 
   @ManyToOne(type => Order, x => x.customerId)
@@ -111,7 +111,7 @@ export class Order {
   @Column().type.int().primaryKey(true)
   id: number;
 
-  @Column(columnName: `customer_id`)
+  @Column(`customer_id`)
   customerId?: number;
 
   @OneToOne(type => Order, x => x.customerId)
@@ -169,7 +169,6 @@ Query methods return a Promise as result so it can be used with `await` keyword 
 let ctx = new MyContext();
 
 // Query all customers
-// names is of type 'string'
 let customers = await ctx.customers.toList();
 
 // Query only the name of the first customer
