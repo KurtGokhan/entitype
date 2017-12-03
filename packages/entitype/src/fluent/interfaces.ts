@@ -1,4 +1,4 @@
-import { DeepPropertyExpression, PropertyMapExpression } from './expressions';
+import { DataType, DeepPropertyExpression, PropertyMapExpression } from './expressions';
 
 
 export interface IListable<EntityType> {
@@ -70,8 +70,15 @@ export interface IFilterCondition<EntityType, PropertyType> {
   in(array: PropertyType[]): IFiltered<EntityType>;
 }
 
+export interface ITableFilterCondition<EntityType, PropertyType> {
+  readonly not: ITableFilterCondition<EntityType, PropertyType>;
+  isNull(): IFiltered<EntityType>;
+}
+
 export interface IWhereable<EntityType> {
-  where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
+  where<SelectType extends DataType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
+  where<SelectType extends Function>(expression: DeepPropertyExpression<EntityType, SelectType>): void;
+  where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): ITableFilterCondition<EntityType, SelectType>;
 }
 
 export interface IFilterable<EntityType> extends ISelectable<EntityType>, IWhereable<EntityType> { }

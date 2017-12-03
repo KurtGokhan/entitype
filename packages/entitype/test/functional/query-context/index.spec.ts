@@ -79,13 +79,14 @@ describe('query-context', async () => {
   it('should correctly create context in where statements', async () => {
     mockDriverToReturnData(null, ctx => {
       let wheres = ctx.wheres;
-      let [group1, group2, group3, group4] = ctx.whereGroups;
+      let [group1, group2, group3, group4, group5] = ctx.whereGroups;
       let [whereGt5, whereLte10] = group1;
       let [whereNameEquals, whereOtherNameNotNull] = group2;
       let [whereGte6, whereLt7] = group3;
       let [whereBetween, whereLike, whereIn] = group4;
+      let [whereChildNotNull] = group5;
 
-      expect(wheres.length).to.be.equal(9);
+      expect(wheres.length).to.be.equal(10);
 
       expect(whereGt5.parameters).to.be.eql([5]);
       expect(whereGt5.conditionType).to.be.eql(ConditionType.GreaterThan);
@@ -132,6 +133,12 @@ describe('query-context', async () => {
       expect(whereIn.parameters).to.be.eql([[1, 2]]);
       expect(whereIn.negated).to.be.eql(false);
       expect(whereIn.propertyPath).to.be.eql(['id']);
+
+
+      expect(whereChildNotNull.conditionType).to.be.eql(ConditionType.IsNull);
+      expect(whereChildNotNull.parameters).to.be.eql([]);
+      expect(whereChildNotNull.negated).to.be.eql(true);
+      expect(whereChildNotNull.propertyPath).to.be.eql(['child', 'id']);
     });
 
     let ctx = new Context();
@@ -143,6 +150,8 @@ describe('query-context', async () => {
       .where(x => x.id).gte(6).andWhere(x => x.id).lt(7)
       .or
       .where(x => x.id).between(3, 8).andWhere(x => x.id).like('hello').andWhere(x => x.id).in([1, 2])
+      .or
+      .where(x => x.child).not.isNull()
       .count.query;
   });
 

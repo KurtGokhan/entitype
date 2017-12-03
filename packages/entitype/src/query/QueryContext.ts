@@ -76,11 +76,29 @@ export class QueryContext {
           this.whereGroups.push(currentWhereGroup);
         }
         else if (cmd.type === CommandType.Where) {
+          cmd = this.resolveWhereConditionForTable(cmd as WhereCommand);
           currentWhereGroup.push(cmd as WhereCommand);
         }
         else break;
       }
     }
+  }
+
+  private resolveWhereConditionForTable(cmd: WhereCommand): WhereCommand {
+    let columnInfo = this.getColumnInfoForPropertyPath(cmd.propertyPath);
+    if (!columnInfo.isNavigationProperty) return cmd;
+
+    let entity = DecoratorStorage.getEntity(columnInfo.type);
+    let pk = entity.primaryKeys[0];
+
+    let newCommand = new WhereCommand();
+    newCommand.condition = cmd.condition;
+    newCommand.conditionType = cmd.conditionType;
+    newCommand.negated = cmd.negated;
+    newCommand.parameters = cmd.parameters;
+    newCommand.propertyPath = cmd.propertyPath.concat(pk.name);
+
+    return newCommand;
   }
 
   private resolveSelectedColumns() {

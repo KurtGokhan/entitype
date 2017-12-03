@@ -1,6 +1,8 @@
 
 export type ObjectType<T> = { new(): T };
 
+export type DataType = string | boolean | number | Date | Buffer;
+
 
 export declare type PropertyPath = string[];
 export declare type PropertyPathGetter = () => string[];
