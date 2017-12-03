@@ -1,6 +1,6 @@
 # Entitype CLI
 
-CLI for Entitype projects, which can be used to do database synchronization with migrations, code-first or database-first style.
+CLI for [Entitype][entitype-url] projects, which can be used to do database synchronization with migrations, code-first or database-first style.
 
 __This is a work in process. By now, only the `pull` command, a.k.a. database-first synchronization, is completed.__
 
@@ -12,7 +12,10 @@ __This is a work in process. By now, only the `pull` command, a.k.a. database-fi
 
 * [Installation](#installation)
 * [Usage](#usage)
+* [Configuration](#configuration)
 * [Creating models from database - Database first style](#creating-models-from-database)
+* [Programmatic API Usage](#programmatic-usage)
+* [License](#license)
 
 ## Installation
 
@@ -26,10 +29,36 @@ npm install -g entitype-cli
 entitype help
 ```
 
-### Creating models from database
+## Configuration
+
+All commands has flags that can be used for configuration.
+In addition to these flags, `-c` flag can be used to specify the file path for a configuration file. If not specified, the CLI will look for a file named `.entitype-cli.json` under the working directory or `config` directory.
+The structure of a configuration file looks like:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/KurtGokhan/entitype-cli/master/schema.json",
+  "pull": {
+    "output": "output",
+    "index": true,
+    "interactive": false,
+    "connection": {
+      "$schema": "https://raw.githubusercontent.com/KurtGokhan/entitype-mysql/master/schema.json",
+      "adapter": "mysql",
+      "database": "northwind",
+      "host": "localhost",
+      "port": 3306,
+      "password": "********",
+      "user": "root"
+    }
+  }
+}
+```
+
+## Creating models from database
 
 ```bash
-entitype pull [options] <output>
+entitype pull [options] [output]
 ```
 
 Reads the database structure and creates entities on the selected output directory.
@@ -43,9 +72,24 @@ Options:
 * `-c, --config <path>`  Path to the config file. Looks for `[config/].entitype-cli.json` by default.
 * `-x, --index`          Create index.ts file that exports all the models.
 
+## Programmatic API Usage
+
+The CLI Api can be called from javascript code.
+
+```typescript
+import { pull } from 'entitype-cli';
+
+pull({
+  output: './models',
+  connection: { /* Rest of configuration*/ }
+});
+
+```
+
 ## License
 
 MIT
 
-
 [travis-badge-url]: https://travis-ci.org/KurtGokhan/entitype-cli
+
+[entitype-url]: https://github.com/KurtGokhan/entitype
