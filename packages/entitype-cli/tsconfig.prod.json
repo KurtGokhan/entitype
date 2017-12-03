@@ -3,5 +3,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {}
-  }
+  },
+  "include": [
+    "src/*"
+  ]
 }
