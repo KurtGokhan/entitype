@@ -1,7 +1,9 @@
 import { ConnectionOptions as EntitypeConnectionOptions } from 'entitype';
 import { ConnectionOptions } from 'mysql2';
 
-export class MysqlConnectionOptions extends EntitypeConnectionOptions {
+import { IMysqlConnectionOptions } from './IMysqlConnectionOptions';
+
+export class MysqlConnectionOptions extends EntitypeConnectionOptions implements IMysqlConnectionOptions {
   database: string;
   host: string;
   port?: number;
