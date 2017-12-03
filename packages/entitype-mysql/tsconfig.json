@@ -17,7 +17,15 @@
     "noImplicitReturns": true,
     "stripInternal": true,
     "pretty": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "entitype": [
+        "../entitype"
+      ],
+      "entitype/*": [
+        "../entitype/*"
+      ]
+    }
   },
   "exclude": [
     "test",

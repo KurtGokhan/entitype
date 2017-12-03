@@ -1,8 +1,8 @@
 {
-    "$ref": "#/definitions/MysqlConnectionOptions",
+    "$ref": "#/definitions/IMysqlConnectionOptions",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
-        "MysqlConnectionOptions": {
+        "IMysqlConnectionOptions": {
             "defaultProperties": [
             ],
             "properties": {
@@ -24,21 +24,15 @@
                 "port": {
                     "type": "number"
                 },
-                "toMysqlOptions": {
-                    "typeof": "function"
-                },
                 "user": {
-                    "description": "Username",
                     "type": "string"
                 }
             },
             "required": [
                 "adapter",
-                "connectTimeout",
                 "database",
                 "host",
                 "password",
-                "toMysqlOptions",
                 "user"
             ],
             "type": "object"

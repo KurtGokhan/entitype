@@ -5,10 +5,6 @@ export class MysqlConnectionOptions extends EntitypeConnectionOptions {
   database: string;
   host: string;
   port?: number;
-
-  /**@name user
-   * @description Username
-   */
   user: string;
   password: string;
 

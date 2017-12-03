@@ -33,7 +33,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^0.7.1",
     "chai-string": "^1.4.0",
-    "entitype": "github:KurtGokhan/entitype#develop",
+    "entitype": "^0.0.4-alpha.1",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
@@ -46,7 +46,7 @@
     "typescript-json-schema": "^0.17.0"
   },
   "peerDependencies": {
-    "entitype": "*"
+    "entitype": "^0.0.4-alpha.1"
   },
   "scripts": {
     "test": "mocha",
@@ -54,8 +54,8 @@
     "cover": "nyc mocha",
     "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "tslint --project test/tsconfig.json -c tslint.json",
-    "build": "tsc",
-    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "build": "tsc -p tsconfig.prod.json",
+    "scheme:generate": "typescript-json-schema tsconfig.json IMysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"
   },
   "main": "./dist/index.js",
