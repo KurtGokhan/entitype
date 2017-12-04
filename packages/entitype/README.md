@@ -2,7 +2,6 @@
 
 <!-- Badges section here. -->
 [![Build Status](https://travis-ci.org/entitype/entitype.svg?branch=master)][travis-badge-url]
-
 [![Coverage Status](https://coveralls.io/repos/github/entitype/entitype/badge.svg?branch=master)][coveralls-badge-url]
 
 Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
@@ -11,7 +10,7 @@ The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm
 
 Entitype can be used in any javascript environment supporting ES6.
 
-__This is a work in process. By now, only the querying is completed. If you are looking for a more mature project, try [TypeORM][typeorm-url]__
+__This is a work in progress. By now, only the querying is completed. If you are looking for a more mature project, try [TypeORM][typeorm-url]__
 
 ## Table of Contents
 
@@ -90,7 +89,7 @@ export class Order {
   id: number;
 
   @Column(`customer_id`)
-  customerId?: number;
+  customerId: number;
 
   @ManyToOne(type => Order, x => x.customerId)
   customer: Customer;
@@ -115,7 +114,7 @@ export class Order {
   id: number;
 
   @Column(`customer_id`)
-  customerId?: number;
+  customerId: number;
 
   @OneToOne(type => Order, x => x.customerId)
   customer: Customer;
@@ -216,7 +215,7 @@ let customers = await ctx.customers.toList();
 Query only the name of the first customer:
 
 ```typescript
-// names is of type 'string'
+// name is of type 'string'
 let name = await ctx.customers
   .select(x => x.name)
   .first();
@@ -246,7 +245,7 @@ Navigation properties can also be queried. Query name and orders of all customer
 ```typescript
 // namesAndOrders is of type '{ name: string, orders: Order[] }'
 let namesAndOrders = await ctx.customers
-  .select(x => {name: x.name, orders: x.orders })
+  .select(x => ({name: x.name, orders: x.orders }))
   .toList();
 ```
 
