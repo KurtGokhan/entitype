@@ -1,7 +1,7 @@
 # Entitype
 
 <!-- Badges section here. -->
-[![Build Status](https://travis-ci.org/KurtGokhan/entitype.svg?branch=master)][travis-badge-url]
+[![Build Status](https://travis-ci.org/entitype/entitype.svg?branch=master)][travis-badge-url]
 
 Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
 
@@ -224,9 +224,9 @@ let customerNamesOrdered = await ctx.customers
 
 More examples can be found in the [integration test repository][entitype-integration-tests-url].
 
-[travis-badge-url]: https://travis-ci.org/KurtGokhan/entitype
-[entitype-url]: https://github.com/KurtGokhan/entitype
-[entitype-cli-url]: https://github.com/KurtGokhan/entitype-cli
-[entitype-integration-tests-url]: https://github.com/KurtGokhan/entitype-integration-tests
+[travis-badge-url]: https://travis-ci.org/entitype/entitype
+[entitype-url]: https://github.com/entitype/entitype
+[entitype-cli-url]: https://github.com/entitype/entitype-cli
+[entitype-integration-tests-url]: https://github.com/entitype/entitype-integration-tests
 [typeorm-url]: https://github.com/typeorm/typeorm
 [entity-framework-url]: https://github.com/aspnet/EntityFramework6
