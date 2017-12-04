@@ -2,6 +2,7 @@ import { Container } from 'inversify';
 
 export * from './driver';
 export * from './query-builder';
+export * from './resolve';
 
 export const DI_TYPES = {
   driver: Symbol('Driver'),

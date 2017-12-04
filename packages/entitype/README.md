@@ -182,7 +182,6 @@ You can specify the configuration which Entitype will use to connect to database
 Also the plugin must be imported atleast once to resolve dependencies. The plugin to be used is specified with `adapter` property of the options object. Plugins are conventionally named `entitype-[pluginName]`.
 
 ```typescript
-import 'entitype-mysql';
 import { useConfiguration } from 'entitype';
 import { MysqlConnectionOptions } from 'entitype-mysql';
 

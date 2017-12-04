@@ -1,8 +1,9 @@
 import { Command } from '../command/Command';
 import { CommandNode } from '../command/CommandNode';
 import { DecoratorStorage } from '../common/DecoratorStorage';
-import { ConnectionOptions } from '../configuration/ConnectionOptions';
+import { ConnectionOptions } from '../configuration';
 import { ObjectType } from '../fluent';
+import { getConfiguration } from '../ioc';
 import { CommandRunner } from '../query/CommandRunner';
 
 export abstract class EntitypeContext {
@@ -20,7 +21,7 @@ export abstract class EntitypeContext {
   private resolveConfiguration(): ConnectionOptions {
     try {
       if (!this.configOrName || typeof this.configOrName === 'string')
-        return ConnectionOptions.getConfiguration(this.configOrName as string);
+        return getConfiguration(this.configOrName as string);
       else return this.configOrName as ConnectionOptions;
     }
     catch (err) {

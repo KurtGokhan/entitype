@@ -1,6 +1,8 @@
-import { container, DI_TYPES } from '../ioc';
-import { ConnectionOptions } from './ConnectionOptions';
-export * from './ConnectionOptions';
+import { container, DI_TYPES } from './ioc';
+
+export class ConnectionOptions {
+  adapter: string;
+}
 
 export function useConfiguration(configuration: ConnectionOptions, name?: string) {
   if (!name) {

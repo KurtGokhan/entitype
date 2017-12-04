@@ -3,7 +3,7 @@ import { QueryCommand } from '../command/command-types/QueryCommand';
 import { CommandType } from '../command/CommandType';
 import { DecoratorStorage } from '../common/DecoratorStorage';
 import { ConnectionOptions } from '../configuration';
-import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from '../ioc';
+import { DriverAdapter, getDriverAdapter, getQueryBuilder, QueryBuilderAdapter } from '../ioc';
 import { QueryContext } from './QueryContext';
 import { ResultMapper } from './ResultMapper';
 
@@ -24,13 +24,11 @@ export class CommandRunner {
   }
 
   private resolveDependencies() {
-    if (container.isBoundNamed(DI_TYPES.driver, this.config.adapter))
-      this.driver = container.getNamed(DI_TYPES.driver, this.config.adapter);
-
     let adapterName = this.config.adapter;
-    if (container.isBoundNamed(DI_TYPES.queryBuilder, adapterName))
-      this.builder = container.getNamed(DI_TYPES.queryBuilder, adapterName);
-    else
+    this.driver = getDriverAdapter(adapterName);
+    this.builder = getQueryBuilder(adapterName);
+
+    if (!this.builder)
       throw Error(`
       Could not find a Query Builder that matches the name '${adapterName}'.
       Did you forget to add the plugin?
