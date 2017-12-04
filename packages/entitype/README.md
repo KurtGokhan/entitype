@@ -15,12 +15,13 @@ __This is a work in process. By now, only the querying is completed. If you are 
 
 * [Installation](#installation)
 * [Quick Start](#quick-start)
-* [Defining a model](#defining-a-model)
-* [Defining relationships](#defining-relationships)
-* [Defining the context](#defining-the-context)
-* [Configuring the Connection](#configuring-the-connection)
-* [Querying API](#querying-api)
+  * [Defining a model](#defining-a-model)
+  * [Defining relationships](#defining-relationships)
+  * [Defining the context](#defining-the-context)
+  * [Configuring the Connection](#configuring-the-connection)
+  * [Querying API](#querying-api)
 * [CLI](#cli)
+* [Examples](#examples)
 
 ## Installation
 
@@ -119,6 +120,43 @@ export class Order {
 }
 ```
 
+### Defining a Many-to-Many Relationship
+
+A *Many-to-Many* relationship can also be defined in Entitype. For this relationship, a mapping entity must be defined like any other entity.
+
+```typescript
+@Entity('employee_privileges_mapping_table')
+export class EmployeePrivilege {
+
+  @Column('employee_id').primaryKey()
+  employeeId: number;
+
+  @Column('privilege_id').primaryKey()
+  privilegeId: number;
+}
+```
+
+The entities to be mapped can be decorated with `ManyToMany` decorator using the mapping entity we defined. First parameter is for array type, second parameter is the mapping entity type. Third and fourth parameters are for left key and right key respectively.
+
+```typescript
+@Entity('employees')
+export class Employee {
+  /* ---- Other properties, including the primary key ----  */
+
+  @ManyToMany(type => Privilege, joinType => EmployeePrivilege, x => x.employeeId, x => x.privilegeId)
+  employeePrivileges: Privilege[];
+}
+
+@Entity('privileges')
+export class Privilege {
+  /* ---- Other properties, including the primary key ----  */
+  
+  @ManyToMany(type => Employee, joinType => EmployeePrivilege, x => x.privilegeId, x => x.employeeId)
+  employeePrivileges: Employee[];
+}
+
+```
+
 ### Defining the Context
 
 A context must be defined before starting using Entitype.
@@ -162,55 +200,78 @@ useConfiguration(<MysqlConnectionOptions>{
 
 The query interface of Entitype will be available over the context class. The IntelliSense holds your hand as you write a query so it will be quite easy to get the grasp of the API.
 
-Query methods return a Promise as result so it can be used with `await` keyword in addition to `then`.
+Firstly, create an instance of the context:
 
 ```typescript
-// Firstly, create an instance of the context
 let ctx = new MyContext();
+```
 
-// Query all customers
+Query all customers:
+
+```typescript
 let customers = await ctx.customers.toList();
+```
 
-// Query only the name of the first customer
+Query only the name of the first customer:
+
+```typescript
 // names is of type 'string'
 let name = await ctx.customers
   .select(x => x.name)
   .first();
+```
 
-// The result is also thenable if you are not able to use 'async/await' feature
+
+Query methods return a Promise as result so it can be used with `await` keyword. The result can also be used with `then` if you are not able to use *async/await* feature:
+
+```typescript
 ctx.customers
   .select(x => x.name)
   .first()
   .then(name => console.log(`My first customer's name is ` + name));
+```
 
-// Query the names of all the customers
+Query the names of all the customers:
+
+```typescript
 // names is of type 'string[]'
 let names = await ctx.customers
   .select(x => x.name)
   .toList();
+```
 
-// Navigation properties can also be queried
-// Query name and orders of all customers
+Navigation properties can also be queried. Query name and orders of all customers;
+
+```typescript
 // namesAndOrders is of type '{ name: string, orders: Order[] }'
 let namesAndOrders = await ctx.customers
   .select(x => {name: x.name, orders: x.orders })
   .toList();
+```
 
-// A combined where query
+A combined where query:
+
+```typescript
 let customers = await ctx.customers
   .where(x => x.name).not.isNull()
   .or
   .where(x => x.id).in([5,6,7])
   .toList();
+```
 
-// Order customers by their name, take first 10 after skipping first 5
+Order customers by their name, take first 10 after skipping first 5:
+
+```typescript
 let customerNamesOrdered = await ctx.customers
   .orderByAscending(x => x.name)
   .skip(5)
   .take(10)
   .toList();
+```
 
-// By tefault, navigation properties are not loaded. Specify an include to load them.
+By tefault, navigation properties are not loaded if they are not referenced in any part of the query. Explicitly specify an include statement to load them:
+
+```typescript
 let customerNamesOrdered = await ctx.customers
   .include(x => x.orders)
   .toList();
