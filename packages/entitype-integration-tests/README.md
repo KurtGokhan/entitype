@@ -1,6 +1,6 @@
 # Entitype Integration tests
 
-[![Build Status](https://travis-ci.org/KurtGokhan/entitype-integration-tests.svg?branch=master)](https://travis-ci.org/KurtGokhan/entitype-integration-tests)
+[![Build Status](https://travis-ci.org/entitype/entitype-integration-tests.svg?branch=master)](https://travis-ci.org/entitype/entitype-integration-tests)
 
 ## Running Tests
 
