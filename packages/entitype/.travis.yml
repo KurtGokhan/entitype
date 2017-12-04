@@ -6,4 +6,5 @@ install:
   - npm install
 script:
   - npm run lint
-  - npm run cover
+  - npm run test
+after_success: npm run cover

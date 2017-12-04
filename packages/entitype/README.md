@@ -3,6 +3,8 @@
 <!-- Badges section here. -->
 [![Build Status](https://travis-ci.org/entitype/entitype.svg?branch=master)][travis-badge-url]
 
+[![Coverage Status](https://coveralls.io/repos/github/entitype/entitype/badge.svg?branch=master)][coveralls-badge-url]
+
 Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
 
 The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm-url] and [Entity Frameork][entity-framework-url]. Its API is designed to resemble Entity Framework but also to conform to Typescript coding conventions and make IntelliSense possible.
@@ -285,6 +287,7 @@ let customerNamesOrdered = await ctx.customers
 More examples can be found in the [integration test repository][entitype-integration-tests-url].
 
 [travis-badge-url]: https://travis-ci.org/entitype/entitype
+[coveralls-badge-url]: https://coveralls.io/github/entitype/entitype?branch=master
 [entitype-url]: https://github.com/entitype/entitype
 [entitype-cli-url]: https://github.com/entitype/entitype-cli
 [entitype-integration-tests-url]: https://github.com/entitype/entitype-integration-tests
