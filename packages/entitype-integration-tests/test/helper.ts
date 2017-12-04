@@ -1,6 +1,3 @@
-import 'entitype';
-import 'entitype-mysql';
-
 import * as chai from 'chai';
 import { useConfiguration } from 'entitype';
 import { MysqlConnectionOptions } from 'entitype-mysql';
