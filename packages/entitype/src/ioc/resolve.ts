@@ -1,11 +1,9 @@
 import { ConnectionOptions } from '../configuration';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from './';
 
-const pluginPrefix = 'entitype-';
-
 function loadPlugin(pluginName) {
   try {
-    require(pluginPrefix + pluginName);
+    require('entitype-' + pluginName);
   }
   catch (err) {
   }

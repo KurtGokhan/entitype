@@ -21,7 +21,6 @@
     "fluent"
   ],
   "dependencies": {
-    "chalk": "^2.3.0",
     "inversify": "^4.5.1",
     "reflect-metadata": "^0.1.10"
   },
