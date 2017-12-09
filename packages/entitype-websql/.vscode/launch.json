@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "type": "node",
+    "request": "launch",
+    "protocol": "inspector",
+    "name": "Run Tests",
+    "sourceMaps": true,
+    "cwd": "${workspaceRoot}",
+    "console": "integratedTerminal",
+    "internalConsoleOptions": "neverOpen",
+    "runtimeExecutable": "npm",
+    "args": [
+      "run",
+      "test:debug"
+    ],
+    "port": 25750,
+    "env": {
+      "NODE_ENV": "test"
+    },
+    "smartStep": true,
+    "showAsyncStacks": true
+  }]
+}

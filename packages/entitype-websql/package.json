@@ -1,0 +1,59 @@
+{
+  "name": "entitype-websql",
+  "version": "0.0.4-alpha.2",
+  "description": "Entitype WebSQL adapter",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "Gökhan Kurt",
+    "email": "krtgokhan@hotmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entitype/entitype-websql"
+  },
+  "tags": [
+    "entitype",
+    "websql"
+  ],
+  "devDependencies": {
+    "@types/chai": "=4.0.6",
+    "@types/chai-as-promised": "7.1.0",
+    "@types/chai-spies": "0.0.0",
+    "@types/chai-string": "^1.1.31",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.50",
+    "@types/sinon": "^2.3.7",
+    "@types/websql": "0.0.27",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-spies": "^0.7.1",
+    "chai-string": "^1.4.0",
+    "entitype": "^0.0.4-alpha.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1",
+    "mochawesome": "^2.3.1",
+    "nyc": "^11.3.0",
+    "sinon": "^4.1.2",
+    "ts-node": "^3.3.0",
+    "tsconfig-paths": "^2.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1",
+    "typescript-json-schema": "^0.17.0"
+  },
+  "peerDependencies": {
+    "entitype": "*"
+  },
+  "scripts": {
+    "test": "mocha",
+    "test:debug": "mocha --inspect=25750 --inspect-brk",
+    "cover": "nyc mocha",
+    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
+    "lint": "tslint --project test/tsconfig.json -c tslint.json",
+    "build": "tsc -p tsconfig.prod.json",
+    "scheme:generate": "typescript-json-schema tsconfig.json IWebSqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "prepare": "npm run scheme:generate && npm run build"
+  },
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts"
+}
