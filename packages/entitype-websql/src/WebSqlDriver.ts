@@ -25,11 +25,13 @@ export class WebSqlDriver implements DriverAdapter {
       }, rejectTx, () => resolveTx(result));
     });
 
+    let rowArray = [];
     let rows = txResult.rows;
-    rows[Symbol.iterator] = (i) => rows.item(i);
+    for (let index = 0; index < rows.length; index++) {
+      rowArray.push(rows.item(index));
+    }
 
-    let rowsData = Array.from(rows as any) as RowData[];
-    return [rowsData, null];
+    return [rowArray, null];
   }
 
   async getEntities(options: string | ConnectionOptions): Promise<DecoratorStorage.Entity[]> {
