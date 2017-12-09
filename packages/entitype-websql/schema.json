@@ -1,40 +1,32 @@
 {
-  "$ref": "#/definitions/IWebSqlConnectionOptions",
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "definitions": {
-    "IWebSqlConnectionOptions": {
-      "defaultProperties": [],
-      "properties": {
-        "adapter": {
-          "type": "string"
-        },
-        "connectTimeout": {
-          "type": "number"
-        },
-        "database": {
-          "type": "string"
-        },
-        "host": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "port": {
-          "type": "number"
-        },
-        "user": {
-          "type": "string"
+    "$ref": "#/definitions/IWebSqlConnectionOptions",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "IWebSqlConnectionOptions": {
+            "defaultProperties": [
+            ],
+            "properties": {
+                "database": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "database",
+                "description",
+                "size",
+                "version"
+            ],
+            "type": "object"
         }
-      },
-      "required": [
-        "adapter",
-        "database",
-        "host",
-        "password",
-        "user"
-      ],
-      "type": "object"
     }
-  }
 }
+
