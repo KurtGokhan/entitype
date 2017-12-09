@@ -3,7 +3,8 @@
   "compilerOptions": {
     "lib": [
       "es5",
-      "es6"
+      "es6",
+      "dom"
     ],
     "outDir": "build/compiled",
     "target": "es5",
@@ -11,13 +12,32 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
     "declaration": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "stripInternal": true,
     "pretty": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "entitype": [
+        "../entitype"
+      ],
+      "entitype/*": [
+        "../entitype/*"
+      ],
+      "entitype-mysql": [
+        "../entitype-mysql"
+      ],
+      "entitype-mysql/*": [
+        "../entitype-mysql/*"
+      ],
+      "entitype-websql": [
+        "../entitype-websql"
+      ],
+      "entitype-websql/*": [
+        "../entitype-websql/*"
+      ]
+    }
   },
   "exclude": [
     "tmp",

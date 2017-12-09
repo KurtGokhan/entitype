@@ -18,21 +18,32 @@
     "test"
   ],
   "dependencies": {
+    "awesome-typescript-loader": "^3.4.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-string": "^1.4.0",
     "entitype": "github:entitype/entitype#develop",
     "entitype-mysql": "github:entitype/entitype-mysql#develop",
+    "entitype-websql": "github:entitype/entitype-websql#develop",
     "istanbul": "^0.4.5",
+    "karma": "^1.7.1",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-webpack": "^2.0.6",
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
     "mysql2": "^1.4.2",
     "nyc": "^11.3.0",
+    "raw-loader": "^0.5.1",
     "reflect-metadata": "^0.1.10",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "@types/chai": "=4.0.6",
@@ -40,11 +51,13 @@
     "@types/chai-string": "^1.1.31",
     "@types/mocha": "^2.2.44",
     "@types/mysql2": "github:types/mysql2",
-    "@types/node": "^8.0.50"
+    "@types/node": "^8.0.50",
+    "@types/websql": "0.0.27"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha && npm run test:browser",
     "test:debug": "mocha --inspect=25750 --inspect-brk",
+    "test:browser": "karma start --single-run",
     "cover": "nyc mocha",
     "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
     "lint": "tslint --project tsconfig.json -c tslint.json"

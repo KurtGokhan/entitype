@@ -1,4 +1,4 @@
-./test/**/*.spec.ts
+./test/!(websql)/**/*.spec.ts
 --recursive
 -r ts-node/register
 -r tsconfig-paths/register
