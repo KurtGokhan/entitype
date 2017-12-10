@@ -13,7 +13,4 @@ export class Profile {
 
   @Column()
   birthdate?: Date;
-
-  @Column()
-  photo?: Buffer;
 }
