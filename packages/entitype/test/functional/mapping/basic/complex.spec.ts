@@ -34,8 +34,6 @@ describe('mapping > complex', async () => {
 
     let ctx = new Context();
 
-    let query = await ctx.models.select(x => deepObject).first.query;
-    console.log(query);
     let result = await ctx.models.select(x => deepObject).first();
     expect(result).to.be.deep.equal(deepObject);
     expect(Array.isArray(result.deepArray));
