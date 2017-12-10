@@ -12,7 +12,7 @@ The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm
 
 Entitype can be used in any JavaScript environment supporting ES6.
 
-__This is a work in progress. By now, only the querying is completed. If you are looking for a more mature project, try [TypeORM][typeorm-url]__
+__This is a work in progress. By now, only the querying is completed. If you are looking for a more mature project, try [TypeORM][typeorm-url].__
 
 ## Table of Contents
 

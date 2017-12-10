@@ -1,6 +1,8 @@
 import { ConnectionOptions } from '../configuration';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from './';
 
+declare var require: any;
+
 function loadPlugin(pluginName) {
   try {
     require('entitype-' + pluginName);

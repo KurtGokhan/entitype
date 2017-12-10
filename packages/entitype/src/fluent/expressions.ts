@@ -1,9 +1,6 @@
-import { Buffer } from 'buffer';
-
-
 export type ObjectType<T> = { new(): T };
 
-export type DataType = string | boolean | number | Date | Buffer;
+export type DataType = string | boolean | number | Date;
 
 
 export declare type PropertyPath = string[];
