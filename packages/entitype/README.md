@@ -1,8 +1,10 @@
 # Entitype
 
 <!-- Badges section here. -->
-[![Build Status](https://travis-ci.org/entitype/entitype.svg?branch=master)][travis-badge-url]
-[![Coverage Status](https://coveralls.io/repos/github/entitype/entitype/badge.svg?branch=master)][coveralls-badge-url]
+[![Build Status][travis-badge-image]][travis-badge-url]
+[![Coverage Status][coveralls-badge-image]][coveralls-badge-url]
+[![Dependencies][dependencies-badge-image]][dependencies-badge-url]
+[![Chat][chat-badge-image]][chat-badge-url]
 
 Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
 
@@ -32,7 +34,7 @@ Install the npm package with:
 npm install --save entitype
 ```
 
-Also install a plugin of your choice for database adapters:
+[Select a plugin][entitype-plugins-url] for database adapters and install it as well:
 
 ```bash
 npm install --save entitype-mysql
@@ -284,10 +286,18 @@ let customerNamesOrdered = await ctx.customers
 
 More examples can be found in the [integration test repository][entitype-integration-tests-url].
 
+[travis-badge-image]: https://travis-ci.org/entitype/entitype.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/entitype/entitype
+[coveralls-badge-image]: https://coveralls.io/repos/github/entitype/entitype/badge.svg?branch=master
 [coveralls-badge-url]: https://coveralls.io/github/entitype/entitype?branch=master
+[dependencies-badge-image]: https://david-dm.org/entitype/entitype.svg
+[dependencies-badge-url]: https://david-dm.org/entitype/entitype
+[chat-badge-image]: https://badges.gitter.im/entitype/entitype.svg
+[chat-badge-url]: https://gitter.im/entitype/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 [entitype-url]: https://github.com/entitype/entitype
 [entitype-cli-url]: https://github.com/entitype/entitype-cli
 [entitype-integration-tests-url]: https://github.com/entitype/entitype-integration-tests
 [typeorm-url]: https://github.com/typeorm/typeorm
 [entity-framework-url]: https://github.com/aspnet/EntityFramework6
+[entitype-plugins-url]: https://github.com/topics/entitype-plugin
