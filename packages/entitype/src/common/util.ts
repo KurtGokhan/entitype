@@ -49,11 +49,11 @@ export function getObjectPath(objectRoot: any, path: string[], ignoreMissing: bo
 }
 
 declare var Buffer;
-declare var UInt8Array;
+declare var Uint8Array;
 
 export function isColumnBuffer(column: DecoratorStorage.Property): boolean {
   if (typeof Buffer === 'function' && column.type === Buffer) return true;
-  if (typeof UInt8Array === 'function' && column.type === UInt8Array) return true;
+  if (typeof Uint8Array === 'function' && column.type === Uint8Array) return true;
   if (column.options && column.options.type && column.options.type.includes('blob')) return true;
   return false;
 }
@@ -71,8 +71,8 @@ export function createBufferFromHex(column: DecoratorStorage.Property, hex: stri
   if (typeof Buffer === 'function' && column.type === Buffer) {
     return Buffer.from(byteArray);
   }
-  if (typeof UInt8Array === 'function' && column.type === UInt8Array) {
-    let uintArray = new UInt8Array(byteArray.length);
+  if (typeof Uint8Array === 'function' && column.type === Uint8Array) {
+    let uintArray = new Uint8Array(byteArray.length);
     for (let i = 0; i < uintArray.length; i++) {
       uintArray[i] = byteArray[i];
     }
