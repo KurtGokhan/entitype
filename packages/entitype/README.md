@@ -6,9 +6,9 @@
 
 Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
 
-The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm-url] and [Entity Frameork][entity-framework-url]. Its API is designed to resemble Entity Framework but also to conform to Typescript coding conventions and make IntelliSense possible.
+The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm-url] and [Entity Frameork][entity-framework-url]. Its API is designed to resemble Entity Framework but also to conform to TypeScript coding conventions and make IntelliSense possible.
 
-Entitype can be used in any javascript environment supporting ES6.
+Entitype can be used in any JavaScript environment supporting ES6.
 
 __This is a work in progress. By now, only the querying is completed. If you are looking for a more mature project, try [TypeORM][typeorm-url]__
 
@@ -38,7 +38,7 @@ Also install a plugin of your choice for database adapters:
 npm install --save entitype-mysql
 ```
 
-Enable Typescript experimental features in your `tsconfig.json` under `compilerOptions`:
+Enable TypeScript experimental features in your `tsconfig.json` under `compilerOptions`:
 
 ```json
 "emitDecoratorMetadata": true,
@@ -151,7 +151,7 @@ export class Employee {
 @Entity('privileges')
 export class Privilege {
   /* ---- Other properties, including the primary key ----  */
-  
+
   @ManyToMany(type => Employee, joinType => EmployeePrivilege, x => x.privilegeId, x => x.employeeId)
   employeePrivileges: Employee[];
 }
@@ -220,7 +220,6 @@ let name = await ctx.customers
   .select(x => x.name)
   .first();
 ```
-
 
 Query methods return a Promise as result so it can be used with `await` keyword. The result can also be used with `then` if you are not able to use *async/await* feature:
 
