@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 
 export type ObjectType<T> = { new(): T };
 
