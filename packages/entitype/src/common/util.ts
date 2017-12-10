@@ -1,3 +1,5 @@
+import { DecoratorStorage } from './DecoratorStorage';
+
 export function setObjectPath(objectRoot: any, path: string[], value: any, createMissing: boolean = true) {
   if (!path.length) return value;
 
@@ -44,4 +46,37 @@ export function getObjectPath(objectRoot: any, path: string[], ignoreMissing: bo
   }
 
   return currentNode;
+}
+
+declare var Buffer;
+declare var UInt8Array;
+
+export function isColumnBuffer(column: DecoratorStorage.Property): boolean {
+  if (typeof Buffer === 'function' && column.type === Buffer) return true;
+  if (typeof UInt8Array === 'function' && column.type === UInt8Array) return true;
+  if (column.options && column.options.type && column.options.type.includes('blob')) return true;
+  return false;
+}
+
+export function isBufferConversionRequired(column: DecoratorStorage.Property, data): boolean {
+  return isColumnBuffer(column) && typeof data === 'string';
+}
+
+export function createBufferFromHex(column: DecoratorStorage.Property, hex: string): any {
+  let byteArray: any[] = new Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    byteArray[i / 2] = parseInt(hex.substring(i, i + 2), 16);
+  }
+
+  if (typeof Buffer === 'function' && column.type === Buffer) {
+    return Buffer.from(byteArray);
+  }
+  if (typeof UInt8Array === 'function' && column.type === UInt8Array) {
+    let uintArray = new UInt8Array(byteArray.length);
+    for (let i = 0; i < uintArray.length; i++) {
+      uintArray[i] = byteArray[i];
+    }
+    return uintArray;
+  }
+  return byteArray;
 }

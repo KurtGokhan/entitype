@@ -1,5 +1,5 @@
 import { JoinTreeNode } from '../common/JoinTreeNode';
-import { setObjectPath } from '../common/util';
+import { createBufferFromHex, isBufferConversionRequired, setObjectPath } from '../common/util';
 import { ColumnData, RowData } from '../ioc/index';
 import { QueryContext } from './QueryContext';
 
@@ -36,8 +36,14 @@ export class ResultMapper {
 
       for (let aliasIndex = 0; aliasIndex < aliases.length; aliasIndex++) {
         let aliasPath = aliases[aliasIndex];
-        if (aliasPath.path)
-          result = setObjectPath(result, aliasPath.path, row[aliasPath.alias]);
+        if (aliasPath.path) {
+          let data = row[aliasPath.alias];
+          let colInfo = this.context.getColumnInfoForPropertyPath(aliasPath.path);
+          if (isBufferConversionRequired(colInfo, data))
+            data = createBufferFromHex(colInfo, data as any);
+
+          result = setObjectPath(result, aliasPath.path, data);
+        }
       }
       resultArray[index] = result;
     }
