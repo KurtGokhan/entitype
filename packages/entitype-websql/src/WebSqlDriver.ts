@@ -14,7 +14,7 @@ export class WebSqlDriver implements DriverAdapter {
 
     let opt = <WebSqlConnectionOptions>options;
 
-    const connection = window.openDatabase(opt.database, opt.version || '1', opt.description, opt.size);
+    const connection = window.openDatabase(opt.database, opt.version || '1', opt.description || '', opt.size);
 
 
     let txResult = await new Promise<SQLResultSet>((resolveTx, rejectTx) => {
