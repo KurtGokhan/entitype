@@ -23,7 +23,6 @@
     "fluent"
   ],
   "dependencies": {
-    "chalk": "^2.2.0",
     "entitype": "0.0.4-alpha.1",
     "entitype-mysql": "0.0.4-alpha.2",
     "fs-extra": "^4.0.2",
