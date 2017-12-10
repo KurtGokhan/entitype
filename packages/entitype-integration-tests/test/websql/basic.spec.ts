@@ -1,9 +1,10 @@
-import 'entitype-websql';
-
 import { expect } from 'chai';
 
 import { Context } from '../mysql/config/entities/Context';
 import { seedDatabase } from './helper';
+
+import { NorthwindContext } from '../northwind/sqlite';
+import { seedNorthwindDatabase } from './helper';
 
 describe('query > one-to-one > basic', async () => {
   beforeEach(seedDatabase);
@@ -75,4 +76,18 @@ describe('query > one-to-one > basic', async () => {
     expect(model).not.to.be.equal(null);
     expect(model.child).to.be.equal(null);
   });
+});
+
+describe('query > websql > blob', async () => {
+  beforeEach(async function () {
+    this.timeout(10000);
+    await seedNorthwindDatabase();
+  });
+
+  it('should return Uint8Array for blob type', async () => {
+    let ctx = new NorthwindContext();
+    let photo = await ctx.employees.select(x => x.photo).first();
+    expect(photo).to.be.instanceof(Buffer);
+  });
+
 });
