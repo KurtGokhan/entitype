@@ -1,7 +1,7 @@
 {
   "name": "entitype",
-  "version": "0.0.4-alpha.2",
-  "description": "An orm framework for typescript that lets you fluently query the database",
+  "version": "0.0.5",
+  "description": "An ORM framework for Typescript that lets you fluently query the database with a strongly-typed API.",
   "license": "MIT",
   "readmeFilename": "README.md",
   "author": {
