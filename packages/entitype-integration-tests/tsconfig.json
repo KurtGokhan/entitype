@@ -6,7 +6,7 @@
       "es6",
       "dom"
     ],
-    "outDir": "build/compiled",
+    "outDir": "build",
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",

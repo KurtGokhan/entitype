@@ -1,7 +1,6 @@
 import * as chai from 'chai';
 import { useConfiguration } from 'entitype';
 import { WebSqlConnectionOptions, WebSqlDriver } from 'entitype-websql';
-import { createConnection } from 'mysql2/promise';
 
 chai.use(require('chai-string'));
 chai.use(require('chai-as-promised'));
