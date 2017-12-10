@@ -1,4 +1,12 @@
-import { ConditionType, JoinTreeNode, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/dist/plugins';
+import {
+  ConditionType,
+  isColumnBuffer,
+  JoinTreeNode,
+  QueryBuilder,
+  QueryBuilderAdapter,
+  QueryContext,
+} from 'entitype/dist/plugins';
+
 import { valueAsDbString } from './util';
 
 @QueryBuilder('websql')
@@ -15,7 +23,11 @@ export class WebSqlQueryBuilder implements QueryBuilderAdapter {
     else if (selectedColumns.length) {
       columnsQuery = selectedColumns
         .map(col => {
+          let columnInfo = ctx.getColumnInfoForPropertyPath(col);
+          let isBuffer = isColumnBuffer(columnInfo);
           let aliasedColumnName = ctx.getAliasedColumnForPath(col);
+          if (isBuffer) aliasedColumnName = `hex(${aliasedColumnName})`;
+
           let alias = ctx.getAliasForColumn(col);
           return `${aliasedColumnName} as ${alias}`;
         }).join(', ');

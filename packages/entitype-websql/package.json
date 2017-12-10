@@ -1,6 +1,6 @@
 {
   "name": "entitype-websql",
-  "version": "0.0.4-alpha.3",
+  "version": "0.0.9",
   "description": "Entitype WebSQL adapter",
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -29,7 +29,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^0.7.1",
     "chai-string": "^1.4.0",
-    "entitype": "^0.0.4-alpha.1",
+    "entitype": "github:entitype/entitype#develop",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "mochawesome": "^2.3.1",
