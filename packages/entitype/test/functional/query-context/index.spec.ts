@@ -143,11 +143,11 @@ describe('query-context', async () => {
 
     let ctx = new Context();
     await ctx.models
-      .where(x => x.id).gt(5).andWhere(x => x.id).lte(10)
+      .where(x => x.id).greaterThan(5).andWhere(x => x.id).lessThanOrEqual(10)
       .or
       .where(x => x.name).equals('Model 3').andWhere(x => x.other.name).not.isNull()
       .or
-      .where(x => x.id).gte(6).andWhere(x => x.id).lt(7)
+      .where(x => x.id).greaterThanOrEqual(6).andWhere(x => x.id).lessThan(7)
       .or
       .where(x => x.id).between(3, 8).andWhere(x => x.id).like('hello').andWhere(x => x.id).in([1, 2])
       .or
@@ -157,7 +157,7 @@ describe('query-context', async () => {
 
   it('should throw error when property is unknown in where statements', async () => {
     let ctx = new Context();
-    let query = () => ctx.models.where(x => x['asdf']).gt(5).count.query;
+    let query = () => ctx.models.where(x => x['asdf']).greaterThan(5).count.query;
 
     expect(query).to.throw();
   });

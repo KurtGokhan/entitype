@@ -28,19 +28,19 @@ export class WhereConditionPicker<EntityType, PropertyType> implements IFilterCo
     return this.createWhereCommand(ConditionType.Equals, ' = {0}', value);
   }
 
-  gt(value: PropertyType): IFiltered<EntityType> {
+  greaterThan(value: PropertyType): IFiltered<EntityType> {
     return this.createWhereCommand(ConditionType.GreaterThan, ' > {0}', value);
   }
 
-  gte(value: PropertyType): IFiltered<EntityType> {
+  greaterThanOrEqual(value: PropertyType): IFiltered<EntityType> {
     return this.createWhereCommand(ConditionType.GreaterThanOrEqual, ' >= {0}', value);
   }
 
-  lt(value: PropertyType): IFiltered<EntityType> {
+  lessThan(value: PropertyType): IFiltered<EntityType> {
     return this.createWhereCommand(ConditionType.LessThan, ' < {0}', value);
   }
 
-  lte(value: PropertyType): IFiltered<EntityType> {
+  lessThanOrEqual(value: PropertyType): IFiltered<EntityType> {
     return this.createWhereCommand(ConditionType.LessThanOrEqual, ' <= {0}', value);
   }
 

@@ -60,10 +60,10 @@ export interface IFilterCondition<EntityType, PropertyType> {
   readonly not: IFilterCondition<EntityType, PropertyType>;
 
   equals(value: PropertyType): IFiltered<EntityType>;
-  gt(value: PropertyType): IFiltered<EntityType>;
-  gte(value: PropertyType): IFiltered<EntityType>;
-  lt(value: PropertyType): IFiltered<EntityType>;
-  lte(value: PropertyType): IFiltered<EntityType>;
+  greaterThan(value: PropertyType): IFiltered<EntityType>;
+  greaterThanOrEqual(value: PropertyType): IFiltered<EntityType>;
+  lessThan(value: PropertyType): IFiltered<EntityType>;
+  lessThanOrEqual(value: PropertyType): IFiltered<EntityType>;
   between(minValue: PropertyType, maxValue: PropertyType): IFiltered<EntityType>;
   like(value: string): IFiltered<EntityType>;
   isNull(): IFiltered<EntityType>;
