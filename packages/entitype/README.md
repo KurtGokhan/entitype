@@ -6,7 +6,7 @@
 [![Dependencies][dependencies-badge-image]][dependencies-badge-url]
 [![Chat][chat-badge-image]][chat-badge-url]
 
-Entitype is an ORM framework that provides a strongly-typed, fluent API. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
+Entitype is an ORM framework that provides a strong-typed, fluent programming interface. You can query the database of your choice with the help of IntelliSense without having to write any SQL or any other DSL.
 
 The project is heavily influenced by other ORM frameworks like [TypeORM][typeorm-url] and [Entity Frameork][entity-framework-url]. Its API is designed to resemble Entity Framework but also to conform to TypeScript coding conventions and make IntelliSense possible.
 
@@ -51,7 +51,7 @@ Enable TypeScript experimental features in your `tsconfig.json` under `compilerO
 
 ### Defining a Model
 
-Entitype models are just classes where the class and its properties are "decorated".
+Entitype models are classes where the class and its properties are "decorated".
 
 ```typescript
 import { Column, Entity } from 'entitype';
@@ -139,7 +139,7 @@ export class EmployeePrivilege {
 }
 ```
 
-The entities to be mapped can be decorated with `ManyToMany` decorator using the mapping entity we defined. First parameter is for array type, second parameter is the mapping entity type. Third and fourth parameters are for left key and right key respectively.
+The entities to be mapped can be decorated with `ManyToMany` decorator using the mapping entity defined above. First parameter is for array type, second parameter is the mapping entity type. Third and fourth parameters are for left key and right key respectively.
 
 ```typescript
 @Entity('employees')
@@ -180,7 +180,7 @@ export class MyContext extends EntitypeContext {
 
 ### Configuring the Connection
 
-You can specify the configuration which Entitype will use to connect to database. This should be done only once in the lifecycle of your program.
+You can specify the configuration which Entitype will use to connect to database. This must be done only once in the lifecycle of your program.
 
 Also the plugin must be imported atleast once to resolve dependencies. The plugin to be used is specified with `adapter` property of the options object. Plugins are conventionally named `entitype-[pluginName]`.
 
@@ -200,7 +200,7 @@ useConfiguration(<MysqlConnectionOptions>{
 
 ### Querying API
 
-The query interface of Entitype will be available over the context class. The IntelliSense holds your hand as you write a query so it will be quite easy to get the grasp of the API.
+The query interface of Entitype will be available over the context class. The IntelliSense helps along while writing a query so the queries can be written like a native language.
 
 Firstly, create an instance of the context:
 
@@ -223,7 +223,7 @@ let name = await ctx.customers
   .first();
 ```
 
-Query methods return a Promise as result so it can be used with `await` keyword. The result can also be used with `then` if you are not able to use *async/await* feature:
+Query methods return a Promise as result so it can be used with `await` keyword. The result can also be used with `then` if you are not able to use *ES7 await* feature:
 
 ```typescript
 ctx.customers
