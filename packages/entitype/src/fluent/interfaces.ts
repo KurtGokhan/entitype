@@ -17,41 +17,22 @@ export interface ISkipable<EntityType> extends ITakeable<EntityType> {
   skip(amount: number): ISkipped<EntityType>;
 }
 
+export interface ISelectable<EntityType> extends ISkipable<EntityType> {
+  count: { (): Promise<number>; query: string; };
+  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): ISkipable<SelectType>;
+}
 
-export interface IOrderable<EntityType> extends ISkipable<EntityType> {
+export interface IOrderable<EntityType> extends ISelectable<EntityType> {
   orderByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
   orderByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
-export interface IOrdered<EntityType> extends ISkipable<EntityType> {
+export interface IOrdered<EntityType> extends ISelectable<EntityType> {
   thenByAscending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
   thenByDescending<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IOrdered<EntityType>;
 }
 
-
-export interface ISelectable<EntityType> extends IOrderable<EntityType> {
-  count: { (): Promise<number>; query: string; };
-  select<SelectType>(expression: PropertyMapExpression<EntityType, SelectType>): IOrderable<SelectType>;
-}
-
-
-export interface IGroupFilterable<EntityType> {
-  having(): IGroupFiltered<EntityType>;
-}
-
-export interface IGroupFiltered<EntityType> extends ISelectable<EntityType> {
-  readonly or: IGroupFilterable<EntityType>;
-  andHaving(): IGroupFiltered<EntityType>;
-}
-
-export interface IGrouped<EntityType> extends IGroupFilterable<EntityType>, ISelectable<EntityType> { }
-
-export interface IGroupable<EntityType> extends ISelectable<EntityType> {
-  groupBy(): IGrouped<EntityType>;
-}
-
-
-export interface IFiltered<EntityType> extends ISelectable<EntityType> {
+export interface IFiltered<EntityType> extends IOrderable<EntityType> {
   readonly or: IWhereable<EntityType>;
   andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
 }
@@ -81,7 +62,7 @@ export interface IWhereable<EntityType> {
   where<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): ITableFilterCondition<EntityType, SelectType>;
 }
 
-export interface IFilterable<EntityType> extends ISelectable<EntityType>, IWhereable<EntityType> { }
+export interface IFilterable<EntityType> extends IOrderable<EntityType>, IWhereable<EntityType> { }
 
 
 export interface IIncludable<EntityType> extends IFilterable<EntityType> {
