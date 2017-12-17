@@ -1,23 +1,12 @@
 {
   "version": "2.1.1",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "lib": [
       "es5",
       "es6",
       "dom"
     ],
-    "outDir": "dist",
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "declaration": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "stripInternal": true,
-    "pretty": true,
     "baseUrl": "./",
     "paths": {
       "entitype": [
@@ -27,13 +16,5 @@
         "../entitype/*"
       ]
     }
-  },
-  "exclude": [
-    "test",
-    "tmp",
-    "temp",
-    "build",
-    "dist",
-    "node_modules"
-  ]
+  }
 }

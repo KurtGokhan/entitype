@@ -1,5 +1,6 @@
 {
   "version": "2.1.1",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "lib": [
       "es5",
@@ -7,16 +8,6 @@
       "dom"
     ],
     "outDir": "build",
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "declaration": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "stripInternal": true,
-    "pretty": true,
     "baseUrl": "./",
     "paths": {
       "entitype": [
