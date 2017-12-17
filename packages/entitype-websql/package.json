@@ -1,6 +1,6 @@
 {
   "name": "entitype-websql",
-  "version": "0.0.9",
+  "version": "0.0.13",
   "description": "Entitype WebSQL adapter",
   "license": "MIT",
   "readmeFilename": "README.md",

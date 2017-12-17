@@ -1,7 +1,7 @@
 {
   "name": "integration-tests",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.13",
   "description": "Entitype integration tests",
   "license": "MIT",
   "readmeFilename": "README.md",
