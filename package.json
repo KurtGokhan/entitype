@@ -1,5 +1,15 @@
 {
+	"name": "entitype-monorepo",
+	"private": true,
 	"devDependencies": {
-		"lerna": "^2.5.1"
+		"lerna": "^2.5.1",
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.2"
+	},
+	"scripts": {
+		"bootstrap": "lerna bootstrap --hoist",
+		"test": "lerna run test",
+		"lint": "tslint --project tsconfig.json -c tslint.json",
+		"cover": "lerna run cover"
 	}
 }

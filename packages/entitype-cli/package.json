@@ -23,8 +23,8 @@
     "fluent"
   ],
   "dependencies": {
-    "entitype": "0.0.4-alpha.1",
-    "entitype-mysql": "0.0.4-alpha.2",
+    "entitype": "*",
+    "entitype-mysql": "*",
     "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
     "inversify": "^4.5.1",

@@ -5,7 +5,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.json', '.tsx', '.jsx'],
     modules: [
-      path.dirname(__dirname),
+      path.dirname(__dirname), // Search entitype packages in the parent directory
       `${__dirname}/node_modules`
     ]
   },

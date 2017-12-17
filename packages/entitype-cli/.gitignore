@@ -1,12 +1,1 @@
-.idea/
-
-node_modules/
-
-temp/
-tmp/
-dist/
-build/
-
-package-lock.json
 config
-output/
