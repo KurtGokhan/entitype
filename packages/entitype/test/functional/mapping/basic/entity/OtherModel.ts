@@ -9,7 +9,7 @@ export class OtherModel {
   @Column()
   name: string;
 
-  @OneToOne((() => OtherModel), x => x.parent_id)
+  @OneToOne(() => OtherModel, x => x.parent_id)
   parent: Model;
 
   @Column()

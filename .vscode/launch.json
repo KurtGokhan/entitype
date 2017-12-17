@@ -6,7 +6,7 @@
     "protocol": "inspector",
     "name": "Run Tests",
     "sourceMaps": true,
-    "cwd": "${workspaceRoot}",
+    "cwd": "${workspaceRoot}/packages/entitype",
     "console": "integratedTerminal",
     "internalConsoleOptions": "neverOpen",
     "runtimeExecutable": "npm",

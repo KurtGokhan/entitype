@@ -11,6 +11,7 @@
 		"build": "lerna run build",
 		"test": "lerna run test",
 		"lint": "tslint --project tsconfig.json -c tslint.json",
-		"cover": "lerna run cover"
+    "cover": "lerna run cover",
+    "update": "lerna exec -- ncu -a -u"
 	}
 }

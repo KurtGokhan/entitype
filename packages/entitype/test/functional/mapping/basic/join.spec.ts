@@ -4,7 +4,7 @@ import { mockDriverToReturnDataWithoutAlias } from 'test/mock';
 
 import { Context } from './entity/Context';
 
-describe('mapping > join', async () => {
+describe.only('mapping > join', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 
