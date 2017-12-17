@@ -4,7 +4,6 @@ node_js:
   - "8"
 install:
   - npm install
-postinstall:
   - npm run bootstrap
 script:
   - npm run lint
