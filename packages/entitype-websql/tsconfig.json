@@ -2,6 +2,7 @@
   "version": "2.1.1",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "outDir": "dist",
     "lib": [
       "es5",
       "es6",
@@ -16,5 +17,14 @@
         "../entitype/*"
       ]
     }
-  }
+  },
+  "exclude": [
+    "test",
+    "tmp",
+    "temp",
+    "build",
+    "dist",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }

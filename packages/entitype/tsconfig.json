@@ -2,6 +2,16 @@
   "version": "2.1.1",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./"
-  }
+    "baseUrl": "./",
+    "outDir": "dist"
+  },
+  "exclude": [
+    "test",
+    "tmp",
+    "temp",
+    "build",
+    "dist",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
 }
