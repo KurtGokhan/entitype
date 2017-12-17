@@ -241,7 +241,7 @@ export class QueryContext {
     for (let index = 0; index < path.length; index++) {
       let prop = path[index];
 
-      if (!entity) throw new UnknownPropertyError(prop);
+      if (!entity) throw new UnknownPropertyError(path[index - 1]);
 
       col = entity.properties.find(x => x.name === prop);
 

@@ -6,7 +6,8 @@ module.exports = {
     extensions: ['.ts', '.js', '.json', '.tsx', '.jsx'],
     modules: [
       path.dirname(__dirname), // Search entitype packages in the parent directory
-      `${__dirname}/node_modules`
+      `${__dirname}/node_modules`,
+      path.resolve(__dirname, '..', '..', 'node_modules') // Lerna hoisting
     ]
   },
   module: {
