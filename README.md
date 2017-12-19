@@ -296,8 +296,8 @@ More examples can be found in the [integration test repository][entitype-integra
 [chat-badge-url]: https://gitter.im/entitype/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 [entitype-url]: https://github.com/entitype/entitype
-[entitype-cli-url]: https://github.com/entitype/entitype-cli
-[entitype-integration-tests-url]: https://github.com/entitype/entitype-integration-tests
+[entitype-cli-url]: https://github.com/entitype/entitype/tree/master/packages/entitype-cli
+[entitype-integration-tests-url]: https://github.com/entitype/entitype/tree/master/packages/entitype-integration-tests
 [typeorm-url]: https://github.com/typeorm/typeorm
 [entity-framework-url]: https://github.com/aspnet/EntityFramework6
-[entitype-plugins-url]: https://github.com/topics/entitype-plugin
+[entitype-plugins-url]: https://www.npmjs.com/search?q=entitype
