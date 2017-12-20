@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { DefaultNamingStrategy } from 'src/naming/DefaultNamingStrategy';
+import { DefaultNamingStrategy } from '../../src/naming/DefaultNamingStrategy';
 
 describe('Default Naming Strategy', () => {
   let ns = new DefaultNamingStrategy();

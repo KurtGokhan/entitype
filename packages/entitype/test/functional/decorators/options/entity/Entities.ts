@@ -1,4 +1,4 @@
-import { Entity } from 'src';
+import { Entity } from 'entitype/src';
 
 @Entity()
 export class ImplicitlyNamedModel {

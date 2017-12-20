@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { container } from 'src/ioc';
-import * as uc from 'test/config/university-context';
-import { mockDriverToReturnDataWithoutAlias } from 'test/mock';
+import { container } from 'entitype/src/ioc';
+import * as uc from 'entitype/test/config/university-context';
+import { mockDriverToReturnDataWithoutAlias } from 'entitype/test/mock';
 
 describe('mapping > one-to-many', async () => {
   beforeEach(() => container.snapshot());

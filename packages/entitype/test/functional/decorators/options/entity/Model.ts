@@ -1,4 +1,4 @@
-import { Column } from 'src';
+import { Column } from 'entitype/src';
 
 export class Model {
   @Column()

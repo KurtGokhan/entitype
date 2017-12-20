@@ -1,8 +1,7 @@
 import { expect } from 'chai';
+import { NoopNamingStrategy } from '../../src/naming/NoopNamingStrategy';
 
-import { NoopNamingStrategy } from 'src/naming/NoopNamingStrategy';
-
-describe('Default Naming Strategy', () => {
+describe('Noop Naming Strategy', () => {
   let ns = new NoopNamingStrategy();
   let inputs = [
     'hello_world',

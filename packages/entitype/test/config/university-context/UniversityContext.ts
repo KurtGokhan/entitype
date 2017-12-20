@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'src';
+import { DbCollection, EntitypeContext, IQueryable } from 'entitype/src';
 import { Course } from './Course';
 import { Instructor } from './Instructor';
 import { Student } from './Student';

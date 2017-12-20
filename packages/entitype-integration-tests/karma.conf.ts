@@ -24,7 +24,7 @@ module.exports = function (config) {
     browsers: ['ChromeHeadless'],
     singleRun: false,
     files: [
-      'test/websql/**/*.spec.ts'
+      'test/websql/index.spec.ts'
     ],
 
     webpack: webpackConfig,

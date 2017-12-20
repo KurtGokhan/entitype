@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { container } from 'src/ioc';
-import { ConditionType } from 'src/plugins';
-import * as uc from 'test/config/university-context';
-import { mockDriverToReturnData } from 'test/mock';
+import { container } from 'entitype/src/ioc';
+import { ConditionType } from 'entitype/src/plugins';
+import * as uc from 'entitype/test/config/university-context';
+import { mockDriverToReturnData } from 'entitype/test/mock';
 
 import { Context } from './entity/Context';
 

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { ConnectionOptions, useConfiguration } from 'src';
-import { container, DI_TYPES } from 'src/plugins';
+import { ConnectionOptions, useConfiguration } from 'entitype/src';
+import { container, DI_TYPES } from 'entitype/src/plugins';
 
 describe('ioc > Driver', async () => {
   beforeEach(() => container.snapshot());

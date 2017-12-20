@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { multilineRegExp } from 'test/helper';
+import { multilineRegExp } from 'entitype-mysql/test/helper';
 
 import { Context } from './entity/Context';
 

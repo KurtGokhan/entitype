@@ -1,10 +1,8 @@
-import * as chai from 'chai';
 import { useConfiguration } from 'entitype';
 import { MysqlConnectionOptions } from 'entitype-mysql';
 import { createConnection } from 'mysql2/promise';
 
-chai.use(require('chai-string'));
-chai.use(require('chai-as-promised'));
+import '../../../test/helper';
 
 export let connectionOptions: MysqlConnectionOptions = {} as any;
 

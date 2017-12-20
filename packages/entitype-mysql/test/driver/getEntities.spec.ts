@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { MysqlDriver } from 'src';
 
-import { ColumnMetadata, ForeignKeyMetadata } from '../../src';
+import { ColumnMetadata, ForeignKeyMetadata, MysqlDriver } from '../../src';
 
 describe('driver > runQuery', async () => {
   let mock;

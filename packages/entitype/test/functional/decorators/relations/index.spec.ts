@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from 'src/common/DecoratorStorage';
-import * as university from 'test/config/university-context';
+import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
+import * as university from 'entitype/test/config/university-context';
 
 
 describe('decorators > relations', async () => {

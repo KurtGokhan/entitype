@@ -1,4 +1,4 @@
-import { Column, OneToOne } from 'src';
+import { Column, OneToOne } from 'entitype/src';
 import { Model } from './Model';
 
 export class ChildModel {

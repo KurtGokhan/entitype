@@ -1,13 +1,12 @@
-import 'entitype-websql';
 
-import * as chai from 'chai';
+import '../../../../test/helper';
+
 import { useConfiguration } from 'entitype';
 import { WebSqlConnectionOptions, WebSqlDriver } from 'entitype-websql';
 
 import nwSeed from '../northwind/seed-sqlite-partial';
 
-chai.use(require('chai-string'));
-chai.use(require('chai-as-promised'));
+let seed = require('../mysql/config/seed-sqlite.sql');
 
 export let connectionOptions: WebSqlConnectionOptions = {
   adapter: 'websql',
@@ -17,8 +16,6 @@ export let connectionOptions: WebSqlConnectionOptions = {
 } as any;
 
 useConfiguration(connectionOptions as any);
-
-let seed = require('../mysql/config/seed-sqlite.sql');
 
 export async function runSeed(seed: string) {
   let driver = new WebSqlDriver();

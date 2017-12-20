@@ -10,7 +10,7 @@ A config file `test/config.json` can be created like following.
 
 {
   "$schema": "../node_modules/entitype-mysql/schema.json",
-  "adapter": "mysql2",
+  "adapter": "mysql",
   "host": "localhost",
   "port": 3306,
   "database": "test",

@@ -1,7 +1,0 @@
-**/*.spec.ts
---recursive
--r ts-node/register
--r tsconfig-paths/register
--r ./test/helper.ts
---reporter mochawesome
---reporter-options inlineAssets=true,reportDir=tmp/mochawesome

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from 'src/common/DecoratorStorage';
-import { ColumnOptions } from 'src/decorators';
+import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
+import { ColumnOptions } from 'entitype/src/decorators';
 
 import { Model } from './entity/Model';
 

@@ -3,7 +3,8 @@
     "compilerOptions": {
       "lib": [
         "es5",
-        "es6"
+        "es6",
+        "dom"
       ],
       "target": "es5",
       "module": "commonjs",
@@ -15,7 +16,8 @@
       "noFallthroughCasesInSwitch": true,
       "noImplicitReturns": true,
       "stripInternal": true,
-      "pretty": true
+      "pretty": true,
+      "baseUrl": "./packages"
     },
     "exclude": [
       "test",
