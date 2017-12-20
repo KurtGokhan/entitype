@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { getObjectPath, setObjectPath } from 'entitype/src/common/util';
 
-describe('util > setObjectPath', async () => {
+describe('entitype > util > setObjectPath', async () => {
   it('should be able to set existing path', async () => {
     let root = { a: { b: {} } };
 
@@ -36,7 +36,7 @@ describe('util > setObjectPath', async () => {
 });
 
 
-describe('util > getObjectPath', async () => {
+describe('entitype > util > getObjectPath', async () => {
   it('should be able to get existing path', async () => {
     let root = { a: { b: { c: 42 } } };
 

@@ -6,7 +6,7 @@ import { seedDatabase } from './helper';
 import { NorthwindContext } from '../northwind/sqlite';
 import { seedNorthwindDatabase } from './helper';
 
-describe('query > one-to-one > basic', async () => {
+describe('entitype-integration-tests > query > one-to-one > basic', async () => {
   beforeEach(seedDatabase);
 
   it('should be able to select owning side property from owning side', async () => {
@@ -78,7 +78,7 @@ describe('query > one-to-one > basic', async () => {
   });
 });
 
-describe('query > websql > blob', async () => {
+describe('entitype-integration-tests > query > websql > blob', async () => {
   beforeEach(async function () {
     this.timeout(10000);
     await seedNorthwindDatabase();

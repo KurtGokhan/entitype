@@ -17,6 +17,7 @@
 		"bootstrap": "lerna bootstrap --hoist",
 		"build": "lerna run build",
 		"test": "nyc mocha",
+		"test:all": "npm run test & npm run test:integration",
 		"test:debug": "mocha --inspect=25650 --inspect-brk",
 		"test:integration": "cd packages/entitype-integration-tests && npm run test",
 		"lint": "tslint --project tsconfig.json -c tslint.json",

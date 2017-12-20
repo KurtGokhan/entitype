@@ -3,7 +3,7 @@ import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
 import * as university from 'entitype/test/config/university-context';
 
 
-describe('decorators > relations', async () => {
+describe('entitype > decorators > relations', async () => {
   it('should create and store many-to-many columns', () => {
     let student = DecoratorStorage.getEntity(university.Student);
     let course = DecoratorStorage.getEntity(university.Course);

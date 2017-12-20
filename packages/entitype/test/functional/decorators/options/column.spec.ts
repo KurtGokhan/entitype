@@ -15,7 +15,7 @@ function checkPropertyOptionValue(propName: (keyof Model), optionName: (keyof Co
 }
 
 
-describe('decorators > column options', async () => {
+describe('entitype > decorators > column options', async () => {
   it('should correctly set nullable options', () => {
     checkPropertyOptionValue('nullable', 'nullable', true);
     checkPropertyOptionValue('nullable_imply', 'nullable', true);

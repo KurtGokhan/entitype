@@ -3,7 +3,7 @@ import { ConnectionOptions, useConfiguration } from 'entitype/src';
 import { container } from 'entitype/src/plugins';
 import { EntitypeContext } from 'entitype/src/query/EntitypeContext';
 
-describe('ioc > Context', async () => {
+describe('entitype > ioc > Context', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > basic', async () => {
+describe('entitype-mysql > query > basic', async () => {
 
   it('should be able to select all', async () => {
     let ctx = new Context();

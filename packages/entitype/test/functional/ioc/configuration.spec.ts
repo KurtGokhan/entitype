@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ConnectionOptions, useConfiguration } from 'entitype/src';
 import { container, DI_TYPES } from 'entitype/src/plugins';
 
-describe('ioc > Driver', async () => {
+describe('entitype > ioc > Driver', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

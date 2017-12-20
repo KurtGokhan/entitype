@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Context } from '../config/entities/Context';
 import { integrationTestDatabaseSeed } from '../integration-helper';
 
-describe('query > one-to-one > basic', async () => {
+describe('entitype-integration-tests > query > one-to-one > basic', async () => {
   beforeEach(integrationTestDatabaseSeed);
 
   it('should be able to select owning side property from owning side', async () => {

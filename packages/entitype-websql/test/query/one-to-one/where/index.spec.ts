@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > one-to-one > where', async () => {
+describe('entitype-websql > query > one-to-one > where', async () => {
 
   it('should be able to filter from owned side', async () => {
     let ctx = new Context();

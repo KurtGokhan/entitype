@@ -3,7 +3,7 @@ import { multilineRegExp } from 'entitype-mysql/test/helper';
 
 import { Context } from './entity/Context';
 
-describe('query > where > combine', async () => {
+describe('entitype-mysql > entitype > query > where > combine', async () => {
   it('should be able to combine multiple conditions with and', async () => {
     let ctx = new Context();
     let listNode = ctx.models

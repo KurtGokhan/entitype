@@ -2,7 +2,7 @@ import { expect, spy } from 'chai';
 import * as sinon from 'sinon';
 import { MysqlDriver } from '../../src';
 
-describe('driver > runQuery', async () => {
+describe('entitype-mysql > driver > runQuery', async () => {
   let mock;
 
   afterEach(() => mock.restore());

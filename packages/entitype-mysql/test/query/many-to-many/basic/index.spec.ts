@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { multilineRegExp } from 'entitype-mysql/test/helper';
 import { Context } from './entity/Context';
 
-describe('query > many-to-many > basic', async () => {
+describe('entitype-mysql > entitype > query > many-to-many > basic', async () => {
 
   it('should be able to select basic', async () => {
     let ctx = new Context();

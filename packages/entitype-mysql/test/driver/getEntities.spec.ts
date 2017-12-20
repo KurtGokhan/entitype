@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 
 import { ColumnMetadata, ForeignKeyMetadata, MysqlDriver } from '../../src';
 
-describe('driver > runQuery', async () => {
+describe('entitype-mysql > driver > runQuery', async () => {
   let mock;
 
   afterEach(() => mock.restore());

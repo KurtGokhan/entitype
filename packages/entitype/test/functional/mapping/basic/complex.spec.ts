@@ -3,7 +3,7 @@ import { container } from 'entitype/src/ioc';
 import { mockDriverToReturnData } from 'entitype/test/mock';
 import { Context } from './entity/Context';
 
-describe('mapping > complex', async () => {
+describe('entitype > mapping > complex', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

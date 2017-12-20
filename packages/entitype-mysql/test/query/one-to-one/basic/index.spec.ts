@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > one-to-one > basic', async () => {
+describe('entitype-mysql > query > one-to-one > basic', async () => {
 
   it('should be able to select from owning side', async () => {
     let ctx = new Context();

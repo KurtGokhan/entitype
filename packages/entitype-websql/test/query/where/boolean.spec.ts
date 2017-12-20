@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > where > boolean', async () => {
+describe('entitype-websql > query > where > boolean', async () => {
   it('should be able to filter by true boolean columns', async () => {
     let ctx = new Context();
     let listNode = ctx.models

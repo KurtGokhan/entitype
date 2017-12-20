@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > one-to-one > two-sided', async () => {
+describe('entitype-mysql > query > one-to-one > two-sided', async () => {
 
   it('should be able to select from owner side', async () => {
     let ctx = new Context();

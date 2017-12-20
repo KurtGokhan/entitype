@@ -4,7 +4,7 @@ import { mockDriverToReturnDataWithoutAlias } from 'entitype/test/mock';
 
 import { Context } from './entity/Context';
 
-describe('mapping > basic', async () => {
+describe('entitype > mapping > basic', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

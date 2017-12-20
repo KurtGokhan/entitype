@@ -3,7 +3,7 @@ import { integrationTestDatabaseSeed } from '../../northwind/helper';
 
 import * as nw from '../../northwind/models';
 
-describe('query > many-to-many > basic', async () => {
+describe('entitype-integration-tests > query > many-to-many > basic', async () => {
   beforeEach(integrationTestDatabaseSeed);
 
   it('should be able to select all of right model from left side', async () => {

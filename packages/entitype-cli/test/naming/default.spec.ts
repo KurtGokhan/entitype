@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { DefaultNamingStrategy } from '../../src/naming/DefaultNamingStrategy';
 
-describe('Default Naming Strategy', () => {
+describe('entitype-cli > Default Naming Strategy', () => {
   let ns = new DefaultNamingStrategy();
 
-  describe('tableNameToEntityName', () => {
+  describe('entitype-cli > tableNameToEntityName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.tableNameToEntityName.bind(ns);
       expect(test('hello_world')).to.eql('HelloWorld');
@@ -17,7 +17,7 @@ describe('Default Naming Strategy', () => {
     });
   });
 
-  describe('mappingTableNameToEntityName', () => {
+  describe('entitype-cli > mappingTableNameToEntityName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.mappingTableNameToEntityName.bind(ns);
       expect(test('hello_world')).to.eql('HelloWorld');
@@ -31,7 +31,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('tableNameToEntityFileName', () => {
+  describe('entitype-cli > tableNameToEntityFileName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.tableNameToEntityFileName.bind(ns);
       expect(test('hello_world')).to.eql('hello-world');
@@ -46,7 +46,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('tableNameToContextPropertyName', () => {
+  describe('entitype-cli > tableNameToContextPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.tableNameToContextPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorlds');
@@ -61,7 +61,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('columnNameToPropertyName', () => {
+  describe('entitype-cli > columnNameToPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.columnNameToPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorld');
@@ -76,7 +76,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('databaseNameToContextFileName', () => {
+  describe('entitype-cli > databaseNameToContextFileName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.databaseNameToContextFileName.bind(ns);
       expect(test('hello_world')).to.eql('hello-world-context');
@@ -91,7 +91,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('databaseNameToContextName', () => {
+  describe('entitype-cli > databaseNameToContextName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.databaseNameToContextName.bind(ns);
       expect(test('hello_world')).to.eql('HelloWorldContext');
@@ -104,7 +104,7 @@ describe('Default Naming Strategy', () => {
     });
   });
 
-  describe('manyToManyNavigationPropertyName', () => {
+  describe('entitype-cli > manyToManyNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.manyToManyNavigationPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorlds');
@@ -121,7 +121,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('oneToManyNavigationPropertyName', () => {
+  describe('entitype-cli > oneToManyNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.oneToManyNavigationPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorlds');
@@ -138,7 +138,7 @@ describe('Default Naming Strategy', () => {
   });
 
 
-  describe('oneToOneNavigationPropertyName', () => {
+  describe('entitype-cli > oneToOneNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.oneToOneNavigationPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorldReference');
@@ -156,7 +156,7 @@ describe('Default Naming Strategy', () => {
 
 
 
-  describe('manyToOneNavigationPropertyName', () => {
+  describe('entitype-cli > manyToOneNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.manyToOneNavigationPropertyName.bind(ns);
       expect(test('hello_world')).to.eql('helloWorldReference');

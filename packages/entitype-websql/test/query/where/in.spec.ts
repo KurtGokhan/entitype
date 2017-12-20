@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > where > in', async () => {
+describe('entitype-websql > query > where > in', async () => {
   it('should be able to filter selection', async () => {
     let ctx = new Context();
     let listNode = ctx.models

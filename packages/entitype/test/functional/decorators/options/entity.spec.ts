@@ -23,7 +23,7 @@ function checkEntityPropertyValue<EntityType>(entityType: ObjectType<EntityType>
 }
 
 
-describe('decorators > entity options', async () => {
+describe('entitype > decorators > entity options', async () => {
   it('should correctly set name options', () => {
     checkEntityOptionValue(ImplicitlyNamedModel, 'tableName', 'ImplicitlyNamedModel');
     checkEntityOptionValue(NamedModel, 'tableName', 'TableName');

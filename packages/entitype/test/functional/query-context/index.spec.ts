@@ -6,7 +6,7 @@ import { mockDriverToReturnData } from 'entitype/test/mock';
 
 import { Context } from './entity/Context';
 
-describe('query-context', async () => {
+describe('entitype > query-context', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

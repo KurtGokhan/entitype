@@ -3,7 +3,7 @@ import { ConnectionOptions } from 'entitype/src';
 import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
 import { container, DI_TYPES, Driver, DriverAdapter, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/src/plugins';
 
-describe('ioc > plugin', async () => {
+describe('entitype > ioc > plugin', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

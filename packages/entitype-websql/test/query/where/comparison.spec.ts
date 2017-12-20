@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > where > comparison', async () => {
+describe('entitype-websql > query > where > comparison', async () => {
     it('should be able to filter with lessThan', async () => {
         let ctx = new Context();
         let listNode = ctx.models

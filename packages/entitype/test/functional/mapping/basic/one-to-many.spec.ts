@@ -3,7 +3,7 @@ import { container } from 'entitype/src/ioc';
 import * as uc from 'entitype/test/config/university-context';
 import { mockDriverToReturnDataWithoutAlias } from 'entitype/test/mock';
 
-describe('mapping > one-to-many', async () => {
+describe('entitype > mapping > one-to-many', async () => {
   beforeEach(() => container.snapshot());
   afterEach(() => container.restore());
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
-describe('query > escape', async () => {
+describe('entitype-mysql > query > escape', async () => {
 
   it('should escape filter parameters', async () => {
     let ctx = new Context();

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { NoopNamingStrategy } from '../../src/naming/NoopNamingStrategy';
 
-describe('Noop Naming Strategy', () => {
+describe('entitype-cli > Noop Naming Strategy', () => {
   let ns = new NoopNamingStrategy();
   let inputs = [
     'hello_world',
@@ -13,7 +13,7 @@ describe('Noop Naming Strategy', () => {
     'is.togetherForever'
   ];
 
-  describe('tableNameToEntityName', () => {
+  describe('entitype-cli > tableNameToEntityName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.mappingTableNameToEntityName.bind(ns);
       let result = inputs.map(test);
@@ -21,7 +21,7 @@ describe('Noop Naming Strategy', () => {
     });
   });
 
-  describe('mappingTableNameToEntityName', () => {
+  describe('entitype-cli > mappingTableNameToEntityName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.mappingTableNameToEntityName.bind(ns);
       let result = inputs.map(test);
@@ -30,7 +30,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('tableNameToEntityFileName', () => {
+  describe('entitype-cli > tableNameToEntityFileName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.tableNameToEntityFileName.bind(ns);
       let result = inputs.map(test);
@@ -39,7 +39,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('tableNameToContextPropertyName', () => {
+  describe('entitype-cli > tableNameToContextPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.tableNameToContextPropertyName.bind(ns);
       let result = inputs.map(test);
@@ -48,7 +48,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('columnNameToPropertyName', () => {
+  describe('entitype-cli > columnNameToPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.columnNameToPropertyName.bind(ns);
       let result = inputs.map(test);
@@ -57,7 +57,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('databaseNameToContextFileName', () => {
+  describe('entitype-cli > databaseNameToContextFileName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.databaseNameToContextFileName.bind(ns);
       let result = inputs.map(test);
@@ -66,7 +66,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('databaseNameToContextName', () => {
+  describe('entitype-cli > databaseNameToContextName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.databaseNameToContextName.bind(ns);
       let result = inputs.map(test);
@@ -74,7 +74,7 @@ describe('Noop Naming Strategy', () => {
     });
   });
 
-  describe('manyToManyNavigationPropertyName', () => {
+  describe('entitype-cli > manyToManyNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.manyToManyNavigationPropertyName.bind(ns);
       let result = inputs.map(test);
@@ -83,7 +83,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('oneToManyNavigationPropertyName', () => {
+  describe('entitype-cli > oneToManyNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.oneToManyNavigationPropertyName.bind(ns);
       let result = inputs.map(test);
@@ -92,7 +92,7 @@ describe('Noop Naming Strategy', () => {
   });
 
 
-  describe('oneToOneNavigationPropertyName', () => {
+  describe('entitype-cli > oneToOneNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.oneToOneNavigationPropertyName.bind(ns);
       let result = inputs.map(test);
@@ -102,7 +102,7 @@ describe('Noop Naming Strategy', () => {
 
 
 
-  describe('manyToOneNavigationPropertyName', () => {
+  describe('entitype-cli > manyToOneNavigationPropertyName', () => {
     it('should work', () => {
       let test: (value: string) => string = ns.manyToOneNavigationPropertyName.bind(ns);
       let result = inputs.map(test);

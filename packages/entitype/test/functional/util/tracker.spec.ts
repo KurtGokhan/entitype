@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Tracker } from 'entitype/src/query/Tracker';
 import * as university from 'entitype/test/config/university-context';
 
-describe('util > tracker', async () => {
+describe('entitype > util > tracker', async () => {
   it('should be able to track deep objects', async () => {
     let tracker = new Tracker();
 

@@ -85,7 +85,7 @@ export function assertEntities() {
   expect(othermodel.type).to.be.equal(OtherModel);
 }
 
-describe('decorators > basic', async () => {
+describe('entitype > decorators > basic', async () => {
 
   it('should create and store entities', assertEntities);
 
