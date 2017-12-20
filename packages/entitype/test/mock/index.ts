@@ -1,4 +1,4 @@
-import { ConnectionOptions, useConfiguration } from 'entitype/src';
+import { ConnectionOptions, useConfiguration } from '../../src';
 import { setObjectPath } from '../../src/common/util';
 import { PropertyPath } from '../../src/fluent';
 import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter, QueryContext, RowData } from '../../src/plugins';

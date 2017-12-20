@@ -8,15 +8,7 @@
       "es6",
       "dom"
     ],
-    "baseUrl": "./",
-    "paths": {
-      "entitype": [
-        "../entitype"
-      ],
-      "entitype/*": [
-        "../entitype/*"
-      ]
-    }
+    "baseUrl": "./"
   },
   "exclude": [
     "test",

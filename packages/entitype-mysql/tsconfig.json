@@ -3,15 +3,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "dist",
-    "paths": {
-      "entitype": [
-        "../entitype"
-      ],
-      "entitype/*": [
-        "../entitype/*"
-      ]
-    }
+    "outDir": "dist"
   },
   "exclude": [
     "test",

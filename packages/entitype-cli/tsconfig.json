@@ -3,21 +3,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "dist",
-    "paths": {
-      "entitype": [
-        "../entitype"
-      ],
-      "entitype/*": [
-        "../entitype/*"
-      ],
-      "entitype-mysql": [
-        "../entitype-mysql"
-      ],
-      "entitype-mysql/*": [
-        "../entitype-mysql/*"
-      ]
-    }
+    "outDir": "dist"
   },
   "exclude": [
     "test",
@@ -27,5 +13,8 @@
     "dist",
     "node_modules",
     "**/*.spec.ts"
+  ],
+  "include": [
+    "src/*"
   ]
 }

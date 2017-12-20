@@ -20,12 +20,12 @@
       "baseUrl": "./packages"
     },
     "exclude": [
-      "test",
-      "tmp",
-      "temp",
-      "build",
-      "dist",
-      "node_modules",
+      "**/test",
+      "**/tmp",
+      "**/temp",
+      "**/build",
+      "**/dist",
+      "**/node_modules",
       "**/*.spec.ts"
     ]
   }
