@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToOne } from 'entitype/src';
+import { Column, Entity, ManyToMany, OneToOne } from '../../../src';
 import { Course } from './Course';
 import { Profile } from './Profile';
 import { StudentCourseMap } from './StudentCourseMap';

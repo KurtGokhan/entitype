@@ -1,8 +1,7 @@
 import { ConnectionOptions, useConfiguration } from 'entitype/src';
-import { setObjectPath } from 'entitype/src/common/util';
-import { PropertyPath } from 'entitype/src/fluent';
-import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter } from 'entitype/src/ioc';
-import { QueryContext, RowData } from 'entitype/src/plugins';
+import { setObjectPath } from '../../src/common/util';
+import { PropertyPath } from '../../src/fluent';
+import { container, DI_TYPES, DriverAdapter, QueryBuilderAdapter, QueryContext, RowData } from '../../src/plugins';
 
 export function mockDriverToReturnData(data: RowData[], builderCallback?: (ctx: QueryContext) => void) {
   let mockConfig: ConnectionOptions = { adapter: 'mock' };

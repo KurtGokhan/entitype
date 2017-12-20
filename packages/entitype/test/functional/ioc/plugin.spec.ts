@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { ConnectionOptions } from 'entitype/src';
-import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
-import { container, DI_TYPES, Driver, DriverAdapter, QueryBuilder, QueryBuilderAdapter, QueryContext } from 'entitype/src/plugins';
+import { ConnectionOptions } from '../../../src';
+import { DecoratorStorage } from '../../../src/common/DecoratorStorage';
+import { container, DI_TYPES, Driver, DriverAdapter, QueryBuilder, QueryBuilderAdapter, QueryContext } from '../../../src/plugins';
 
 describe('entitype > ioc > plugin', async () => {
   beforeEach(() => container.snapshot());

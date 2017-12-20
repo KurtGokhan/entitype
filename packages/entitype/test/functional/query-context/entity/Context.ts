@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype/src';
+import { DbCollection, EntitypeContext, IQueryable } from '../../../../src';
 
 import { ChildModel } from './ChildModel';
 import { Model } from './Model';

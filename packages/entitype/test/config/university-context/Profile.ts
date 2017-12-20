@@ -1,4 +1,4 @@
-import { Column, Entity } from 'entitype/src';
+import { Column, Entity } from '../../../src';
 
 @Entity()
 export class Profile {

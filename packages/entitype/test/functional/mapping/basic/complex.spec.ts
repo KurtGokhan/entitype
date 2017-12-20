@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { container } from 'entitype/src/ioc';
-import { mockDriverToReturnData } from 'entitype/test/mock';
+import { container } from '../../../../src/ioc';
+import { mockDriverToReturnData } from '../../../mock';
 import { Context } from './entity/Context';
 
 describe('entitype > mapping > complex', async () => {

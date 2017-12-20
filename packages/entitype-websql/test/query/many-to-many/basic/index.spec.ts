@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { multilineRegExp } from 'entitype-websql/test/helper';
+import { multilineRegExp } from '../../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-websql > entitype > query > many-to-many > basic', async () => {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from 'entitype/src/common/DecoratorStorage';
-import { EntityOptions } from 'entitype/src/decorators';
-import { ObjectType } from 'entitype/src/fluent';
+import { DecoratorStorage } from '../../../../src/common/DecoratorStorage';
+import { EntityOptions } from '../../../../src/decorators';
+import { ObjectType } from '../../../../src/fluent';
 
 import { ImplicitlyNamedModel, NamedModel, NamedModelOpts, NamedModelParams } from './entity/Entities';
 

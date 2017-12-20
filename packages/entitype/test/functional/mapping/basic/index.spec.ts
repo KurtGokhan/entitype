@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { container } from 'entitype/src/ioc';
-import { mockDriverToReturnDataWithoutAlias } from 'entitype/test/mock';
+import { container } from '../../../../src/ioc';
+import { mockDriverToReturnDataWithoutAlias } from '../../../../test/mock';
 
 import { Context } from './entity/Context';
 
