@@ -1,5 +1,7 @@
 import { expect } from 'chai';
-import { ConnectionOptions, useConfiguration } from '../../../src';
+import * as sinon from 'sinon';
+
+import { Column, ConnectionOptions, DbCollection, Entity, IQueryable, useConfiguration } from '../../../src';
 import { container } from '../../../src/plugins';
 import { EntitypeContext } from '../../../src/query/EntitypeContext';
 
@@ -21,7 +23,16 @@ describe('entitype > ioc > Context', async () => {
 
   let configName = 'test-config-name';
 
-  class TestContext extends EntitypeContext { }
+  @Entity()
+  class TestEntity {
+    @Column()
+    id: number;
+  }
+
+  class TestContext extends EntitypeContext {
+    @DbCollection(TestEntity)
+    entities: IQueryable<TestEntity>;
+  }
 
 
   it('should be retrieve default config for context', async () => {
@@ -54,4 +65,10 @@ describe('entitype > ioc > Context', async () => {
     expect(ctx.connectionOptions).to.be.equal(otherConfig);
   });
 
+  it('should throw exception if plugin does not exist', () => {
+    let adapterName = 'test-load';
+
+    let ctx = new TestContext({ adapter: adapterName });
+    expect(ctx.entities.toList).to.throw(/test-load/);
+  });
 });

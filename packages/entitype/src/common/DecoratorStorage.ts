@@ -159,10 +159,7 @@ export namespace DecoratorStorage {
   }
 
 
-  export function getEntity(type: Function | Entity): Entity {
-    if (typeof type === 'object')
-      return type;
-
+  export function getEntity(type: Function): Entity {
     for (let index = 0; index < targetStorage.length; index++) {
       let entity = targetStorage[index];
       if (entity.type === type)

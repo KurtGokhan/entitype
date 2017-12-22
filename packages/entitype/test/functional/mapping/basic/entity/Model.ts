@@ -19,4 +19,12 @@ export class Model {
   @OneToOne(type => OtherModel, x => x.parent_id)
   other: OtherModel;
 
+  @Column()
+  buffer: Buffer;
+
+  @Column()
+  uint8: Uint8Array;
+
+  @Column().type.blob()
+  blobArray: number[];
 }

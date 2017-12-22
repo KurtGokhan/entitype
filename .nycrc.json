@@ -1,7 +1,9 @@
 {
   "check-coverage": true,
   "include": [
-    "packages/entitype/src/**/*.ts"
+    "packages/entitype/src/**/*.ts",
+    "packages/entitype-websql/src/**/*.ts",
+    "packages/entitype-mysql/src/**/*.ts"
   ],
   "reporter": [
     "lcov",

@@ -137,4 +137,53 @@ describe('entitype > mapping > basic', async () => {
     expect(result.mappedArray.length).to.be.equal(3);
     expect(Array.isArray(result.mappedArray));
   });
+
+
+  it('should get buffer if database returns hexadecimal string for buffer column', async () => {
+    let specId = 5;
+    let specHex = 'A5B3';
+    let dataResult = [{ buffer: specHex, id: specId }];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => x.buffer).first();
+
+    expect(result).to.be.instanceof(Buffer);
+    expect(result.length).to.eql(2);
+    expect(result[0]).to.eql(0xA5);
+    expect(result[1]).to.eql(0xB3);
+  });
+
+  it('should get uint8array if database returns hexadecimal string for uint8array column', async () => {
+    let specId = 5;
+    let specHex = 'A5B3';
+    let dataResult = [{ uint8: specHex, id: specId }];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => x.uint8).first();
+
+    expect(result).to.be.instanceof(Uint8Array);
+    expect(result.length).to.eql(2);
+    expect(result[0]).to.eql(0xA5);
+    expect(result[1]).to.eql(0xB3);
+  });
+
+  it('should get blob if database returns hexadecimal string for blob column', async () => {
+    let specId = 5;
+    let specHex = 'A5B3';
+    let dataResult = [{ blobArray: specHex, id: specId }];
+
+    mockDriverToReturnDataWithoutAlias(dataResult);
+
+    let ctx = new Context();
+    let result = await ctx.models.select(x => x.blobArray).first();
+
+    expect(result).to.be.instanceof(Array);
+    expect(result.length).to.eql(2);
+    expect(result[0]).to.eql(0xA5);
+    expect(result[1]).to.eql(0xB3);
+  });
 });

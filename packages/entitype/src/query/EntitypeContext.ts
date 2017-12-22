@@ -19,14 +19,9 @@ export abstract class EntitypeContext {
   }
 
   private resolveConfiguration(): ConnectionOptions {
-    try {
-      if (!this.configOrName || typeof this.configOrName === 'string')
-        return getConfiguration(this.configOrName as string);
-      else return this.configOrName as ConnectionOptions;
-    }
-    catch (err) {
-      return null;
-    }
+    if (!this.configOrName || typeof this.configOrName === 'string')
+      return getConfiguration(this.configOrName as string);
+    else return this.configOrName as ConnectionOptions;
   }
 
   private createProxy() {
