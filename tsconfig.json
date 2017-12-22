@@ -19,12 +19,10 @@
       "pretty": true
     },
     "exclude": [
-      "**/test",
       "**/tmp",
       "**/temp",
       "**/build",
       "**/dist",
-      "**/node_modules",
-      "**/*.spec.ts"
+      "**/node_modules"
     ]
   }

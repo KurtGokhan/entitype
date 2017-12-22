@@ -1,7 +1,9 @@
 import { expect } from 'chai';
+import { setupConfiguration } from '../../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > query > one-to-one > two-sided-reversed', async () => {
+  beforeEach(setupConfiguration);
 
   it('should be able to select from owned side', async () => {
     let ctx = new Context();

@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { multilineRegExp } from '../../../helper';
+import { multilineRegExp, setupConfiguration } from '../../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > entitype > query > many-to-many > basic', async () => {
+  beforeEach(setupConfiguration);
 
   it('should be able to select basic', async () => {
     let ctx = new Context();

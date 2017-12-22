@@ -1,7 +1,9 @@
 import { expect } from 'chai';
+import { setupConfiguration } from '../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > query > basic', async () => {
+  beforeEach(setupConfiguration);
 
   it('should be able to select all', async () => {
     let ctx = new Context();

@@ -1,7 +1,10 @@
 import { expect } from 'chai';
+import { setupConfiguration } from '../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > query > where > like', async () => {
+  beforeEach(setupConfiguration);
+
   it('should be able to filter selection', async () => {
     let ctx = new Context();
     let listNode = ctx.models

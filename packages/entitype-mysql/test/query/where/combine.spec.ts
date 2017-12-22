@@ -1,9 +1,11 @@
 import { expect } from 'chai';
-import { multilineRegExp } from '../../helper';
+import { multilineRegExp, setupConfiguration } from '../../helper';
 
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > entitype > query > where > combine', async () => {
+  beforeEach(setupConfiguration);
+
   it('should be able to combine multiple conditions with and', async () => {
     let ctx = new Context();
     let listNode = ctx.models

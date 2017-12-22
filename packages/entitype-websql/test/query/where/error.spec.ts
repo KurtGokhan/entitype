@@ -1,5 +1,5 @@
-import { setupConfiguration } from '../../helper';
 import { expect } from 'chai';
+import { setupConfiguration } from '../../helper';
 
 import { Context } from './entity/Context';
 

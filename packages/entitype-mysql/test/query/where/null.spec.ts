@@ -1,7 +1,10 @@
 import { expect } from 'chai';
+import { setupConfiguration } from '../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-mysql > query > where > null', async () => {
+  beforeEach(setupConfiguration);
+
   it('should be able to filter selection where null', async () => {
     let ctx = new Context();
     let listNode = ctx.models
