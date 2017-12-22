@@ -11,28 +11,13 @@
     "baseUrl": "./",
     "paths": {
       "entitype": [
-        "../entitype",
         "./node_modules/entitype"
       ],
-      "entitype/*": [
-        "../entitype/*",
-        "./node_modules/entitype/*"
-      ],
       "entitype-mysql": [
-        "../entitype-mysql",
         "./node_modules/entitype-mysql"
       ],
-      "entitype-mysql/*": [
-        "../entitype-mysql/*",
-        "./node_modules/entitype-mysql/*"
-      ],
       "entitype-websql": [
-        "../entitype-websql",
         "./node_modules/entitype-websql"
-      ],
-      "entitype-websql/*": [
-        "../entitype-websql/*",
-        "./node_modules/entitype-websql/*"
       ]
     }
   },

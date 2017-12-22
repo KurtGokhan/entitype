@@ -15,6 +15,7 @@
 	},
 	"scripts": {
 		"bootstrap": "lerna bootstrap --hoist",
+		"clean": "lerna clean",
 		"build": "lerna run build",
 		"test": "nyc mocha",
 		"test:all": "npm run test & npm run test:integration",

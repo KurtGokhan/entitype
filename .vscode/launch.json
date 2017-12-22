@@ -42,6 +42,27 @@
       },
       "smartStep": true,
       "showAsyncStacks": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "name": "Run Integration Tests",
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}/packages/entitype-integration-tests",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeExecutable": "npm",
+      "args": [
+        "run",
+        "test:debug"
+      ],
+      "port": 25750,
+      "env": {
+        "NODE_ENV": "dev"
+      },
+      "smartStep": true,
+      "showAsyncStacks": true
     }
   ]
 }

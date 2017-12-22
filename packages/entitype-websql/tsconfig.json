@@ -7,8 +7,7 @@
       "es5",
       "es6",
       "dom"
-    ],
-    "baseUrl": "./"
+    ]
   },
   "exclude": [
     "test",
