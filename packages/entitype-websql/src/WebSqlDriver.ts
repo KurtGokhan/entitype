@@ -1,6 +1,6 @@
 import { ConnectionOptions } from 'entitype';
-import { DecoratorStorage } from 'entitype/dist/common/DecoratorStorage';
-import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
+import { ColumnData, DecoratorStorage, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
+
 import { WebSqlConnectionOptions } from '.';
 
 @Driver('websql')

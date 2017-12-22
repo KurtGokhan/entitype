@@ -1,7 +1,10 @@
+import { setupConfiguration } from '../../helper';
 import { expect } from 'chai';
 import { Context } from './entity/Context';
 
 describe('entitype-websql > query > where > with count', async () => {
+  beforeEach(setupConfiguration);
+
   it('should be able to filter selection and take count', async () => {
     let ctx = new Context();
     let listNode = ctx.models

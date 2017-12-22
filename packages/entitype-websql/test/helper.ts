@@ -1,6 +1,9 @@
 import { useConfiguration } from 'entitype';
 
-useConfiguration({ adapter: 'websql' });
+export function setupConfiguration() {
+  require('../src');
+  useConfiguration({ adapter: 'websql' });
+}
 
 export function multilineRegExp(regs: RegExp[], options?: string) {
   return new RegExp(regs.map(

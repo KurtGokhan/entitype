@@ -1,7 +1,10 @@
 import { expect } from 'chai';
+
+import { setupConfiguration } from '../../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-websql > query > one-to-one > basic', async () => {
+  beforeEach(setupConfiguration);
 
   it('should be able to select from owning side', async () => {
     let ctx = new Context();

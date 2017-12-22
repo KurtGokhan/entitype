@@ -1,7 +1,5 @@
 import { ConnectionOptions, DefaultColumnOptions } from 'entitype';
-import { DecoratorStorage } from 'entitype/dist/common/DecoratorStorage';
-import { ForwardRef } from 'entitype/dist/common/forwardRef';
-import { ColumnData, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
+import { ColumnData, DecoratorStorage, Driver, DriverAdapter, resolveType, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
 import { getConstructorForDatabaseType } from './types';
@@ -66,7 +64,7 @@ export class MysqlDriver implements DriverAdapter {
         let counterEntity = entities.find(x => x.dbName === fk.REFERENCED_TABLE_NAME);
 
         let foreignKey = {
-          owner: new ForwardRef(() => entity.type as any),
+          owner: resolveType(() => entity.type as any),
           column: fk.COLUMN_NAME
         };
 

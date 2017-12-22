@@ -1,7 +1,10 @@
 import { expect } from 'chai';
+
+import { setupConfiguration } from '../../helper';
 import { Context } from './entity/Context';
 
 describe('entitype-websql > query > basic > orderby', async () => {
+  beforeEach(setupConfiguration);
 
   it('should be able to order by ascending', async () => {
     let ctx = new Context();

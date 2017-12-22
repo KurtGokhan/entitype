@@ -16,8 +16,7 @@
       "noFallthroughCasesInSwitch": true,
       "noImplicitReturns": true,
       "stripInternal": true,
-      "pretty": true,
-      "baseUrl": "./packages"
+      "pretty": true
     },
     "exclude": [
       "**/test",
