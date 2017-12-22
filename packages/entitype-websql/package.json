@@ -10,10 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/entitype/entitype-websql"
+    "url": "https://github.com/entitype/entitype/tree/master/packages/entitype-websql"
   },
   "tags": [
     "entitype",
+    "entitype-plugin",
     "websql"
   ],
   "devDependencies": {
@@ -45,11 +46,6 @@
     "entitype": "^0.0.13"
   },
   "scripts": {
-    "test": "mocha",
-    "test:debug": "mocha --inspect=25750 --inspect-brk",
-    "cover": "nyc mocha",
-    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
-    "lint": "tslint --project test/tsconfig.json -c tslint.json",
     "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json IWebSqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"

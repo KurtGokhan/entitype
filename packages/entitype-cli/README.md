@@ -4,9 +4,6 @@ CLI for [Entitype][entitype-url] projects, which can be used to do database sync
 
 __This is a work in process. By now, only the `pull` command, a.k.a. database-first synchronization, is completed.__
 
-<!-- Badges section here. -->
-[![Build Status](https://travis-ci.org/entitype/entitype-cli.svg?branch=master)][travis-badge-url]
-
 
 ## Table of Contents
 
@@ -89,7 +86,5 @@ pull({
 ## License
 
 MIT
-
-[travis-badge-url]: https://travis-ci.org/entitype/entitype-cli
 
 [entitype-url]: https://github.com/entitype/entitype

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
 
 import { Column, ConnectionOptions, DbCollection, Entity, IQueryable, useConfiguration } from '../../../src';
 import { container } from '../../../src/plugins';

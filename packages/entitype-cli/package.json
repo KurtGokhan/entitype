@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/entitype/entitype-cli"
+    "url": "https://github.com/entitype/entitype/tree/master/packages/entitype-cli"
   },
   "tags": [
     "orm",
@@ -56,13 +56,8 @@
     "typescript-json-schema": "^0.20.0"
   },
   "scripts": {
-    "test": "mocha",
-    "test:debug": "mocha --inspect=25650 --inspect-brk",
     "start": "ts-node src/cli.ts",
     "start:debug": "ts-node --inspect=25650 --inspect-brk src/cli.ts",
-    "cover": "nyc mocha",
-    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
-    "lint": "tslint --project tsconfig.json -c tslint.json",
     "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json IConfiguration --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"

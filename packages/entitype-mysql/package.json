@@ -10,10 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/entitype/entitype-mysql"
+    "url": "https://github.com/entitype/entitype/tree/master/packages/entitype-mysql"
   },
   "tags": [
     "entitype",
+    "entitype-plugin",
     "mysql"
   ],
   "dependencies": {
@@ -49,11 +50,6 @@
     "entitype": "^0.0.13"
   },
   "scripts": {
-    "test": "mocha",
-    "test:debug": "mocha --inspect=25750 --inspect-brk",
-    "cover": "nyc mocha",
-    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
-    "lint": "tslint --project test/tsconfig.json -c tslint.json",
     "build": "tsc",
     "scheme:generate": "typescript-json-schema tsconfig.json IMysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"

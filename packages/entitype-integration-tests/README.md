@@ -1,7 +1,5 @@
 # Entitype Integration tests
 
-[![Build Status](https://travis-ci.org/entitype/entitype-integration-tests.svg?branch=master)](https://travis-ci.org/entitype/entitype-integration-tests)
-
 ## Running Tests
 
 A config file `test/config.json` can be created like following.
