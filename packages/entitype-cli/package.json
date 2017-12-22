@@ -1,6 +1,6 @@
 {
   "name": "entitype-cli",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "preferGlobal": true,
   "description": "CLI for entitype, which lets you do migrations and provides other utility functions",
   "license": "MIT",
@@ -23,8 +23,8 @@
     "fluent"
   ],
   "dependencies": {
-    "entitype": "^0.0.13",
-    "entitype-mysql": "^0.0.13",
+    "entitype": "^0.0.14",
+    "entitype-mysql": "^0.0.14",
     "fs-extra": "^5.0.0",
     "inquirer": "^4.0.1",
     "inversify": "^4.8.0",
