@@ -1,5 +1,6 @@
 packages/!(entitype-integration-tests)/test/**/*.spec.ts
 --recursive
+--preserve-symlinks
 -r ts-node/register
 -r tsconfig-paths/register
 -r ./test/helper.ts
