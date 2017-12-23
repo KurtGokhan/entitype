@@ -21,7 +21,6 @@ export function OneToMany<EntityType, SelectType>(
     column.isNavigationProperty = true;
     column.isArray = true;
     column.foreignKey = fk;
-    DecoratorStorage.updateEntityReferences(column.parent);
   };
 
 

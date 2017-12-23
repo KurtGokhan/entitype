@@ -14,19 +14,16 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
   let propertyDecorator = (target, propertyKey) => {
     let joinTypeResolved = resolveType(joinTableType);
 
-    let fk = {
-      get owner() {
-        return DecoratorStorage.getEntity(joinTypeResolved.type);
-      },
-      leftKey: resolvePropertyExpression(leftKey),
-      rightKey: resolvePropertyExpression(rightKey)
-    };
+    let mtm = new DecoratorStorage.ManyToManyMapping(
+      joinTypeResolved,
+      resolvePropertyExpression(leftKey),
+      resolvePropertyExpression(rightKey)
+    );
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, arrayType, {});
     column.isNavigationProperty = true;
     column.isArray = true;
-    column.manyToManyMapping = fk;
-    DecoratorStorage.updateEntityReferences(column.parent);
+    column.manyToManyMapping = mtm;
   };
 
 

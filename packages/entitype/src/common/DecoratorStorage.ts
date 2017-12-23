@@ -3,6 +3,19 @@ import { ColumnOptions, DefaultColumnOptions, EntityOptions } from '../decorator
 import { ObjectType } from '../fluent';
 
 export namespace DecoratorStorage {
+  export class EntityError extends Error {
+    constructor(public data: ContextError[], message?: string) {
+      super(message);
+      Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+    }
+  }
+
+  export type ContextError = {
+    entity: Entity;
+    property: Property;
+    message: string;
+  };
+
   export class Entity {
     type: Function;
     name: string;
@@ -50,6 +63,16 @@ export namespace DecoratorStorage {
     readonly owner: Entity;
     readonly leftKey: string;
     readonly rightKey: string;
+
+    constructor(owner: ForwardRef<any>, leftKey: string, rightKey: string) {
+      Object.defineProperty(this, 'owner', {
+        get() {
+          return findEntity(owner.type);
+        }
+      });
+      this.leftKey = leftKey;
+      this.rightKey = rightKey;
+    }
   }
 
   export class Context {
@@ -74,14 +97,15 @@ export namespace DecoratorStorage {
   }
 
 
-  let targetStorage: Entity[] = [];
-  let contextStorage: Context[] = [];
+  let entities: Entity[] = [];
+  let contexts: Context[] = [];
+  let errors: ContextError[] = [];
 
   export function addEntity(entityType: Function, options: EntityOptions): Entity {
     options = Object.assign({}, options);
     options.tableName = options.tableName || entityType.name;
 
-    let existingEntity = getEntity(entityType);
+    let existingEntity = findEntity(entityType);
     if (existingEntity) {
       existingEntity.dbName = options.tableName;
       existingEntity.options = options;
@@ -94,7 +118,7 @@ export namespace DecoratorStorage {
         dbName: options.tableName,
         options
       });
-      targetStorage.push(entity);
+      entities.push(entity);
       return entity;
     }
   }
@@ -106,7 +130,7 @@ export namespace DecoratorStorage {
     options = Object.assign({}, DefaultColumnOptions, options);
     options.columnName = options.columnName || columnName;
 
-    let entity = getEntity(parent) || addEntity(parent, {});
+    let entity = findEntity(parent) || addEntity(parent, {});
 
     let column = new Property({
       dbName: options.columnName,
@@ -129,14 +153,13 @@ export namespace DecoratorStorage {
     if (!entity.properties.find(x => x.name === column.name))
       entity.properties.push(column);
 
-    updateEntityReferences(column.parent);
     return column;
   }
 
 
   export function addDbCollection(parentContext: Function, propertyName: string, entityType: ObjectType<any>): DbCollection {
     let context = getContext(parentContext);
-    let entity = getEntity(entityType);
+    let entity = findEntity(entityType);
 
     if (!entity) {
       // TODO: probably an error, log error
@@ -158,14 +181,22 @@ export namespace DecoratorStorage {
     return collection;
   }
 
+  function findEntity(type: Function): Entity {
+    return entities.find(x => x.type === type);
+  }
 
   export function getEntity(type: Function): Entity {
-    for (let index = 0; index < targetStorage.length; index++) {
-      let entity = targetStorage[index];
-      if (entity.type === type)
-        return entity;
-    }
-    return null;
+    updateAllReferences();
+
+    let entity = findEntity(type);
+    if (!entity) return null;
+
+    let entityErrors = errors.filter(x => x.entity === entity);
+
+    if (entityErrors.length)
+      throw new EntityError(entityErrors, `Requested entity '${entity.name}' has errors.`);
+
+    return entity;
   }
 
 
@@ -174,44 +205,27 @@ export namespace DecoratorStorage {
       name: contextType.name,
       type: contextType
     });
-    contextStorage.push(ctx);
+    contexts.push(ctx);
     return ctx;
   }
 
   export function getContext(type: Function): Context {
-    return contextStorage.find(x => x.type === type) || addContext(type);
+    return contexts.find(x => x.type === type) || addContext(type);
   }
 
+  function updateAllReferences() {
+    entities.forEach(entity => {
+      entity.properties.forEach(updateForeignKeyColumns);
+    });
 
-
-  /**
-   * Update the owning and referencing entities to this column if there is any
-   * Should be called after a navigation property is registered
-   */
-  export function updateColumnReferences(column: Property) {
-    if (column.foreignKey) {
-      let entity = getEntity(column.foreignKey.owner.type);
-      if (!entity) return;
-      let col = entity.properties.find(x => x.name === column.foreignKey.column);
-      if (col)
-        col.isForeignKey = true;
-    }
-  }
-
-  export function updateEntityReferences(entity: Entity) {
-    entity.properties.forEach(updateColumnReferences);
-    updateAllReferences();
-  }
-
-  export function updateAllReferences() {
-    targetStorage.forEach(entity => {
+    entities.forEach(entity => {
       entity.properties
         .filter(x => x.foreignKey && !x.type)
         .forEach(col => {
           // HACK: Due to the reflect-metadata bug in issue 12, in circular references
           // Type cannot be retrieved. Find the type by searching the counter part of this FK
 
-          let fkCounterPart = DecoratorStorage.getForeignKeyCounterPart(col);
+          let fkCounterPart = getForeignKeyCounterPart(col);
 
           if (fkCounterPart) {
             col.type = fkCounterPart.parent.type;
@@ -219,21 +233,72 @@ export namespace DecoratorStorage {
           }
         });
     });
+
+    validateAllReferences();
   }
 
-  export function getForeignKeyCounterPart(baseColumn: Property): Property {
+  function validateAllReferences() {
+    errors = [];
+
+    entities.forEach(entity => {
+      entity.properties.forEach(property => {
+
+        if (property.isNavigationProperty) {
+          let propertyType = findEntity(property.type);
+
+          if (!propertyType) {
+            errors.push({
+              entity,
+              property,
+              message: `Property '${property.name}' of entity '${entity.name}' doesn't have a type`
+            });
+          }
+        }
+
+        if (property.foreignKey && !property.foreignKey.owner.type)
+          errors.push({
+            entity,
+            property,
+            message: `Cannot resolve foreign key owner for property '${property.name}' of entity '${entity.name}'`
+          });
+      });
+    });
+  }
+
+  /**
+   * If a column is navigation property, updates the foreign key for that column
+   * @param column Navigation property
+   */
+  function updateForeignKeyColumns(column: Property) {
+    if (!column.foreignKey) return;
+
+    let entity = findEntity(column.foreignKey.owner.type);
+    if (!entity) return;
+    let col = entity.properties.find(x => x.name === column.foreignKey.column);
+
+    if (col) col.isForeignKey = true;
+  }
+
+  /**
+   * Get the counter part navigation property for given navigation property
+   * @param baseColumn A navigation property to search counterpart for
+   */
+  function getForeignKeyCounterPart(baseColumn: Property): Property {
+    if (!baseColumn.isNavigationProperty)
+      throw new Error('Given column is not a navigation property');
+
     let fk = baseColumn.foreignKey;
-    let baseEntity = getEntity(fk.owner.type);
+    let baseEntity = findEntity(fk.owner.type);
 
     // Solves reversed cyclic references
-    for (let index = 0; index < targetStorage.length; index++) {
-      let entity = targetStorage[index];
+    for (let index = 0; index < entities.length; index++) {
+      let entity = entities[index];
 
       for (let colIndex = 0; colIndex < entity.properties.length; colIndex++) {
         let col = entity.properties[colIndex];
         if (baseColumn === col || !col.foreignKey) continue;
 
-        let fkEntity = getEntity(col.foreignKey.owner.type);
+        let fkEntity = findEntity(col.foreignKey.owner.type);
         if (fkEntity === baseEntity && col.foreignKey.column === fk.column)
           return col;
       }
@@ -241,8 +306,8 @@ export namespace DecoratorStorage {
 
 
     // Solves cyclic references
-    for (let index = 0; index < targetStorage.length; index++) {
-      let entity = targetStorage[index];
+    for (let index = 0; index < entities.length; index++) {
+      let entity = entities[index];
 
       for (let colIndex = 0; colIndex < entity.properties.length; colIndex++) {
         let col = entity.properties[colIndex];
