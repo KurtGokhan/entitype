@@ -1,6 +1,6 @@
 {
   "name": "entitype",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "An ORM framework for Typescript that lets you fluently query the database with a strongly-typed API.",
   "license": "MIT",
   "readmeFilename": "README.md",

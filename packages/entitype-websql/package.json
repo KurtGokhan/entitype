@@ -1,6 +1,6 @@
 {
   "name": "entitype-websql",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Entitype WebSQL adapter",
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -30,7 +30,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^0.7.1",
     "chai-string": "^1.4.0",
-    "entitype": "^0.0.15",
+    "entitype": "^0.0.16",
     "istanbul": "^0.4.5",
     "mocha": "^4.0.1",
     "mochawesome": "^3.0.0",
@@ -40,7 +40,7 @@
     "typescript-json-schema": "^0.20.0"
   },
   "peerDependencies": {
-    "entitype": "^0.0.15"
+    "entitype": "^0.0.16"
   },
   "scripts": {
     "build": "tsc",
