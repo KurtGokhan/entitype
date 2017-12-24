@@ -1,4 +1,4 @@
-export class MysqlConnectionOptions {
+export interface MysqlConnectionOptions {
   adapter: 'mysql';
   host: string;
   port?: number;

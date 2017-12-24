@@ -44,8 +44,9 @@
   },
   "scripts": {
     "build": "tsc",
+    "postbuild": "npm run scheme:generate",
     "scheme:generate": "typescript-json-schema tsconfig.json WebSqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
-    "prepare": "npm run scheme:generate && npm run build"
+    "prepare": "npm run build"
   },
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts"
