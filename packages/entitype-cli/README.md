@@ -40,7 +40,6 @@ The structure of a configuration file looks like:
     "index": true,
     "interactive": false,
     "connection": {
-      "$schema": "https://raw.githubusercontent.com/entitype/entitype/master/packages/entitype-mysql/schema.json",
       "adapter": "mysql",
       "database": "northwind",
       "host": "localhost",

@@ -1,7 +1,7 @@
-import { ConnectionOptions } from 'entitype';
+import { MysqlConnectionOptions } from 'entitype-mysql';
 export interface IPullOptions {
   output?: string;
   interactive?: boolean;
   index?: boolean;
-  connection: ConnectionOptions;
+  connection: MysqlConnectionOptions;
 }

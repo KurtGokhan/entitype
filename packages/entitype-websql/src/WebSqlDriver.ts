@@ -1,7 +1,7 @@
 import { ConnectionOptions } from 'entitype';
 import { ColumnData, DecoratorStorage, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
 
-import { WebSqlConnectionOptions } from '.';
+import { WebSqlConnectionOptions } from './WebSqlConnectionOptions';
 
 @Driver('websql')
 export class WebSqlDriver implements DriverAdapter {
@@ -12,7 +12,7 @@ export class WebSqlDriver implements DriverAdapter {
     if (typeof options !== 'object')
       throw new Error('WebSql options must be an object.');
 
-    let opt = <WebSqlConnectionOptions>options;
+    let opt: WebSqlConnectionOptions = options as any;
 
     const connection = window.openDatabase(opt.database, opt.version || '1', opt.description || '', opt.size);
 

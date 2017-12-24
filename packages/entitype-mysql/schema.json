@@ -1,8 +1,8 @@
 {
-    "$ref": "#/definitions/IMysqlConnectionOptions",
+    "$ref": "#/definitions/MysqlConnectionOptions",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
-        "IMysqlConnectionOptions": {
+        "MysqlConnectionOptions": {
             "defaultProperties": [
             ],
             "properties": {

@@ -24,7 +24,7 @@ export async function runSeed(seed: string) {
 
   for (let index = 0; index < seeds.length; index++) {
     const seedPart = seeds[index];
-    await driver.runQuery(seedPart, connectionOptions);
+    await driver.runQuery(seedPart, connectionOptions as any);
   }
 }
 export async function seedNorthwindDatabase() {

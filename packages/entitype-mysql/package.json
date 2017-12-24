@@ -48,7 +48,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "scheme:generate": "typescript-json-schema tsconfig.json IMysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
+    "scheme:generate": "typescript-json-schema tsconfig.json MysqlConnectionOptions --useTypeOfKeyword --topRef --excludePrivate --strictNullChecks --required --defaultProps --out=schema.json",
     "prepare": "npm run scheme:generate && npm run build"
   },
   "main": "./dist/index.js",
