@@ -1,6 +1,5 @@
 import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
 import { ColumnOptions, DefaultColumnOptions, EntityOptions } from '../decorators';
-import { ObjectType } from '../fluent';
 
 export namespace DecoratorStorage {
   export class EntityError extends Error {
@@ -123,7 +122,6 @@ export namespace DecoratorStorage {
     }
   }
 
-
   export function addColumn(parent: Function, columnName: string, metadataType: TypeResolver<any>, options: ColumnOptions): Property {
     let type = resolveType(metadataType);
 
@@ -156,49 +154,34 @@ export namespace DecoratorStorage {
     return column;
   }
 
-
-  export function addDbCollection(parentContext: Function, propertyName: string, entityType: ObjectType<any>): DbCollection {
+  export function addDbCollection(parentContext: Function, propertyName: string, entityType: ForwardRef<any>): DbCollection {
     let context = getContext(parentContext);
-    let entity = findEntity(entityType);
-
-    if (!entity) {
-      // TODO: probably an error, log error
-    }
 
     let collection = new DbCollection({
       name: propertyName,
-      context: context,
-      type: entityType,
-      entity: entity
+      context: context
     });
 
-    if (!context.collections.find(x => x.name === collection.name))
-      context.collections.push(collection);
-    else {
-      // TODO: probably an error, log error
-    }
+    Object.defineProperty(collection, 'type', {
+      get() {
+        return entityType.type;
+      }
+    });
 
+    Object.defineProperty(collection, 'entity', {
+      get() {
+        let entity = getEntity(this.type);
+
+        if (!entity)
+          throw Error(`Could not find entity by type '${this.type.name}'`);
+
+        return entity;
+      }
+    });
+
+    context.collections.push(collection);
     return collection;
   }
-
-  function findEntity(type: Function): Entity {
-    return entities.find(x => x.type === type);
-  }
-
-  export function getEntity(type: Function): Entity {
-    updateAllReferences();
-
-    let entity = findEntity(type);
-    if (!entity) return null;
-
-    let entityErrors = errors.filter(x => x.entity === entity);
-
-    if (entityErrors.length)
-      throw new EntityError(entityErrors, `Requested entity '${entity.name}' has errors.`);
-
-    return entity;
-  }
-
 
   export function addContext(contextType: Function): Context {
     let ctx = new Context({
@@ -213,6 +196,27 @@ export namespace DecoratorStorage {
     return contexts.find(x => x.type === type) || addContext(type);
   }
 
+  export function getEntity(type: Function): Entity {
+    updateAllReferences();
+
+    let entity = findEntity(type);
+    if (!entity) return null;
+
+    let entityErrors = errors.filter(x => x.entity === entity);
+
+    if (entityErrors.length)
+      throw new EntityError(entityErrors,
+        `Requested entity '${entity.name}' has errors.\n`
+        + entityErrors.map(x => x.message).join('\n')
+      );
+
+    return entity;
+  }
+
+  function findEntity(type: Function): Entity {
+    return entities.find(x => x.type === type);
+  }
+
   function updateAllReferences() {
     entities.forEach(entity => {
       entity.properties.forEach(updateForeignKeyColumns);
@@ -220,7 +224,7 @@ export namespace DecoratorStorage {
 
     entities.forEach(entity => {
       entity.properties
-        .filter(x => x.foreignKey && !x.type)
+        .filter(x => x.foreignKey && !findEntity(x.type))
         .forEach(col => {
           // HACK: Due to the reflect-metadata bug in issue 12, in circular references
           // Type cannot be retrieved. Find the type by searching the counter part of this FK
@@ -255,12 +259,17 @@ export namespace DecoratorStorage {
           }
         }
 
-        if (property.foreignKey && !property.foreignKey.owner.type)
-          errors.push({
-            entity,
-            property,
-            message: `Cannot resolve foreign key owner for property '${property.name}' of entity '${entity.name}'`
-          });
+        if (property.foreignKey) {
+
+          let fkTargetType = findEntity(property.foreignKey.owner.type);
+          if (!fkTargetType) {
+            errors.push({
+              entity,
+              property,
+              message: `Cannot resolve foreign key owner for property '${property.name}' of entity '${entity.name}'`
+            });
+          }
+        }
       });
     });
   }
@@ -298,25 +307,17 @@ export namespace DecoratorStorage {
         let col = entity.properties[colIndex];
         if (baseColumn === col || !col.foreignKey) continue;
 
+        // Find the counter navigation property referencing to this entity and this column
         let fkEntity = findEntity(col.foreignKey.owner.type);
-        if (fkEntity === baseEntity && col.foreignKey.column === fk.column)
+
+
+        let entityMatches = fkEntity === baseEntity;
+        let typeMatches = col.type === baseColumn.parent.type;
+
+        let propNameMatches = col.foreignKey.column === fk.column;
+
+        if ((entityMatches || typeMatches) && propNameMatches)
           return col;
-      }
-    }
-
-
-    // Solves cyclic references
-    for (let index = 0; index < entities.length; index++) {
-      let entity = entities[index];
-
-      for (let colIndex = 0; colIndex < entity.properties.length; colIndex++) {
-        let col = entity.properties[colIndex];
-
-        if (col.isNavigationProperty && col.foreignKey) {
-          if (col.type === baseColumn.parent.type && col.foreignKey.column === fk.column) {
-            return col;
-          }
-        }
       }
     }
 

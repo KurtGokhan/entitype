@@ -5,9 +5,9 @@ import { OtherModel } from './OtherModel';
 
 export class Context extends EntitypeContext {
 
-  @DbCollection(Model)
+  @DbCollection(() => Model)
   models: IQueryable<Model>;
 
-  @DbCollection(OtherModel)
+  @DbCollection(() => OtherModel)
   othermodels: IQueryable<OtherModel>;
 }

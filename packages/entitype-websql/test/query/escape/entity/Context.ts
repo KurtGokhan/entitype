@@ -7,6 +7,6 @@ export class Context extends EntitypeContext {
     super();
   }
 
-  @DbCollection(Model)
+  @DbCollection(() => Model)
   models: IQueryable<Model>;
 }

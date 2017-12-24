@@ -36,18 +36,9 @@
     "mocha": "^4.0.1",
     "mochawesome": "^3.0.0",
     "nyc": "^11.3.0",
-    "rimraf": "^2.6.2",
-    "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.6.0",
-    "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   },
   "scripts": {
-    "test": "nyc mocha",
-    "test:debug": "mocha --inspect=25650 --inspect-brk",
-    "cover": "nyc report --reporter=text-lcov | coveralls",
-    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
-    "lint": "tslint --project test/tsconfig.json -c tslint.json",
     "build": "tsc",
     "prepare": "npm run build"
   },

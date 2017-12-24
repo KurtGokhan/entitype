@@ -423,7 +423,7 @@ class Pull {
     context.entities.filter(x => !x.isMappingEntity).forEach(entity => {
       ctxImports.add(entity);
       propertyLines.push('');
-      propertyLines.push(`@DbCollection(${entity.className})`);
+      propertyLines.push(`@DbCollection(() => ${entity.className})`);
       propertyLines.push(`${entity.contextPropertyName}: IQueryable<${entity.className}>;`);
     });
 

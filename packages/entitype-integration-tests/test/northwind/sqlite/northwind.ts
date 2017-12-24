@@ -14,36 +14,36 @@ import { Territory } from './territory';
 
 export class NorthwindContext extends EntitypeContext {
 
-  @DbCollection(Category)
+  @DbCollection(() => Category)
   categories: IQueryable<Category>;
 
-  @DbCollection(Customerdemographic)
+  @DbCollection(() => Customerdemographic)
   customerdemographics: IQueryable<Customerdemographic>;
 
-  @DbCollection(Customer)
+  @DbCollection(() => Customer)
   customers: IQueryable<Customer>;
 
-  @DbCollection(Employee)
+  @DbCollection(() => Employee)
   employees: IQueryable<Employee>;
 
-  @DbCollection(OrderDetail)
+  @DbCollection(() => OrderDetail)
   orderDetails: IQueryable<OrderDetail>;
 
-  @DbCollection(Order)
+  @DbCollection(() => Order)
   orders: IQueryable<Order>;
 
-  @DbCollection(Product)
+  @DbCollection(() => Product)
   products: IQueryable<Product>;
 
-  @DbCollection(Region)
+  @DbCollection(() => Region)
   regions: IQueryable<Region>;
 
-  @DbCollection(Shipper)
+  @DbCollection(() => Shipper)
   shippers: IQueryable<Shipper>;
 
-  @DbCollection(Supplier)
+  @DbCollection(() => Supplier)
   suppliers: IQueryable<Supplier>;
 
-  @DbCollection(Territory)
+  @DbCollection(() => Territory)
   territories: IQueryable<Territory>;
 }

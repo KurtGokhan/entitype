@@ -169,10 +169,10 @@ import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
 
 export class MyContext extends EntitypeContext {
 
-  @DbCollection(Customer)
+  @DbCollection(() => Customer)
   customers: IQueryable<Customer>;
 
-  @DbCollection(Order)
+  @DbCollection(() => Order)
   orders: IQueryable<Order>;
 }
 

@@ -39,9 +39,8 @@
     "nyc": "^11.3.0",
     "raw-loader": "^0.5.1",
     "reflect-metadata": "^0.1.10",
-    "ts-node": "^3.3.0",
+    "ts-node": "^4.1.0",
     "tsconfig-paths": "^2.6.0",
-    "tslint": "^5.8.0",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
   },

@@ -2,29 +2,32 @@
 	"name": "entitype-monorepo",
 	"private": true,
 	"devDependencies": {
-		"lerna": "^2.5.1",
-		"tslint": "^5.8.0",
-		"typescript": "^2.6.2",
+		"chai": "^4.1.2",
+		"chai-as-promised": "^7.1.1",
+		"chai-spies": "^0.7.1",
+		"chai-string": "^1.4.0",
 		"coveralls": "^3.0.0",
 		"istanbul": "^0.4.5",
 		"mocha": "^4.0.1",
 		"mochawesome": "^3.0.0",
-    "nyc": "^11.3.0",
-    "rimraf": "^2.6.2",
-		"ts-node": "^3.3.0",
-		"tsconfig-paths": "^2.6.0"
+		"nyc": "^11.3.0",
+		"rimraf": "^2.6.2",
+		"ts-node": "^4.1.0",
+		"tsconfig-paths": "^2.6.0",
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.2"
 	},
 	"scripts": {
 		"bootstrap": "lerna bootstrap --hoist",
-    "prebuild": "rimraf packages/*/dist",
+		"prebuild": "rimraf packages/*/dist",
 		"build": "lerna run build",
 		"test": "nyc mocha",
 		"test:all": "npm run test & npm run test:integration",
 		"test:debug": "mocha --inspect=25650 --inspect-brk",
 		"test:integration": "cd packages/entitype-integration-tests && npm run test",
 		"lint": "tslint --project tsconfig.json -c tslint.json",
-    "cover": "nyc report --reporter=text-lcov | coveralls",
-    "report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
+		"cover": "nyc report --reporter=text-lcov | coveralls",
+		"report": "start ./tmp/mochawesome/mochawesome.html & start ./tmp/lcov-report/index.html",
 		"update": "lerna exec -- ncu -a -u"
 	}
 }

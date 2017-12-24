@@ -1,7 +1,8 @@
 packages/!(entitype-integration-tests)/test/**/*.spec.ts
 --recursive
 --preserve-symlinks
--r ts-node/register
+-r ts-node/register/type-check
+-r tsconfig-paths/register
 -r ./test/helper.ts
 --reporter mochawesome
 --reporter-options inlineAssets=true,reportDir=tmp/mochawesome

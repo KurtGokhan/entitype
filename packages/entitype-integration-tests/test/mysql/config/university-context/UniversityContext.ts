@@ -8,12 +8,12 @@ export class UniversityContext extends EntitypeContext {
     super();
   }
 
-  @DbCollection(Student)
+  @DbCollection(() => Student)
   students: IQueryable<Student>;
 
-  @DbCollection(Course)
+  @DbCollection(() => Course)
   courses: IQueryable<Course>;
 
-  @DbCollection(Instructor)
+  @DbCollection(() => Instructor)
   instructors: IQueryable<Instructor>;
 }
