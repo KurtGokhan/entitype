@@ -10,7 +10,7 @@
     "text-summary"
   ],
   "require": [
-    "ts-node/register"
+    "ts-node/register/type-check"
   ],
   "extension": [
     ".ts",
