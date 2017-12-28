@@ -208,13 +208,21 @@ Firstly, create an instance of the context:
 let ctx = new MyContext();
 ```
 
+<details>
+<summary>
 Query all customers:
+</summary>
 
 ```typescript
 let customers = await ctx.customers.toList();
 ```
 
+</details>
+
+<details>
+<summary>
 Query only the name of the first customer:
+</summary>
 
 ```typescript
 // name is of type 'string'
@@ -223,7 +231,12 @@ let name = await ctx.customers
   .first();
 ```
 
+</details>
+
+<details>
+<summary>
 Query methods return a Promise as result so it can be used with `await` keyword. The result can also be used with `then` if you are not able to use *ES7 await* feature:
+</summary>
 
 ```typescript
 ctx.customers
@@ -232,7 +245,12 @@ ctx.customers
   .then(name => console.log(`My first customer's name is ` + name));
 ```
 
+</details>
+
+<details>
+<summary>
 Query the names of all the customers:
+</summary>
 
 ```typescript
 // names is of type 'string[]'
@@ -241,7 +259,12 @@ let names = await ctx.customers
   .toList();
 ```
 
+</details>
+
+<details>
+<summary>
 Navigation properties can also be queried. Query name and orders of all customers;
+</summary>
 
 ```typescript
 // namesAndOrders is of type '{ name: string, orders: Order[] }'
@@ -250,7 +273,12 @@ let namesAndOrders = await ctx.customers
   .toList();
 ```
 
+</details>
+
+<details>
+<summary>
 A combined where query:
+</summary>
 
 ```typescript
 let customers = await ctx.customers
@@ -260,7 +288,12 @@ let customers = await ctx.customers
   .toList();
 ```
 
+</details>
+
+<details>
+<summary>
 Order customers by their name, take first 10 after skipping first 5:
+</summary>
 
 ```typescript
 let customerNamesOrdered = await ctx.customers
@@ -270,13 +303,20 @@ let customerNamesOrdered = await ctx.customers
   .toList();
 ```
 
-By tefault, navigation properties are not loaded if they are not referenced in any part of the query. Explicitly specify an include statement to load them:
+</details>
+
+<details>
+<summary>
+By tefault, navigation properties are not loaded if they are not referenced in any part of the query. Explicitly specify an include statement to load them: 
+</summary>
 
 ```typescript
 let customerNamesOrdered = await ctx.customers
   .include(x => x.orders)
   .toList();
 ```
+
+</details>
 
 ## CLI
 
