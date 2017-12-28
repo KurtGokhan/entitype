@@ -1,6 +1,6 @@
 ./test/!(websql)/**/*.spec.ts
 --recursive
--r ts-node/register
+-r ts-node/register/type-check
 -r tsconfig-paths/register
 -r ./test/helper.ts
 --reporter mochawesome

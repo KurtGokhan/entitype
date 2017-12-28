@@ -2,19 +2,6 @@
     "$ref": "#/definitions/IConfiguration",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
-        "ConnectionOptions": {
-            "defaultProperties": [
-            ],
-            "properties": {
-                "adapter": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "adapter"
-            ],
-            "type": "object"
-        },
         "IConfiguration": {
             "defaultProperties": [
             ],
@@ -30,7 +17,7 @@
             ],
             "properties": {
                 "connection": {
-                    "$ref": "#/definitions/ConnectionOptions"
+                    "$ref": "#/definitions/MysqlConnectionOptions"
                 },
                 "index": {
                     "type": "boolean"
@@ -44,6 +31,44 @@
             },
             "required": [
                 "connection"
+            ],
+            "type": "object"
+        },
+        "MysqlConnectionOptions": {
+            "defaultProperties": [
+            ],
+            "properties": {
+                "adapter": {
+                    "enum": [
+                        "mysql"
+                    ],
+                    "type": "string"
+                },
+                "connectTimeout": {
+                    "type": "number"
+                },
+                "database": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "number"
+                },
+                "user": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "adapter",
+                "database",
+                "host",
+                "password",
+                "user"
             ],
             "type": "object"
         }

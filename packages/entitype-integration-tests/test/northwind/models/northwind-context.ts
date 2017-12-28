@@ -22,60 +22,60 @@ import { Supplier } from './supplier';
 
 export class NorthwindContext extends EntitypeContext {
   
-  @DbCollection(Customer)
+  @DbCollection(() => Customer)
   customers: IQueryable<Customer>;
   
-  @DbCollection(Employee)
+  @DbCollection(() => Employee)
   employees: IQueryable<Employee>;
   
-  @DbCollection(InventoryTransactionType)
+  @DbCollection(() => InventoryTransactionType)
   inventoryTransactionTypes: IQueryable<InventoryTransactionType>;
   
-  @DbCollection(InventoryTransaction)
+  @DbCollection(() => InventoryTransaction)
   inventoryTransactions: IQueryable<InventoryTransaction>;
   
-  @DbCollection(Invoice)
+  @DbCollection(() => Invoice)
   invoices: IQueryable<Invoice>;
   
-  @DbCollection(OrderDetail)
+  @DbCollection(() => OrderDetail)
   orderDetails: IQueryable<OrderDetail>;
   
-  @DbCollection(OrderDetailsStatus)
+  @DbCollection(() => OrderDetailsStatus)
   orderDetailsStatuses: IQueryable<OrderDetailsStatus>;
   
-  @DbCollection(Order)
+  @DbCollection(() => Order)
   orders: IQueryable<Order>;
   
-  @DbCollection(OrdersStatus)
+  @DbCollection(() => OrdersStatus)
   ordersStatuses: IQueryable<OrdersStatus>;
   
-  @DbCollection(OrdersTaxStatus)
+  @DbCollection(() => OrdersTaxStatus)
   ordersTaxStatuses: IQueryable<OrdersTaxStatus>;
   
-  @DbCollection(Privilege)
+  @DbCollection(() => Privilege)
   privileges: IQueryable<Privilege>;
   
-  @DbCollection(Product)
+  @DbCollection(() => Product)
   products: IQueryable<Product>;
   
-  @DbCollection(PurchaseOrderDetail)
+  @DbCollection(() => PurchaseOrderDetail)
   purchaseOrderDetails: IQueryable<PurchaseOrderDetail>;
   
-  @DbCollection(PurchaseOrderStatus)
+  @DbCollection(() => PurchaseOrderStatus)
   purchaseOrderStatuses: IQueryable<PurchaseOrderStatus>;
   
-  @DbCollection(PurchaseOrder)
+  @DbCollection(() => PurchaseOrder)
   purchaseOrders: IQueryable<PurchaseOrder>;
   
-  @DbCollection(SalesReport)
+  @DbCollection(() => SalesReport)
   salesReports: IQueryable<SalesReport>;
   
-  @DbCollection(Shipper)
+  @DbCollection(() => Shipper)
   shippers: IQueryable<Shipper>;
   
-  @DbCollection(String)
+  @DbCollection(() => String)
   strings: IQueryable<String>;
   
-  @DbCollection(Supplier)
+  @DbCollection(() => Supplier)
   suppliers: IQueryable<Supplier>;
 }

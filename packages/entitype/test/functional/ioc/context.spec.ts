@@ -29,7 +29,7 @@ describe('entitype > ioc > Context', async () => {
   }
 
   class TestContext extends EntitypeContext {
-    @DbCollection(TestEntity)
+    @DbCollection(() => TestEntity)
     entities: IQueryable<TestEntity>;
   }
 

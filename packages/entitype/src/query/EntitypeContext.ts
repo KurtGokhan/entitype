@@ -30,8 +30,8 @@ export abstract class EntitypeContext {
     let self = this;
 
     return new Proxy(this, {
-      get(target, name) {
-        let collection = ctxDict.get(name as string);
+      get(target, name: string) {
+        let collection = ctxDict.get(name);
         let targetProperty = target[name];
 
         // The called property is not decorated with DbSet, or it was already created

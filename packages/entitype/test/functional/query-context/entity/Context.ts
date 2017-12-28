@@ -9,12 +9,12 @@ export class Context extends EntitypeContext {
     super();
   }
 
-  @DbCollection(Model)
+  @DbCollection(() => Model)
   models: IQueryable<Model>;
 
-  @DbCollection(ChildModel)
+  @DbCollection(() => ChildModel)
   childmodels: IQueryable<ChildModel>;
 
-  @DbCollection(OtherModel)
+  @DbCollection(() => OtherModel)
   othermodels: IQueryable<OtherModel>;
 }

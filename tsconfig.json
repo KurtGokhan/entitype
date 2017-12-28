@@ -16,7 +16,14 @@
       "noFallthroughCasesInSwitch": true,
       "noImplicitReturns": true,
       "stripInternal": true,
-      "pretty": true
+      "pretty": true,
+      "baseUrl": "./",
+      "paths": {
+        "entitype": ["./packages/entitype/src"],
+        "entitype-mysql": ["./packages/entitype-mysql/src"],
+        "entitype-websql": ["./packages/entitype-websql/src"],
+        "entitype/dist/plugins": ["./packages/entitype/src/plugins"]
+      }
     },
     "exclude": [
       "**/tmp",

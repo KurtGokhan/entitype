@@ -19,7 +19,6 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
 
     let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => metadata, options);
     column.isColumn = true;
-    DecoratorStorage.updateEntityReferences(column.parent);
   };
 
   retType['type'] = new Proxy(function () { }, {

@@ -1,8 +1,8 @@
 {
-    "$ref": "#/definitions/IWebSqlConnectionOptions",
+    "$ref": "#/definitions/WebSqlConnectionOptions",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "definitions": {
-        "IWebSqlConnectionOptions": {
+        "WebSqlConnectionOptions": {
             "defaultProperties": [
             ],
             "properties": {

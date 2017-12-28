@@ -12,7 +12,7 @@ try {
 catch (err) {
 }
 
-connectionOptions.adapter = process.env.DB_ADAPTER || connectionOptions.adapter || 'mysql';
+connectionOptions.adapter = (process.env.DB_ADAPTER || connectionOptions.adapter || 'mysql') as any;
 connectionOptions.database = process.env.DB_NAME || connectionOptions.database;
 connectionOptions.user = process.env.DB_USER || connectionOptions.user;
 connectionOptions.password = process.env.DB_PASSWORD || connectionOptions.password;

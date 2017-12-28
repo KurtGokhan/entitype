@@ -34,13 +34,12 @@ The structure of a configuration file looks like:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/entitype/entitype-cli/master/schema.json",
+  "$schema": "https://raw.githubusercontent.com/entitype/entitype/master/packages/entitype-cli/schema.json",
   "pull": {
     "output": "output",
     "index": true,
     "interactive": false,
     "connection": {
-      "$schema": "https://raw.githubusercontent.com/entitype/entitype-mysql/master/schema.json",
       "adapter": "mysql",
       "database": "northwind",
       "host": "localhost",
