@@ -1,18 +1,13 @@
+import { InsertCommand, PersistCommand, UpdateCommand } from '../command/command-types';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
 import { OrCommand } from '../command/command-types/OrCommand';
-import {
-  DeepPropertyExpression,
-  IFiltered,
-  IOrdered,
-  IQueryable,
-  ObjectType,
-  PropertyMapExpression,
-} from '../fluent';
+import { DeepPropertyExpression, IFiltered, IOrdered, ObjectType, PropertyMapExpression } from '../fluent';
+import { DbSet } from '../fluent';
 import { IFilterCondition } from '../fluent/interfaces';
 import {
-  resolveDeepPropertyExpression,
-  resolveDeepPropertyExpressionArray,
-  resolvePropertyMapExpression,
+    resolveDeepPropertyExpression,
+    resolveDeepPropertyExpressionArray,
+    resolvePropertyMapExpression,
 } from '../fluent/property-selector';
 import { WhereConditionPicker } from '../fluent/where-helpers';
 import { Command } from './Command';
@@ -26,7 +21,9 @@ import { TakeCommand } from './command-types/TakeCommand';
 import { ToListCommand } from './command-types/ToListCommand';
 
 
-export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltered<EntityType>, IOrdered<EntityType> {
+export class CommandNode<EntityType>
+  implements DbSet<EntityType>, IFiltered<EntityType>, IOrdered<EntityType> {
+
   get or(): CommandNode<EntityType> {
     let nextCommand = this.createNextCommand(new OrCommand());
     return nextCommand;
@@ -46,11 +43,22 @@ export class CommandNode<EntityType> implements IQueryable<EntityType>, IFiltere
     return this.finalizerCommand(CountCommand);
   }
 
+  get insert(): { (): Promise<EntityType>; query: string; } {
+    return this.finalizerCommand(InsertCommand);
+  }
+
+  get update(): { (): Promise<EntityType>; query: string; } {
+    return this.finalizerCommand(UpdateCommand);
+  }
+
+  get persist(): { (): Promise<EntityType>; query: string; } {
+    return this.finalizerCommand(PersistCommand);
+  }
 
   private finalizerCommand(commandCreator: typeof Command) {
     let self: CommandNode<any> = this;
-    let ret = () => {
-      let nextCommand: CommandNode<any> = self.createNextCommand(new commandCreator());
+    let ret = (...args) => {
+      let nextCommand: CommandNode<any> = self.createNextCommand(new commandCreator(...args));
       return nextCommand.runCommandChain();
     };
 

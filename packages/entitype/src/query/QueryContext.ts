@@ -1,4 +1,5 @@
 import { Command } from '../command/Command';
+import { EditCommand } from '../command/command-types';
 import { CountCommand } from '../command/command-types/CountCommand';
 import { FirstCommand } from '../command/command-types/FirstCommand';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
@@ -41,6 +42,7 @@ export class QueryContext {
 
   public tracker: Tracker = new Tracker();
 
+  public edit: EditCommand;
 
   constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
     this.selectedColumns = [];
@@ -63,6 +65,11 @@ export class QueryContext {
     this.count = this.commandChain.find(x => x.type === CommandType.Count) as CountCommand;
     this.first = this.commandChain.find(x => x.type === CommandType.First) as FirstCommand;
 
+    this.edit = this.commandChain.find(x =>
+      x.type === CommandType.Persist ||
+      x.type === CommandType.Insert ||
+      x.type === CommandType.Update
+    ) as EditCommand;
 
     this.whereGroups = [[]];
     let currentWhereGroup = this.whereGroups[0];

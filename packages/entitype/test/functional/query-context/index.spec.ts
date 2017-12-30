@@ -1,9 +1,10 @@
 import { expect } from 'chai';
+
+import { CommandType } from '../../../src/command/CommandType';
 import { container } from '../../../src/ioc';
 import { ConditionType } from '../../../src/plugins';
 import * as uc from '../../config/university-context';
 import { mockDriverToReturnData } from '../../mock';
-
 import { Context } from './entity/Context';
 
 describe('entitype > query-context', async () => {
@@ -153,6 +154,40 @@ describe('entitype > query-context', async () => {
       .or
       .where(x => x.child).not.isNull()
       .count.query;
+  });
+
+
+  it('should correctly create context in insert statements', async () => {
+    mockDriverToReturnData([], ctx => {
+      expect(ctx.edit.entry).to.be.equal(entry);
+      expect(ctx.edit.type).to.eql(CommandType.Insert);
+    });
+
+    let entry = {};
+    let ctx = new Context();
+    await ctx.models.insert(entry as any);
+  });
+
+  it('should correctly create context in update statements', async () => {
+    mockDriverToReturnData([], ctx => {
+      expect(ctx.edit.entry).to.be.equal(entry);
+      expect(ctx.edit.type).to.eql(CommandType.Update);
+    });
+
+    let entry = {};
+    let ctx = new Context();
+    await ctx.models.update(entry as any);
+  });
+
+  it('should correctly create context in persist statements', async () => {
+    mockDriverToReturnData([], ctx => {
+      expect(ctx.edit.entry).to.be.equal(entry);
+      expect(ctx.edit.type).to.eql(CommandType.Persist);
+    });
+
+    let entry = {};
+    let ctx = new Context();
+    await ctx.models.persist(entry as any);
   });
 
   it('should throw error when property is unknown in where statements', async () => {

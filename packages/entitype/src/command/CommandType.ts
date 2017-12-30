@@ -15,5 +15,8 @@ export enum CommandType {
   Having = 13,
   OrHaving = 14,
   AndHaving = 15,
-  Include = 16
+  Include = 16,
+  Insert = 17,
+  Update = 18,
+  Persist = 19
 }
