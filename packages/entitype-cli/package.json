@@ -13,12 +13,13 @@
     "type": "git",
     "url": "https://github.com/entitype/entitype/tree/master/packages/entitype-cli"
   },
-  "tags": [
+  "keywords": [
     "orm",
     "typescript",
     "typescript-orm",
     "entity",
     "entitype",
+    "entitype-plugin",
     "linq",
     "fluent"
   ],
@@ -35,22 +36,11 @@
     "vorpal": "^1.12.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.10",
-    "@types/chai-string": "^1.1.31",
     "@types/fs-extra": "^5.0.0",
     "@types/inquirer": "0.0.36",
-    "@types/mocha": "^2.2.44",
-    "@types/node": "^8.5.1",
     "@types/pluralize": "0.0.28",
-    "chai": "^4.1.2",
-    "chai-string": "^1.4.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^4.0.1",
-    "mochawesome": "^3.0.0",
-    "nyc": "^11.3.0",
     "ts-node": "^4.1.0",
     "tsconfig-paths": "^2.6.0",
-    "tslint": "^5.8.0",
     "typescript": "^2.6.2",
     "typescript-json-schema": "^0.20.0"
   },
