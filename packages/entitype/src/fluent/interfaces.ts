@@ -34,7 +34,7 @@ export interface IOrdered<EntityType> extends ISelectable<EntityType> {
 
 export interface IFiltered<EntityType> extends IOrderable<EntityType> {
   readonly or: IWhereable<EntityType>;
-  andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType>;
+  readonly and: IWhereable<EntityType>;
 }
 
 export interface IFilterCondition<EntityType, PropertyType> {

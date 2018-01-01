@@ -1,8 +1,16 @@
-import { InsertCommand, PersistCommand, UpdateCommand } from '../command/command-types';
+import { InsertCommand, PersistCommand, SetCommand, UpdateCommand } from '../command/command-types';
 import { IncludeCommand } from '../command/command-types/IncludeCommand';
-import { OrCommand } from '../command/command-types/OrCommand';
-import { DeepPropertyExpression, IFiltered, IOrdered, ObjectType, PropertyMapExpression } from '../fluent';
+import { AndCommand, OrCommand } from '../command/command-types/OrCommand';
+import {
+    DeepPropertyExpression,
+    IFiltered,
+    IOrdered,
+    ObjectType,
+    PropertyExpression,
+    PropertyMapExpression,
+} from '../fluent';
 import { DbSet } from '../fluent';
+import { ISetable } from '../fluent/collection';
 import { IFilterCondition } from '../fluent/interfaces';
 import {
     resolveDeepPropertyExpression,
@@ -22,10 +30,15 @@ import { ToListCommand } from './command-types/ToListCommand';
 
 
 export class CommandNode<EntityType>
-  implements DbSet<EntityType>, IFiltered<EntityType>, IOrdered<EntityType> {
+  implements DbSet<EntityType>, IFiltered<EntityType>, IOrdered<EntityType>, ISetable<EntityType> {
 
   get or(): CommandNode<EntityType> {
     let nextCommand = this.createNextCommand(new OrCommand());
+    return nextCommand;
+  }
+
+  get and(): CommandNode<EntityType> {
+    let nextCommand = this.createNextCommand(new AndCommand());
     return nextCommand;
   }
 
@@ -53,6 +66,10 @@ export class CommandNode<EntityType>
 
   get persist(): { (): Promise<EntityType>; query: string; } {
     return this.finalizerCommand(PersistCommand);
+  }
+
+  get set(): { (): Promise<void>; query: string; } {
+    return this.finalizerCommand(SetCommand);
   }
 
   private finalizerCommand(commandCreator: typeof Command) {
@@ -142,7 +159,8 @@ export class CommandNode<EntityType>
     return new WhereConditionPicker(path, onFinish);
   }
 
-  andWhere<SelectType>(expression: DeepPropertyExpression<EntityType, SelectType>): IFilterCondition<EntityType, SelectType> {
+
+  when<SelectType>(expression: PropertyExpression<EntityType, SelectType>): any {
     return this.where(expression);
   }
 

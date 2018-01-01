@@ -23,3 +23,9 @@ export class PersistCommand extends Command implements EditCommand {
     super(CommandType.Persist);
   }
 }
+
+export class SetCommand extends Command implements EditCommand {
+  constructor(public entry) {
+    super(CommandType.Set);
+  }
+}

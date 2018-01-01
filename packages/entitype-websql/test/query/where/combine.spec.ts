@@ -10,8 +10,8 @@ describe('entitype-websql > entitype > query > where > combine', async () => {
     let ctx = new Context();
     let listNode = ctx.models
       .where(x => x.name).isNull()
-      .andWhere(x => x.id).between(5, 10)
-      .andWhere(x => x.id).not.equals(6)
+      .and.where(x => x.id).between(5, 10)
+      .and.where(x => x.id).not.equals(6)
       .toList;
     let query = listNode.query;
     expect(query).to.match(multilineRegExp([
@@ -40,7 +40,7 @@ describe('entitype-websql > entitype > query > where > combine', async () => {
       .where(x => x.name).isNull()
       .or
       .where(x => x.id).between(5, 10)
-      .andWhere(x => x.id).not.equals(6)
+      .and.where(x => x.id).not.equals(6)
       .toList;
     let query = listNode.query;
     expect(query).to.match(multilineRegExp([

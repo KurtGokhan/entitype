@@ -9,8 +9,8 @@ export enum CommandType {
   Take = 7,
   Skip = 8,
   Where = 9,
-  AndWhere = 10,
-  OrWhere = 11,
+  And = 10,
+  Or = 11,
   GroupBy = 12,
   Having = 13,
   OrHaving = 14,
@@ -18,5 +18,6 @@ export enum CommandType {
   Include = 16,
   Insert = 17,
   Update = 18,
-  Persist = 19
+  Persist = 19,
+  Set = 20
 }

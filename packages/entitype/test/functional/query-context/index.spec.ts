@@ -144,13 +144,13 @@ describe('entitype > query-context', async () => {
 
     let ctx = new Context();
     await ctx.models
-      .where(x => x.id).greaterThan(5).andWhere(x => x.id).lessThanOrEqual(10)
+      .where(x => x.id).greaterThan(5).and.where(x => x.id).lessThanOrEqual(10)
       .or
-      .where(x => x.name).equals('Model 3').andWhere(x => x.other.name).not.isNull()
+      .where(x => x.name).equals('Model 3').and.where(x => x.other.name).not.isNull()
       .or
-      .where(x => x.id).greaterThanOrEqual(6).andWhere(x => x.id).lessThan(7)
+      .where(x => x.id).greaterThanOrEqual(6).and.where(x => x.id).lessThan(7)
       .or
-      .where(x => x.id).between(3, 8).andWhere(x => x.id).like('hello').andWhere(x => x.id).in([1, 2])
+      .where(x => x.id).between(3, 8).and.where(x => x.id).like('hello').and.where(x => x.id).in([1, 2])
       .or
       .where(x => x.child).not.isNull()
       .count.query;
@@ -188,6 +188,38 @@ describe('entitype > query-context', async () => {
     let entry = {};
     let ctx = new Context();
     await ctx.models.persist(entry as any);
+  });
+
+  it('should correctly create context in set statements', async () => {
+    mockDriverToReturnData([], ctx => {
+      expect(ctx.edit.entry).to.be.equal(entry);
+      expect(ctx.edit.type).to.eql(CommandType.Set);
+
+
+      let wheres = ctx.wheres;
+      let [[whereEq], [whereNotGt5]] = ctx.whereGroups;
+
+      expect(wheres.length).to.be.equal(2);
+
+      expect(whereEq.parameters).to.be.eql(['eq']);
+      expect(whereEq.conditionType).to.be.eql(ConditionType.Equals);
+      expect(whereEq.negated).to.be.eql(false);
+      expect(whereEq.propertyPath).to.be.eql(['name']);
+
+      expect(whereNotGt5.parameters).to.be.eql([5]);
+      expect(whereNotGt5.conditionType).to.be.eql(ConditionType.GreaterThan);
+      expect(whereNotGt5.negated).to.be.eql(true);
+      expect(whereNotGt5.propertyPath).to.be.eql(['id']);
+
+    });
+
+    let entry = {};
+    let ctx = new Context();
+    await ctx.models
+      .when(x => x.name).equals('eq')
+      .or
+      .when(x => x.id).not.greaterThan(5)
+      .set(entry as any);
   });
 
   it('should throw error when property is unknown in where statements', async () => {

@@ -68,6 +68,7 @@ export class QueryContext {
     this.edit = this.commandChain.find(x =>
       x.type === CommandType.Persist ||
       x.type === CommandType.Insert ||
+      x.type === CommandType.Set ||
       x.type === CommandType.Update
     ) as EditCommand;
 
@@ -78,13 +79,16 @@ export class QueryContext {
       for (let index = firstWhereIndex; index < this.commandChain.length; index++) {
         let cmd = this.commandChain[index];
 
-        if (cmd.type === CommandType.OrWhere) {
+        if (cmd.type === CommandType.Or) {
           currentWhereGroup = [];
           this.whereGroups.push(currentWhereGroup);
         }
         else if (cmd.type === CommandType.Where) {
           cmd = this.resolveWhereConditionForTable(cmd as WhereCommand);
           currentWhereGroup.push(cmd as WhereCommand);
+        }
+        else if (cmd.type === CommandType.And) {
+          continue;
         }
         else break;
       }
