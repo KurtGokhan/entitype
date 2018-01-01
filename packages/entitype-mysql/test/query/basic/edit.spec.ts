@@ -21,7 +21,7 @@ describe.skip('entitype-mysql > query > edit', async () => {
     entry.name = 'Entry1';
 
     let ctx = new Context();
-    let query = ctx.models.insert(entry);
+    ctx.models.insert(entry);
   });
 
 
@@ -35,7 +35,7 @@ describe.skip('entitype-mysql > query > edit', async () => {
     entry.name = 'Entry1';
 
     let ctx = new Context();
-    let query = ctx.models.insert(entry);
+    ctx.models.insert(entry);
   });
 
   it('should be able to update', async () => {
@@ -48,7 +48,7 @@ describe.skip('entitype-mysql > query > edit', async () => {
     entry.name = 'Entry1';
 
     let ctx = new Context();
-    let query = ctx.models.update(entry);
+    ctx.models.update(entry);
   });
 });
 

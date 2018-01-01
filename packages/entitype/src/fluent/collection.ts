@@ -1,6 +1,6 @@
 import { DataType, PropertyExpression } from './';
 
-export interface ISetable<EntityType>{
+export interface ISetable<EntityType> {
   set(entry: Partial<EntityType>): Promise<void>;
 }
 
@@ -10,7 +10,7 @@ export interface ISetFiltered<EntityType> extends ISetable<EntityType> {
 }
 
 export interface ISetFilterCondition<EntityType, PropertyType> {
-  readonly not: ISetFilterCondition<EntityType, PropertyType>;
+  readonly not: this;
 
   equals(value: PropertyType): ISetFiltered<EntityType>;
   greaterThan(value: PropertyType): ISetFiltered<EntityType>;
