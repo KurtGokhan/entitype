@@ -24,7 +24,7 @@
         "entitype-mysql": ["./packages/entitype-mysql/src"],
         "entitype-websql": ["./packages/entitype-websql/src"],
         "entitype/dist/plugins": ["./packages/entitype/src/plugins"],
-        "examples/*": ["./packages/examples/*"]
+        "common*": ["./packages/common*"]
       }
     },
     "exclude": [

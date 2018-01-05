@@ -22,8 +22,8 @@
       "entitype-websql": [
         "./node_modules/entitype-websql"
       ],
-      "examples/*": [
-        "../examples/*"
+      "common*": [
+        "../common*"
       ]
     }
   },
