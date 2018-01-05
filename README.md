@@ -40,18 +40,16 @@ npm install --save entitype
 npm install --save entitype-mysql
 ```
 
-Enable TypeScript experimental features in your `tsconfig.json` under `compilerOptions`:
-
-```json
-"emitDecoratorMetadata": true,
-"experimentalDecorators": true,
-```
-
 ## Quick Start
 
 ### Defining a Model
 
 Entitype models are classes where the class and its properties are "decorated".
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 import { Column, Entity } from 'entitype';
@@ -67,6 +65,8 @@ export class Customer {
 }
 ```
 
+</details>
+
 ### Defining Relationships
 
 Relationships on a table are defined by putting decorators on navigation properties.
@@ -76,6 +76,11 @@ The valid navigation property decorators are `OneToOne`, `OneToMany`, `ManyToOne
 ### Defining a One-to-Many Relationship
 
 A *One-to-Many* relationship is defined by using `OneToMany` and `ManyToOne` decorators. For first parameter, the entity type which owns the foreign key for this relationship is passed. The second parameter is for declaring the foreign key.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 export class Customer {
@@ -98,9 +103,16 @@ export class Order {
 }
 ```
 
+</details>
+
 ### Defining a One-to-One Relationship
 
 A *One-to-One* relationship is a special case of *One-to-Many* relationship and is not much different. Instead of an array for property type, a singular value is used. `OneToOne` decorator is used to specify this kind of relationship.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 export class Customer {
@@ -123,9 +135,16 @@ export class Order {
 }
 ```
 
+</details>
+
 ### Defining a Many-to-Many Relationship
 
 A *Many-to-Many* relationship can also be defined in Entitype. For this relationship, a mapping entity must be defined like any other entity.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 @Entity('employee_privileges_mapping_table')
@@ -139,7 +158,14 @@ export class EmployeePrivilege {
 }
 ```
 
+</details>
+
 The entities to be mapped can be decorated with `ManyToMany` decorator using the mapping entity defined above. First parameter is for array type, second parameter is the mapping entity type. Third and fourth parameters are for left key and right key respectively.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 @Entity('employees')
@@ -160,9 +186,16 @@ export class Privilege {
 
 ```
 
+</details>
+
 ### Defining the Context
 
 A context must be defined before starting using Entitype.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
@@ -178,11 +211,18 @@ export class MyContext extends EntitypeContext {
 
 ```
 
+</details>
+
 ### Configuring the Connection
 
 You can specify the configuration which Entitype will use to connect to database. This must be done only once in the lifecycle of your program.
 
 Also the plugin must be imported atleast once to resolve dependencies. The plugin to be used is specified with `adapter` property of the options object. Plugins are conventionally named `entitype-[pluginName]`.
+
+<details>
+<summary>
+Example
+</summary>
 
 ```typescript
 import { useConfiguration } from 'entitype';
@@ -197,6 +237,8 @@ useConfiguration(<MysqlConnectionOptions>{
   user: 'root'
 })
 ```
+
+</details>
 
 ### Querying API
 
@@ -324,7 +366,8 @@ let customerNamesOrdered = await ctx.customers
 
 ## Examples
 
-More examples can be found in the [integration test repository][entitype-integration-tests-url].
+* [Angular example app][entitype-angular-example-url] using WebSQL adapter.
+* [React example app][entitype-react-example-url] using WebSQL adapter.
 
 [travis-badge-image]: https://travis-ci.org/entitype/entitype.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/entitype/entitype
@@ -337,7 +380,9 @@ More examples can be found in the [integration test repository][entitype-integra
 
 [entitype-url]: https://github.com/entitype/entitype
 [entitype-cli-url]: https://github.com/entitype/entitype/tree/master/packages/entitype-cli
-[entitype-integration-tests-url]: https://github.com/entitype/entitype/tree/master/packages/entitype-integration-tests
 [typeorm-url]: https://github.com/typeorm/typeorm
 [entity-framework-url]: https://github.com/aspnet/EntityFramework6
 [entitype-plugins-url]: https://www.npmjs.com/search?q=entitype
+
+[entitype-angular-example-url]: https://stackblitz.com/edit/angular-entitype-demo?file=demo.ts
+[entitype-react-example-url]: https://stackblitz.com/edit/react-entitype-demo?file=demo.tsx
