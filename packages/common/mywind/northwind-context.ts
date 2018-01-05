@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
+import { DbCollection, DbSet, EntitypeContext } from 'entitype';
 
 import { Customer } from './customer';
 import { Employee } from './employee';
@@ -23,59 +23,59 @@ import { Supplier } from './supplier';
 export class NorthwindContext extends EntitypeContext {
   
   @DbCollection(() => Customer)
-  customers: IQueryable<Customer>;
+  customers: DbSet<Customer>;
   
   @DbCollection(() => Employee)
-  employees: IQueryable<Employee>;
+  employees: DbSet<Employee>;
   
   @DbCollection(() => InventoryTransactionType)
-  inventoryTransactionTypes: IQueryable<InventoryTransactionType>;
+  inventoryTransactionTypes: DbSet<InventoryTransactionType>;
   
   @DbCollection(() => InventoryTransaction)
-  inventoryTransactions: IQueryable<InventoryTransaction>;
+  inventoryTransactions: DbSet<InventoryTransaction>;
   
   @DbCollection(() => Invoice)
-  invoices: IQueryable<Invoice>;
+  invoices: DbSet<Invoice>;
   
   @DbCollection(() => OrderDetail)
-  orderDetails: IQueryable<OrderDetail>;
+  orderDetails: DbSet<OrderDetail>;
   
   @DbCollection(() => OrderDetailsStatus)
-  orderDetailsStatuses: IQueryable<OrderDetailsStatus>;
+  orderDetailsStatuses: DbSet<OrderDetailsStatus>;
   
   @DbCollection(() => Order)
-  orders: IQueryable<Order>;
+  orders: DbSet<Order>;
   
   @DbCollection(() => OrdersStatus)
-  ordersStatuses: IQueryable<OrdersStatus>;
+  ordersStatuses: DbSet<OrdersStatus>;
   
   @DbCollection(() => OrdersTaxStatus)
-  ordersTaxStatuses: IQueryable<OrdersTaxStatus>;
+  ordersTaxStatuses: DbSet<OrdersTaxStatus>;
   
   @DbCollection(() => Privilege)
-  privileges: IQueryable<Privilege>;
+  privileges: DbSet<Privilege>;
   
   @DbCollection(() => Product)
-  products: IQueryable<Product>;
+  products: DbSet<Product>;
   
   @DbCollection(() => PurchaseOrderDetail)
-  purchaseOrderDetails: IQueryable<PurchaseOrderDetail>;
+  purchaseOrderDetails: DbSet<PurchaseOrderDetail>;
   
   @DbCollection(() => PurchaseOrderStatus)
-  purchaseOrderStatuses: IQueryable<PurchaseOrderStatus>;
+  purchaseOrderStatuses: DbSet<PurchaseOrderStatus>;
   
   @DbCollection(() => PurchaseOrder)
-  purchaseOrders: IQueryable<PurchaseOrder>;
+  purchaseOrders: DbSet<PurchaseOrder>;
   
   @DbCollection(() => SalesReport)
-  salesReports: IQueryable<SalesReport>;
+  salesReports: DbSet<SalesReport>;
   
   @DbCollection(() => Shipper)
-  shippers: IQueryable<Shipper>;
+  shippers: DbSet<Shipper>;
   
   @DbCollection(() => String)
-  strings: IQueryable<String>;
+  strings: DbSet<String>;
   
   @DbCollection(() => Supplier)
-  suppliers: IQueryable<Supplier>;
+  suppliers: DbSet<Supplier>;
 }

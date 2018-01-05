@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
+import { DbCollection, DbSet, EntitypeContext } from 'entitype';
 
 import { Category } from './category';
 import { Customer } from './customer';
@@ -15,35 +15,35 @@ import { Territory } from './territory';
 export class NorthwindContext extends EntitypeContext {
 
   @DbCollection(() => Category)
-  categories: IQueryable<Category>;
+  categories: DbSet<Category>;
 
   @DbCollection(() => Customerdemographic)
-  customerdemographics: IQueryable<Customerdemographic>;
+  customerdemographics: DbSet<Customerdemographic>;
 
   @DbCollection(() => Customer)
-  customers: IQueryable<Customer>;
+  customers: DbSet<Customer>;
 
   @DbCollection(() => Employee)
-  employees: IQueryable<Employee>;
+  employees: DbSet<Employee>;
 
   @DbCollection(() => OrderDetail)
-  orderDetails: IQueryable<OrderDetail>;
+  orderDetails: DbSet<OrderDetail>;
 
   @DbCollection(() => Order)
-  orders: IQueryable<Order>;
+  orders: DbSet<Order>;
 
   @DbCollection(() => Product)
-  products: IQueryable<Product>;
+  products: DbSet<Product>;
 
   @DbCollection(() => Region)
-  regions: IQueryable<Region>;
+  regions: DbSet<Region>;
 
   @DbCollection(() => Shipper)
-  shippers: IQueryable<Shipper>;
+  shippers: DbSet<Shipper>;
 
   @DbCollection(() => Supplier)
-  suppliers: IQueryable<Supplier>;
+  suppliers: DbSet<Supplier>;
 
   @DbCollection(() => Territory)
-  territories: IQueryable<Territory>;
+  territories: DbSet<Territory>;
 }

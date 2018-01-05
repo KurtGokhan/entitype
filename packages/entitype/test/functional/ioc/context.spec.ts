@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Column, ConnectionOptions, DbCollection, Entity, IQueryable, useConfiguration } from '../../../src';
+import { Column, ConnectionOptions, DbCollection, DbSet, Entity, useConfiguration } from '../../../src';
 import { container } from '../../../src/plugins';
 import { EntitypeContext } from '../../../src/query/EntitypeContext';
 
@@ -30,7 +30,7 @@ describe('entitype > ioc > Context', async () => {
 
   class TestContext extends EntitypeContext {
     @DbCollection(() => TestEntity)
-    entities: IQueryable<TestEntity>;
+    entities: DbSet<TestEntity>;
   }
 
 

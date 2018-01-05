@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
+import { DbCollection, DbSet, EntitypeContext } from 'entitype';
 
 import { ChildModel } from './ChildModel';
 import { Model } from './Model';
@@ -9,8 +9,8 @@ export class Context extends EntitypeContext {
   }
 
   @DbCollection(() => Model)
-  models: IQueryable<Model>;
+  models: DbSet<Model>;
 
   @DbCollection(() => ChildModel)
-  childmodels: IQueryable<ChildModel>;
+  childmodels: DbSet<ChildModel>;
 }

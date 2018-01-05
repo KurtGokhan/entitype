@@ -198,15 +198,15 @@ Example
 </summary>
 
 ```typescript
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
+import { DbCollection, EntitypeContext, DbSet } from 'entitype';
 
 export class MyContext extends EntitypeContext {
 
   @DbCollection(() => Customer)
-  customers: IQueryable<Customer>;
+  customers: DbSet<Customer>;
 
   @DbCollection(() => Order)
-  orders: IQueryable<Order>;
+  orders: DbSet<Order>;
 }
 
 ```

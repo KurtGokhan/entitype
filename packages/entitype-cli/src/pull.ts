@@ -415,7 +415,7 @@ class Pull {
   private async createContextFile(options: IPullOptions, context: Context) {
     let directory = path.resolve(options.output);
     fs.mkdirpSync(directory);
-    let entitypeImports = new Set<string>(['EntitypeContext', 'IQueryable', 'DbCollection']);
+    let entitypeImports = new Set<string>(['EntitypeContext', 'DbSet', 'DbCollection']);
     let ctxImports = new Set<EntityDefinition>();
     let propertyLines = [];
 
@@ -424,7 +424,7 @@ class Pull {
       ctxImports.add(entity);
       propertyLines.push('');
       propertyLines.push(`@DbCollection(() => ${entity.className})`);
-      propertyLines.push(`${entity.contextPropertyName}: IQueryable<${entity.className}>;`);
+      propertyLines.push(`${entity.contextPropertyName}: DbSet<${entity.className}>;`);
     });
 
 

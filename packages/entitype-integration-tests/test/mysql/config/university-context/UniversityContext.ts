@@ -1,4 +1,4 @@
-import { DbCollection, EntitypeContext, IQueryable } from 'entitype';
+import { DbCollection, DbSet, EntitypeContext } from 'entitype';
 import { Course } from './Course';
 import { Instructor } from './Instructor';
 import { Student } from './Student';
@@ -9,11 +9,11 @@ export class UniversityContext extends EntitypeContext {
   }
 
   @DbCollection(() => Student)
-  students: IQueryable<Student>;
+  students: DbSet<Student>;
 
   @DbCollection(() => Course)
-  courses: IQueryable<Course>;
+  courses: DbSet<Course>;
 
   @DbCollection(() => Instructor)
-  instructors: IQueryable<Instructor>;
+  instructors: DbSet<Instructor>;
 }
