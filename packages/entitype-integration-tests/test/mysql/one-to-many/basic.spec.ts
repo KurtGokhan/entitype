@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { integrationTestDatabaseSeed } from '../../northwind/helper';
 
-import * as nw from '../../northwind/models';
+import * as nw from 'examples/mywind';
 
 describe('entitype-integration-tests > query > one-to-many > basic', async () => {
   beforeEach(integrationTestDatabaseSeed);

@@ -1,8 +1,8 @@
+import '~/test/helper';
+
 import { useConfiguration } from 'entitype';
 import { MysqlConnectionOptions } from 'entitype-mysql';
 import { createConnection } from 'mysql2/promise';
-
-import '../../../test/helper';
 
 export let connectionOptions: MysqlConnectionOptions = {} as any;
 

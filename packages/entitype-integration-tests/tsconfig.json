@@ -10,6 +10,9 @@
     "outDir": "build",
     "baseUrl": "./",
     "paths": {
+      "~/*": [
+        "../../*"
+      ],
       "entitype": [
         "./node_modules/entitype"
       ],
@@ -18,6 +21,9 @@
       ],
       "entitype-websql": [
         "./node_modules/entitype-websql"
+      ],
+      "examples/*": [
+        "../examples/*"
       ]
     }
   },

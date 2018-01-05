@@ -30,6 +30,14 @@ module.exports = function (config) {
     webpack: webpackConfig,
     mime: {
       'text/x-typescript': ['ts', 'tsx']
+    },
+
+    client: {
+      mocha: {
+        // change Karma's debug.html to the mocha web reporter
+        reporter: 'html',
+        ui: 'bdd'
+      }
     }
   });
 };

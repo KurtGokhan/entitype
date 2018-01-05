@@ -1,5 +1,5 @@
 
-import '../../../../test/helper';
+import '~/test/helper';
 
 import { useConfiguration } from 'entitype';
 import { WebSqlConnectionOptions, WebSqlDriver } from 'entitype-websql';

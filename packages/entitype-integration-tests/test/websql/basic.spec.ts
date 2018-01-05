@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { Context } from '../mysql/config/entities/Context';
 import { seedDatabase } from './helper';
 
-import { NorthwindContext } from '../northwind/sqlite';
+import { NorthwindContext } from 'examples/northwind-sqlite';
 import { seedNorthwindDatabase } from './helper';
 
 describe('entitype-integration-tests > query > one-to-one > basic', async () => {

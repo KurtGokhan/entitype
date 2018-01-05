@@ -349,7 +349,7 @@ let customerNamesOrdered = await ctx.customers
 
 <details>
 <summary>
-By tefault, navigation properties are not loaded if they are not referenced in any part of the query. Explicitly specify an include statement to load them: 
+By tefault, navigation properties are not loaded if they are not referenced in any part of the query. Explicitly specify an include statement to load them:
 </summary>
 
 ```typescript

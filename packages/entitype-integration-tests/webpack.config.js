@@ -8,6 +8,9 @@ module.exports = {
       path.dirname(__dirname), // Search entitype packages in the parent directory
       `${__dirname}/node_modules`,
       path.resolve(__dirname, '..', '..', 'node_modules') // Lerna hoisting
+    ],
+    plugins: [
+      new TsConfigPathsPlugin()
     ]
   },
   module: {
