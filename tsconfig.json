@@ -1,37 +1,53 @@
 {
-    "version": "2.1.1",
-    "compilerOptions": {
-      "lib": [
-        "es5",
-        "es6",
-        "dom"
+  "version": "2.1.1",
+  "compilerOptions": {
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "stripInternal": true,
+    "pretty": true,
+    "baseUrl": "./",
+    "typeRoots": [
+      "node_modules/@types",
+      "test"
+    ],
+    "paths": {
+      "~/*": [
+        "./*"
       ],
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": true,
-      "declaration": true,
-      "noFallthroughCasesInSwitch": true,
-      "noImplicitReturns": true,
-      "stripInternal": true,
-      "pretty": true,
-      "baseUrl": "./",
-      "paths": {
-        "~/*": ["./*"],
-        "entitype": ["./packages/entitype/src"],
-        "entitype-mysql": ["./packages/entitype-mysql/src"],
-        "entitype-websql": ["./packages/entitype-websql/src"],
-        "entitype/dist/plugins": ["./packages/entitype/src/plugins"],
-        "common/*": ["./packages/common/*"]
-      }
-    },
-    "exclude": [
-      "**/tmp",
-      "**/temp",
-      "**/build",
-      "**/dist",
-      "**/node_modules"
-    ]
-  }
+      "entitype": [
+        "./packages/entitype/src"
+      ],
+      "entitype-mysql": [
+        "./packages/entitype-mysql/src"
+      ],
+      "entitype-websql": [
+        "./packages/entitype-websql/src"
+      ],
+      "entitype/dist/plugins": [
+        "./packages/entitype/src/plugins"
+      ],
+      "common/*": [
+        "./packages/common/*"
+      ]
+    }
+  },
+  "exclude": [
+    "**/tmp",
+    "**/temp",
+    "**/build",
+    "**/dist",
+    "**/node_modules"
+  ]
+}

@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { multilineRegExp } from '~/test/util';
 
 import * as nw from '../../../mywind';
 
@@ -12,11 +11,11 @@ export function defineTests(setupConfiguration: () => void, mockDriver?: MockDri
       let ctx = new nw.NorthwindContext();
       let loadModelQuery = ctx.employees.include(x => x.employeePrivileges).select(x => x.firstName).toList.query;
       expect(loadModelQuery).to
-        .match(multilineRegExp([
+        .satisfySql([
           /SELECT .* FROM employees as t0 /,
-          /LEFT JOIN employeeprivileges as m\d+ ON m\d+.employeeId = t0.id /,
-          /LEFT JOIN privileges as t\d+ ON m\d+.privilegeId = t\d+.id/i
-        ], 'i'));
+          /LEFT JOIN employee_privileges as m\d+ ON m\d+.employee_id = t0.id /,
+          /LEFT JOIN privileges as t\d+ ON m\d+.privilege_id = t\d+.id/i
+        ]);
     });
   });
 }
