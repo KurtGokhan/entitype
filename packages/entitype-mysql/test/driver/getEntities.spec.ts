@@ -1,12 +1,9 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { setupConfiguration } from '../helper';
 
 import { ColumnMetadata, ForeignKeyMetadata, MysqlDriver } from '../../src';
 
 describe(`mysql > driver > runQuery`, async () => {
-  beforeEach(setupConfiguration);
-
   let mock;
 
   afterEach(() => mock.restore());
