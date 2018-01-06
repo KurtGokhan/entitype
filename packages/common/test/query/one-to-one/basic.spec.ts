@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
-  describe('entitype-mysql > query > one-to-one > basic', async () => {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+  describe(`${adapterName} > query > one-to-one > basic`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to select from owning side', async () => {

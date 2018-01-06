@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
 
-  describe('entitype-mysql > query > where > with count', async () => {
+  describe(`${adapterName} > query > where > with count`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to filter selection and take count', async () => {

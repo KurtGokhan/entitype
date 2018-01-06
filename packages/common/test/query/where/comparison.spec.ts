@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
 
-  describe('entitype-mysql > query > where > comparison', async () => {
+  describe(`${adapterName} > query > where > comparison`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to filter with lessThan', async () => {

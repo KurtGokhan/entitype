@@ -4,7 +4,7 @@ import { setupConfiguration } from '../helper';
 
 import { ColumnMetadata, ForeignKeyMetadata, MysqlDriver } from '../../src';
 
-describe('entitype-mysql > driver > runQuery', async () => {
+describe(`mysql > driver > runQuery`, async () => {
   beforeEach(setupConfiguration);
 
   let mock;

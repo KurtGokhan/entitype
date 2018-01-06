@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
-  describe('entitype-mysql > entitype > query > many-to-many > basic', async () => {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+  describe(`${adapterName} > entitype > query > many-to-many > basic`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to select basic', async () => {

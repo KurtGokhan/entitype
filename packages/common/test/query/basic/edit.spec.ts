@@ -4,8 +4,8 @@ import { container } from 'entitype/dist/plugins';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
-  describe.skip('entitype-mysql > query > edit', async () => {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+  describe.skip(`${adapterName} > query > edit`, async () => {
     beforeEach(setupConfiguration);
     beforeEach(() => container.snapshot());
     afterEach(() => container.restore());

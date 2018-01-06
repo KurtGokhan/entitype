@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: (queryCallback?: (query: string) => void) => void) {
-  describe('entitype-mysql > query > basic', async () => {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: (queryCallback?: (query: string) => void) => void) {
+  describe(`${adapterName} > query > basic`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to select all', async () => {

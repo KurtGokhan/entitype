@@ -7,6 +7,9 @@
             ],
             "properties": {
                 "adapter": {
+                    "enum": [
+                        "mysql"
+                    ],
                     "type": "string"
                 },
                 "connectTimeout": {

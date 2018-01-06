@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
 
-  describe('entitype-mysql > query > basic > orderby', async () => {
+  describe(`${adapterName} > query > basic > orderby`, async () => {
     beforeEach(setupConfiguration);
 
     it('should be able to order by ascending', async () => {

@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import * as nw from '../../../mywind';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
-export function defineTests(setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
+export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
 
-  describe('entitype-mysql > query > where > error', async () => {
+  describe(`${adapterName} > query > where > error`, async () => {
     beforeEach(setupConfiguration);
 
     it('should throw when trying to navigate to an unknown property', async () => {

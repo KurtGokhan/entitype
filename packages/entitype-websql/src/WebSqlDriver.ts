@@ -22,7 +22,10 @@ export class WebSqlDriver implements DriverAdapter {
 
       connection.transaction((tx) => {
         tx.executeSql(query, [], (_, resultSet) => result = resultSet);
-      }, rejectTx, () => resolveTx(result));
+      },
+        rejectTx,
+        () => resolveTx(result)
+      );
     });
 
     let rowArray = [];

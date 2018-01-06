@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import { MysqlDriver } from '../../src';
 import { setupConfiguration } from '../helper';
 
-describe('entitype-mysql > driver > runQuery', async () => {
+describe(`mysql > driver > runQuery`, async () => {
   beforeEach(setupConfiguration);
 
   let mock;
