@@ -10,7 +10,7 @@ import { SkipCommand } from '../command/command-types/SkipCommand';
 import { TakeCommand } from '../command/command-types/TakeCommand';
 import { WhereCommand } from '../command/command-types/WhereCommand';
 import { CommandType } from '../command/CommandType';
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { JoinTreeNode } from '../common/JoinTreeNode';
 import { UnknownPropertyError } from '../common/UnknownPropertyError';
 import { PropertyPath } from '../fluent';
@@ -44,7 +44,7 @@ export class QueryContext {
 
   public edit: EditCommand;
 
-  constructor(public commandChain: Command[], public entity: DecoratorStorage.Entity) {
+  constructor(public commandChain: Command[], public entity: EntitypeMetadata.Entity) {
     this.selectedColumns = [];
 
     this.resolveCommands();
@@ -99,7 +99,7 @@ export class QueryContext {
     let columnInfo = this.getColumnInfoForPropertyPath(cmd.propertyPath);
     if (!columnInfo.isNavigationProperty) return cmd;
 
-    let entity = DecoratorStorage.getEntity(columnInfo.type);
+    let entity = EntitypeMetadata.getEntity(columnInfo.type);
     let pk = entity.primaryKeys[0];
 
     let newCommand = new WhereCommand();
@@ -193,7 +193,7 @@ export class QueryContext {
         let parentPath = currentPathNode.path;
         let currentPath = parentPath.concat(node);
         let col = currentPathNode.entity.properties.find(x => x.name === node);
-        let colEntity = DecoratorStorage.getEntity(col.type);
+        let colEntity = EntitypeMetadata.getEntity(col.type);
 
         this.addEntityPrimaryKeysToSelectedColumns(colEntity, currentPath);
 
@@ -214,7 +214,7 @@ export class QueryContext {
     });
   }
 
-  private addEntityPrimaryKeysToSelectedColumns(entity: DecoratorStorage.Entity, currentPath: PropertyPath) {
+  private addEntityPrimaryKeysToSelectedColumns(entity: EntitypeMetadata.Entity, currentPath: PropertyPath) {
     let primaryKeys = entity.primaryKeys;
     for (let index = 0; index < primaryKeys.length; index++) {
       let primaryKey = primaryKeys[index];
@@ -245,7 +245,7 @@ export class QueryContext {
     return currentPathNode;
   }
 
-  getColumnInfoForPropertyPath(path: PropertyPath): DecoratorStorage.Property {
+  getColumnInfoForPropertyPath(path: PropertyPath): EntitypeMetadata.Property {
     let entity = this.entity;
     let col = null;
 
@@ -256,7 +256,7 @@ export class QueryContext {
 
       col = entity.properties.find(x => x.name === prop);
 
-      if (col) entity = DecoratorStorage.getEntity(col.type);
+      if (col) entity = EntitypeMetadata.getEntity(col.type);
       else entity = null;
     }
     return col;

@@ -1,4 +1,4 @@
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { PropertyExpression } from '../fluent';
 import { resolvePropertyExpression } from '../fluent/property-selector';
@@ -14,13 +14,13 @@ export function ManyToMany<ArrayType, JoinTableType, LeftKeyType, RightKeyType>(
   let propertyDecorator = (target, propertyKey) => {
     let joinTypeResolved = resolveType(joinTableType);
 
-    let mtm = new DecoratorStorage.ManyToManyMapping(
+    let mtm = new EntitypeMetadata.ManyToManyMapping(
       joinTypeResolved,
       resolvePropertyExpression(leftKey),
       resolvePropertyExpression(rightKey)
     );
 
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, arrayType, {});
+    let column = EntitypeMetadata.addColumn(target.constructor, propertyKey, arrayType, {});
     column.isNavigationProperty = true;
     column.isArray = true;
     column.manyToManyMapping = mtm;

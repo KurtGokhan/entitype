@@ -1,7 +1,7 @@
 import { Command } from '../command/Command';
 import { QueryCommand } from '../command/command-types/QueryCommand';
 import { CommandType } from '../command/CommandType';
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { ConnectionOptions } from '../configuration';
 import { DriverAdapter, getDriverAdapter, getQueryBuilder, QueryBuilderAdapter } from '../ioc';
 import { QueryContext } from './QueryContext';
@@ -15,7 +15,7 @@ export class CommandRunner {
 
   constructor(
     private commandChain: Command[],
-    private entity: DecoratorStorage.Entity,
+    private entity: EntitypeMetadata.Entity,
     private config: ConnectionOptions) {
 
     if (this.config) this.resolveDependencies();

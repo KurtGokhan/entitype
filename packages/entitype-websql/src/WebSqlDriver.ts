@@ -1,5 +1,5 @@
 import { ConnectionOptions } from 'entitype';
-import { ColumnData, DecoratorStorage, Driver, DriverAdapter, RowData } from 'entitype/dist/plugins';
+import { ColumnData, Driver, DriverAdapter, EntitypeMetadata, RowData } from 'entitype/dist/plugins';
 
 import { WebSqlConnectionOptions } from './WebSqlConnectionOptions';
 
@@ -37,7 +37,7 @@ export class WebSqlDriver implements DriverAdapter {
     return [rowArray, null];
   }
 
-  async getEntities(options: string | ConnectionOptions): Promise<DecoratorStorage.Entity[]> {
+  async getEntities(options: string | ConnectionOptions): Promise<EntitypeMetadata.Entity[]> {
     throw new Error('Schema operations are not supported in Entitype WebSQL plugin.');
   }
 }

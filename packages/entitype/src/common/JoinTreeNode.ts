@@ -1,12 +1,12 @@
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { PropertyPath } from '../fluent';
 import { Alias } from '../query/Alias';
 
 export class JoinTreeNode {
   path: PropertyPath;
   pathPart: string;
-  entity: DecoratorStorage.Entity;
-  column: DecoratorStorage.Property;
+  entity: EntitypeMetadata.Entity;
+  column: EntitypeMetadata.Property;
 
   alias: Alias;
 

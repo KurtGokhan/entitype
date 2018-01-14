@@ -1,15 +1,15 @@
 
 import { expect } from 'chai';
-import { DecoratorStorage } from '../../../../src/common/DecoratorStorage';
+import { EntitypeMetadata } from '../../../../src/common/EntitypeMetadata';
 
 import { ChildModel } from './entity/ChildModel';
 import { Model } from './entity/Model';
 import { OtherModel } from './entity/OtherModel';
 
 export function assertForeignKeys() {
-  let model = DecoratorStorage.getEntity(Model);
-  let childmodel = DecoratorStorage.getEntity(ChildModel);
-  let othermodel = DecoratorStorage.getEntity(OtherModel);
+  let model = EntitypeMetadata.getEntity(Model);
+  let childmodel = EntitypeMetadata.getEntity(ChildModel);
+  let othermodel = EntitypeMetadata.getEntity(OtherModel);
 
   let modelChild = model.properties.find(x => x.name === 'child');
   let modelOther = model.properties.find(x => x.name === 'other');
@@ -32,9 +32,9 @@ export function assertForeignKeys() {
 }
 
 export function assertColumns() {
-  let model = DecoratorStorage.getEntity(Model);
-  let childmodel = DecoratorStorage.getEntity(ChildModel);
-  let othermodel = DecoratorStorage.getEntity(OtherModel);
+  let model = EntitypeMetadata.getEntity(Model);
+  let childmodel = EntitypeMetadata.getEntity(ChildModel);
+  let othermodel = EntitypeMetadata.getEntity(OtherModel);
 
   let modelId = model.properties.find(x => x.name === 'id');
   let modelName = model.properties.find(x => x.name === 'name');
@@ -71,9 +71,9 @@ export function assertColumns() {
 }
 
 export function assertEntities() {
-  let model = DecoratorStorage.getEntity(Model);
-  let childmodel = DecoratorStorage.getEntity(ChildModel);
-  let othermodel = DecoratorStorage.getEntity(OtherModel);
+  let model = EntitypeMetadata.getEntity(Model);
+  let childmodel = EntitypeMetadata.getEntity(ChildModel);
+  let othermodel = EntitypeMetadata.getEntity(OtherModel);
 
   expect(model);
   expect(model.type).to.be.equal(Model);

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { ColumnDecorator, ColumnOptions } from './';
 
 export function Column(): ColumnDecorator;
@@ -17,7 +17,7 @@ export function Column(optionsOrName?: ColumnOptions | string): ColumnDecorator 
   let retType = (target, propertyKey) => {
     let metadata = Reflect.getMetadata('design:type', target, propertyKey);
 
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => metadata, options);
+    let column = EntitypeMetadata.addColumn(target.constructor, propertyKey, () => metadata, options);
     column.isColumn = true;
   };
 

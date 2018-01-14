@@ -1,7 +1,7 @@
 import { ForwardRef, resolveType, TypeResolver } from '../common/forwardRef';
 import { ColumnOptions, DefaultColumnOptions, EntityOptions } from '../decorators';
 
-export namespace DecoratorStorage {
+export namespace EntitypeMetadata {
   export class EntityError extends Error {
     constructor(public data: ContextError[], message?: string) {
       super(message);

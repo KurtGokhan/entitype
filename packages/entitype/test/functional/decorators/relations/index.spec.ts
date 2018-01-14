@@ -1,13 +1,13 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from '../../../../src/common/DecoratorStorage';
+import { EntitypeMetadata } from '../../../../src/common/EntitypeMetadata';
 import * as university from '../../../config/university-context';
 
 
 describe('entitype > decorators > relations', async () => {
   it('should create and store many-to-many columns', () => {
-    let student = DecoratorStorage.getEntity(university.Student);
-    let course = DecoratorStorage.getEntity(university.Course);
-    let map = DecoratorStorage.getEntity(university.StudentCourseMap);
+    let student = EntitypeMetadata.getEntity(university.Student);
+    let course = EntitypeMetadata.getEntity(university.Course);
+    let map = EntitypeMetadata.getEntity(university.StudentCourseMap);
 
     let studentCourses = student.properties.find(x => x.name === 'courses');
     let courseStudents = course.properties.find(x => x.name === 'students');
@@ -33,8 +33,8 @@ describe('entitype > decorators > relations', async () => {
   });
 
   it('should create and store one-to-many and many-to-one columns', () => {
-    let instructor = DecoratorStorage.getEntity(university.Instructor);
-    let course = DecoratorStorage.getEntity(university.Course);
+    let instructor = EntitypeMetadata.getEntity(university.Instructor);
+    let course = EntitypeMetadata.getEntity(university.Course);
 
     let instructorCourses = instructor.properties.find(x => x.name === 'courses');
     let courseInstructor = course.properties.find(x => x.name === 'instructor');

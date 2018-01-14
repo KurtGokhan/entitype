@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { integrationTestDatabaseSeed } from '../../northwind/helper';
+import { integrationTestDatabaseSeed } from '../northwind/helper';
 
 import * as nw from 'common/mywind';
 

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { resolveType, TypeResolver } from '../common/forwardRef';
 import { NavigationPropertyDecorator } from '../decorators';
 import { PropertyExpression } from '../fluent';
@@ -20,7 +20,7 @@ export function ManyToOne<EntityType, SelectType>(
 
     let type = Reflect.getMetadata('design:type', target, propertyKey);
 
-    let column = DecoratorStorage.addColumn(target.constructor, propertyKey, () => type, {});
+    let column = EntitypeMetadata.addColumn(target.constructor, propertyKey, () => type, {});
     column.isNavigationProperty = true;
     column.foreignKey = fk;
   };

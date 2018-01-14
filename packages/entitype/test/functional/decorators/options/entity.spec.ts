@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from '../../../../src/common/DecoratorStorage';
+import { EntitypeMetadata } from '../../../../src/common/EntitypeMetadata';
 import { EntityOptions } from '../../../../src/decorators';
 import { ObjectType } from '../../../../src/fluent';
 
@@ -7,15 +7,15 @@ import { ImplicitlyNamedModel, NamedModel, NamedModelOpts, NamedModelParams } fr
 
 
 function checkEntityOptionValue<EntityType>(entityType: ObjectType<EntityType>, optionName: (keyof EntityOptions), expectedValue: any) {
-  let entity = DecoratorStorage.getEntity(entityType);
+  let entity = EntitypeMetadata.getEntity(entityType);
 
   let actualValue = entity.options[optionName];
 
   expect(actualValue).to.be.equal(expectedValue);
 }
 
-function checkEntityPropertyValue<EntityType>(entityType: ObjectType<EntityType>, propName: (keyof DecoratorStorage.Entity), expectedValue: any) {
-  let entity = DecoratorStorage.getEntity(entityType);
+function checkEntityPropertyValue<EntityType>(entityType: ObjectType<EntityType>, propName: (keyof EntitypeMetadata.Entity), expectedValue: any) {
+  let entity = EntitypeMetadata.getEntity(entityType);
 
   let actualValue = entity[propName];
 

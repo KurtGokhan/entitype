@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { DecoratorStorage } from '../../../../src/common/DecoratorStorage';
+import { EntitypeMetadata } from '../../../../src/common/EntitypeMetadata';
 import { ColumnOptions } from '../../../../src/decorators';
 
 import { Model } from './entity/Model';
 
 
 function checkPropertyOptionValue(propName: (keyof Model), optionName: (keyof ColumnOptions), expectedValue: any) {
-  let entity = DecoratorStorage.getEntity(Model);
+  let entity = EntitypeMetadata.getEntity(Model);
   let prop = entity.properties.find(x => x.name === propName);
 
   let actualValue = prop.options[optionName];
@@ -94,7 +94,7 @@ describe('entitype > decorators > column options', async () => {
   });
 
   it('should correctly set multiple primary keys', () => {
-    let entity = DecoratorStorage.getEntity(Model);
+    let entity = EntitypeMetadata.getEntity(Model);
     let pk = entity.primaryKeys;
 
     expect(pk.length).to.be.eql(3);

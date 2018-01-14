@@ -1,4 +1,4 @@
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { EntityDecorator, EntityOptions } from './index';
 
 export function Entity(): EntityDecorator;
@@ -14,7 +14,7 @@ export function Entity(optionsOrName?: EntityOptions | string): EntityDecorator 
     options = optionsOrName || {};
 
   let retType = (target) => {
-    DecoratorStorage.addEntity(target, options);
+    EntitypeMetadata.addEntity(target, options);
   };
 
   retType['tableName'] = tableName => Entity(Object.assign({}, options, { tableName }));

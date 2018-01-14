@@ -1,6 +1,6 @@
 import { Command } from '../command/Command';
 import { CommandNode } from '../command/CommandNode';
-import { DecoratorStorage } from '../common/DecoratorStorage';
+import { EntitypeMetadata } from '../common/EntitypeMetadata';
 import { ConnectionOptions } from '../configuration';
 import { ObjectType } from '../fluent';
 import { getConfiguration } from '../ioc';
@@ -25,8 +25,8 @@ export abstract class EntitypeContext {
   }
 
   private createProxy() {
-    let ctx = DecoratorStorage.getContext(this.constructor);
-    let ctxDict = new Map(ctx.collections.map(col => [col.name, col] as [string, DecoratorStorage.DbCollection]));
+    let ctx = EntitypeMetadata.getContext(this.constructor);
+    let ctxDict = new Map(ctx.collections.map(col => [col.name, col] as [string, EntitypeMetadata.DbCollection]));
     let self = this;
 
     return new Proxy(this, {

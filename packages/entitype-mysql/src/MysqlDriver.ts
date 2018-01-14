@@ -1,5 +1,5 @@
 import { ConnectionOptions, DefaultColumnOptions } from 'entitype';
-import { ColumnData, DecoratorStorage, Driver, DriverAdapter, resolveType, RowData } from 'entitype/dist/plugins';
+import { ColumnData, Driver, DriverAdapter, EntitypeMetadata, resolveType, RowData } from 'entitype/dist/plugins';
 import { createConnection } from 'mysql2/promise';
 
 import { getConstructorForDatabaseType } from './types';
@@ -36,9 +36,9 @@ export class MysqlDriver implements DriverAdapter {
     }
   }
 
-  async getEntities(options: string | ConnectionOptions): Promise<DecoratorStorage.Entity[]> {
+  async getEntities(options: string | ConnectionOptions): Promise<EntitypeMetadata.Entity[]> {
     let tables = await this.getTables(options);
-    let entities = tables.map(table => new DecoratorStorage.Entity({
+    let entities = tables.map(table => new EntitypeMetadata.Entity({
       dbName: table,
       name: table,
       type: function () { },
@@ -68,7 +68,7 @@ export class MysqlDriver implements DriverAdapter {
           column: fk.COLUMN_NAME
         };
 
-        let navigationProperty = new DecoratorStorage.Property({
+        let navigationProperty = new EntitypeMetadata.Property({
           isColumn: false,
           isForeignKey: false,
           isNavigationProperty: true,
@@ -82,7 +82,7 @@ export class MysqlDriver implements DriverAdapter {
 
 
 
-        let counterNavigationProperty = new DecoratorStorage.Property({
+        let counterNavigationProperty = new EntitypeMetadata.Property({
           isColumn: false,
           isForeignKey: false,
           isNavigationProperty: true,
@@ -108,12 +108,12 @@ export class MysqlDriver implements DriverAdapter {
     return rows.map(x => x[key]);
   }
 
-  private async getTableColumns(tableName: string, options: string | ConnectionOptions): Promise<DecoratorStorage.Property[]> {
+  private async getTableColumns(tableName: string, options: string | ConnectionOptions): Promise<EntitypeMetadata.Property[]> {
     let query = 'DESCRIBE `' + tableName + '`';
     let rows: ColumnMetadata[] = (await this.runQuery(query, options))[0] as any;
 
     let columns = rows.map(row => {
-      return new DecoratorStorage.Property({
+      return new EntitypeMetadata.Property({
         name: row.Field,
         dbName: row.Field,
         isColumn: true,

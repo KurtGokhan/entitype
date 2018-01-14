@@ -1,5 +1,5 @@
 import { DefaultColumnOptions } from 'entitype';
-import { DecoratorStorage } from 'entitype/dist/plugins';
+import { EntitypeMetadata } from 'entitype/dist/plugins';
 import * as fs from 'fs-extra';
 import { Question, Questions } from 'inquirer';
 import * as os from 'os';
@@ -24,7 +24,7 @@ type EntityDefinition = ClassDefinition & {
   tableName: string;
   contextPropertyName: string;
   isMappingEntity: boolean;
-  entity: DecoratorStorage.Entity;
+  entity: EntitypeMetadata.Entity;
   propertyDefinitions: PropertyDefinition[];
 };
 
@@ -79,12 +79,12 @@ class Pull {
   }
 
 
-  private async resolveEntityRelationships(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
+  private async resolveEntityRelationships(options: IPullOptions, entities: EntitypeMetadata.Entity[]) {
     await this.resolveManyToMany(options, entities);
     await this.resolveOneToManyOrOneToOne(options, entities);
   }
 
-  private async resolveOneToManyOrOneToOne(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
+  private async resolveOneToManyOrOneToOne(options: IPullOptions, entities: EntitypeMetadata.Entity[]) {
     const choices = ['One To One', 'One To Many'];
 
     let allProperties = entities.map(x => x.properties).reduce((a, b) => a.concat(b));
@@ -132,7 +132,7 @@ class Pull {
     }
   }
 
-  private async resolveManyToMany(options: IPullOptions, entities: DecoratorStorage.Entity[]) {
+  private async resolveManyToMany(options: IPullOptions, entities: EntitypeMetadata.Entity[]) {
     let possibleManyToMany = entities.filter(
       x => x.properties.length === 4 &&
         x.properties.filter(c => c.isForeignKey).length === 2 &&
@@ -196,8 +196,8 @@ class Pull {
     }
   }
 
-  private async createContextDefinitions(entities: DecoratorStorage.Entity[]) {
-    let entityMap = new Map<Function, DecoratorStorage.Entity>(entities.map(x => [x.type, x]) as any);
+  private async createContextDefinitions(entities: EntitypeMetadata.Entity[]) {
+    let entityMap = new Map<Function, EntitypeMetadata.Entity>(entities.map(x => [x.type, x]) as any);
     let context: Context = { entities: [] };
 
     for (let index = 0; index < entities.length; index++) {
