@@ -6,7 +6,7 @@ import { WebSqlConnectionOptions, WebSqlDriver } from 'entitype-websql';
 
 import nwSeed from '../northwind/seed-sqlite-partial';
 
-let seed = require('../mysql/config/seed-sqlite.sql');
+let seed = require('../northwind/seed-websql-small.sql');
 
 export let connectionOptions: WebSqlConnectionOptions = {
   adapter: 'websql',
@@ -30,6 +30,6 @@ export async function runSeed(seed: string) {
 export async function seedNorthwindDatabase() {
   await runSeed(nwSeed);
 }
-export async function seedDatabase() {
+export async function seedWebsqlDatabase() {
   await runSeed(seed);
 }

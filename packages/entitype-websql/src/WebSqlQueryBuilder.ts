@@ -113,7 +113,7 @@ export class WebSqlQueryBuilder implements QueryBuilderAdapter {
     let tokens: string[] = [];
 
     let alias = ctx.getAliasForTable(branch.path);
-    let tableWithAlias = `${branch.entity.dbName} as ${alias}`;
+    let tableWithAlias = `${this.escapeIdentifier(branch.entity.dbName)} as ${alias}`;
     if (branch.parent) {
       let mmp = branch.column.manyToManyMapping;
       let fk = branch.column.foreignKey;
@@ -197,5 +197,12 @@ export class WebSqlQueryBuilder implements QueryBuilderAdapter {
       tokens.push(orderList.join(', '));
     }
     return tokens;
+  }
+
+  escapeIdentifier(identifier: string): string {
+    if (identifier.includes(' ')) {
+      return '`' + identifier + '`';
+    }
+    return identifier;
   }
 }

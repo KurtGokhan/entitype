@@ -1,0 +1,52 @@
+graph TD;
+    Start(( ))-->Include;
+
+    Include-->Include;
+    Include-->AndIts;
+    AndIts-->AndIts;
+    AndIts-->Include;
+    AndIts-->When;
+
+    Include-->When;
+    When-->Include;
+
+    When--And-->When;
+    When--Or-->When;
+    When--Not-->When;
+
+
+    Start-->Where;
+    Include-->Where;
+
+    Where--And-->Where;
+    Where--Or-->Where;
+    Where--Not-->Where;
+
+
+    Where-->OrderBy;
+
+    Start-->OrderBy;
+    OrderBy-->Select;
+    OrderBy-->ThenBy;
+    ThenBy-->ThenBy;
+    ThenBy-->Select;
+
+    Start-->Select;
+    Select-->Skip;
+    Skip-->Take;
+    Skip-->First;
+    Select-->Take;
+    Take-->ToList;
+    Take-->Count;
+    Take-->First;
+
+    Start-->ToList;
+    Start-->Count;
+    Start-->First;
+    Select-->ToList;
+    Select-->Count;
+    Select-->First;
+
+    ToList-.->Query((Query));
+    Count-.->Query;
+    First-.->Query;

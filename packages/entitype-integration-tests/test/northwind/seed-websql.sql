@@ -2330,8 +2330,6 @@ VALUES(10609, 10, 31, 10, 0.0);
 INSERT INTO [Order Details] (OrderID, ProductID, UnitPrice, Quantity, Discount)
 VALUES(10609, 21, 10, 6, 0.0);
 INSERT INTO [Order Details] (OrderID, ProductID, UnitPrice, Quantity, Discount)
-VALUES(10610, 36, 19, 21, 0.25);
-INSERT INTO [Order Details] (OrderID, ProductID, UnitPrice, Quantity, Discount)
 VALUES(10611, 1, 18, 6, 0.0);
 INSERT INTO [Order Details] (OrderID, ProductID, UnitPrice, Quantity, Discount)
 VALUES(10611, 2, 19, 10, 0.0);

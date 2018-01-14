@@ -1,11 +1,18 @@
 import { expect } from 'chai';
 
 import * as nw from '../../../mywind';
+import * as nwsqlite from '../../../northwind-sqlite';
 
 export type MockDriverFunction = (queryCallback?: (query: string) => void) => void;
 export function defineTests(adapterName: string, setupConfiguration: () => void, mockDriver?: MockDriverFunction) {
   describe(`${adapterName} > query > escape`, async () => {
     beforeEach(setupConfiguration);
+
+    it('should escape table names', async () => {
+      let ctx = new nwsqlite.NorthwindContext();
+      let loadModelQuery = ctx.orderDetails.toList.query;
+      expect(loadModelQuery).to.satisfySql(/SELECT (t0\..* as a\d+,?)+ FROM `order details` as t0/);
+    });
 
     it('should escape filter parameters', async () => {
       let ctx = new nw.NorthwindContext();

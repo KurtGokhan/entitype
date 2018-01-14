@@ -4,9 +4,6 @@ import { Instructor } from './Instructor';
 import { Student } from './Student';
 
 export class UniversityContext extends EntitypeContext {
-  constructor() {
-    super();
-  }
 
   @DbCollection(() => Student)
   students: DbSet<Student>;

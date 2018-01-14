@@ -1,93 +1,85 @@
 import { expect } from 'chai';
 
-import { Context } from '../mysql/config/entities/Context';
-import { seedDatabase } from './helper';
-
 import { NorthwindContext } from 'common/northwind-sqlite';
-import { seedNorthwindDatabase } from './helper';
+import { seedWebsqlDatabase } from './helper';
 
 describe('entitype-integration-tests > query > one-to-one > basic', async () => {
-  beforeEach(seedDatabase);
+  beforeEach(async function () {
+    this.timeout(20000);
+    await seedWebsqlDatabase();
+  });
 
   it('should be able to select owning side property from owning side', async () => {
-    let ctx = new Context();
-    let names = await ctx.models.select(x => x.name).toList();
+    let ctx = new NorthwindContext();
+    let names = await ctx.orders.select(x => x.shipName).toList();
     expect(names).not.to.be.equal(null);
-    expect(names.length).to.be.equal(3);
-    expect(names[0]).to.be.equal('Model 1');
+    expect(names.length).to.be.equal(67);
+    expect(names[0]).to.be.equal('Vins et alcools Chevalier');
   });
 
 
   it('should be able to select owned side included implicitly', async () => {
-    let ctx = new Context();
-    let children = await ctx.models.select(x => x.child).toList();
+    let ctx = new NorthwindContext();
+    let children = await ctx.orders.select(x => x.orderDetailsReference).toList();
 
     expect(children).not.to.be.equal(null);
-    expect(children.length).to.be.equal(3);
-    expect(children[0].name).to.be.equal('Child Model 1');
+    expect(children.length).to.be.equal(67);
+    expect(children[0].unitPrice).to.be.equal(34.8);
   });
 
   it('should be able to select owned side property from owning side included implicitly', async () => {
-    let ctx = new Context();
-    let childNames = await ctx.models.select(x => (x.child || {} as any).name).toList();
+    let ctx = new NorthwindContext();
+    let childNames = await ctx.orders.select(x => (x.orderDetailsReference || {} as any).unitPrice).toList();
 
     expect(childNames).not.to.be.equal(null);
-    expect(childNames.length).to.be.equal(3);
-    expect(childNames[0]).to.be.equal('Child Model 1');
+    expect(childNames.length).to.be.equal(67);
+    expect(childNames[0]).to.be.equal(34.8);
   });
 
   it('should be able to filter based on whether the child is null', async () => {
-    let ctx = new Context();
-    let childNames = await ctx.models
-      .where(x => x.child).not.isNull()
-      .select(x => x.child.name)
+    let ctx = new NorthwindContext();
+    let childNames = await ctx.orders
+      .where(x => x.orderDetailsReference).not.isNull()
+      .select(x => x.orderDetailsReference.unitPrice)
       .toList();
 
     expect(childNames).not.to.be.equal(null);
-    expect(childNames.length).to.be.equal(2);
-    expect(childNames[0]).to.be.equal('Child Model 1');
+    expect(childNames.length).to.be.equal(10);
+    expect(childNames[0]).to.be.equal(34.8);
   });
 
   it('should be able to filter based on whether the child property is null', async () => {
-    let ctx = new Context();
-    let childNames = await ctx.models.where(x => x.child.id).not.isNull().select(x => x.child.name).toList();
+    let ctx = new NorthwindContext();
+    let childNames = await ctx.orders
+      .where(x => x.orderDetailsReference.orderId).not.isNull()
+      .select(x => x.orderDetailsReference.unitPrice)
+      .toList();
 
     expect(childNames).not.to.be.equal(null);
-    expect(childNames.length).to.be.equal(2);
-    expect(childNames[0]).to.be.equal('Child Model 1');
+    expect(childNames.length).to.be.equal(10);
+    expect(childNames[0]).to.be.equal(34.8);
   });
 
   it('should be able to select all relation included explicitly', async () => {
-    let ctx = new Context();
-    let models = await ctx.models.include(x => x.child).toList();
+    let ctx = new NorthwindContext();
+    let models = await ctx.orders.include(x => x.orderDetailsReference).toList();
 
     expect(models).not.to.be.equal(null);
-    expect(models.length).to.be.equal(3);
-    expect(models[0].child).not.to.be.equal(null);
-    expect(models[0].name).to.be.equal('Model 1');
-    expect(models[0].child.name).to.be.equal('Child Model 1');
+    expect(models.length).to.be.equal(67);
+    expect(models[0].orderDetailsReference).not.to.be.equal(null);
+    expect(models[0].shipName).to.be.equal('Vins et alcools Chevalier');
+    expect(models[0].orderDetailsReference.unitPrice).to.be.equal(34.8);
   });
 
 
   it('should return null for owned side if not found', async () => {
-    let ctx = new Context();
-    let model = await ctx.models.include(x => x.child).where(x => x.id).equals(2).first();
+    let ctx = new NorthwindContext();
+    let model = await ctx.orders
+      .include(x => x.orderDetailsReference)
+      .where(x => x.orderId).equals(10258)
+      .first();
 
     expect(model).not.to.be.equal(null);
-    expect(model.child).to.be.equal(null);
+    expect(model.orderDetailsReference).to.be.equal(null);
   });
-});
-
-describe('entitype-integration-tests > query > websql > blob', async () => {
-  beforeEach(async function () {
-    this.timeout(10000);
-    await seedNorthwindDatabase();
-  });
-
-  it('should return Uint8Array for blob type', async () => {
-    let ctx = new NorthwindContext();
-    let photo = await ctx.employees.select(x => x.photo).first();
-    expect(photo).to.be.instanceof(Buffer);
-  });
-
 });
